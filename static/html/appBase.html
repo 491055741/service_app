@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html manifest="/hf_web/mobile/safari.manifest">
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/static/css/jquery.mobile-1.3.1.min.css" />
+        <link rel="stylesheet" href="/static/css/hotel.css" />
+        <link rel="stylesheet" href="/static/css/list.css" />
+        <link rel="stylesheet" href="/static/css/comment.css" />
+        <link rel="stylesheet" href="/static/css/content.css" />
+    </head>
+
+    <body>
+        <div id="content" data-role="content">
+
+            <!-- 首页 -->
+            <div data-role="page" id="appListPage" data-title="应用商店" class="page">
+
+                <!-- 导航条 -->
+                <div data-role="header" data-theme="b">
+                    <!-- <a class="goHome" data-icon="back">搜索</a> -->
+                    <h1 id="appListTitle">精选</h1>
+                    <!-- <a class="goHome" data-icon="home" data-iconpos="notext"></a> -->
+                </div>
+
+                <!-- 广告条 -->
+                <div class="fouce" style="display: block;">
+                    <div id="divSlidePanle" style="overflow: hidden;">
+                        <div id="slidebox" class="img_box" style="width: 13153px; -webkit-transition-property: -webkit-transform; transition-property: -webkit-transform; -webkit-transform-origin: 0px 0px 0px; -webkit-transform: translate3d(-5637px, 0px, 0px) scale(1);">
+                            <ul id="fouce">
+                                <li style="width: 1879px; height: 217px;">
+                                    <a href="http://www.91.com/client/" title="222222">
+                                        <img src="/static/image/20150423134824150.jpg" alt="">
+                                    </a>
+                                </li>
+                                
+                                <li style="width: 1879px; height: 217px;"><a href="http://game.91.com/kuwanxishuo/21826117.html" title="">
+                                    <img src="/static/image/20150508175845980.jpg" alt=""></a></li>
+                                
+                                <li style="width: 1879px; height: 217px;"><a href="http://wan.91.com/info/150511/21826480.html" title="">
+                                    <img src="/static/image/20150511175658864.jpg" alt=""></a></li>
+                                
+                                <li style="width: 1879px; height: 217px;"><a href="http://www.app111.com/doc/100140196_1.html" title="">
+                                    <img src="/static/image/20150506174550497.jpg" alt=""></a></li>
+                                
+                                <li style="width: 1879px; height: 217px;"><a href="http://www.app111.com/doc/100140159_1.html" title="">
+                                    <img src="/static/image/20150505174546875.jpg" alt=""></a></li>
+                                
+                                <li style="width: 1879px; height: 217px;"><a href="http://www.91.com/client/" title="">
+                                    <img src="/static/image/20150423134824150.jpg" alt=""></a></li>
+                                
+                                <li style="width: 1879px; height: 217px;"><a href="http://game.91.com/kuwanxishuo/21826117.html" title="">
+                                    <img src="/static/image/20150508175845980.jpg" alt=""></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ol id="olSlideNum">
+                        <li class=""></li>
+                        <li class=""></li>
+                        <li class="cur"></li>
+                        <li class=""></li>
+                        <li class=""></li>
+                    </ol>
+                </div>
+
+                <div data-role="content">
+                    <div id="excellent" class="app-list"> </div>
+                    <div id="application" class="app-list"> </div>
+                    <div id="game" class="app-list"> </div>
+                    <div id="mine" class="login-wrapper">
+                        <p style="backg"><font color="#2EB1E8" >登录</font></p>
+                        <form method="post" id="loginform">
+                            <input type="text" name="username" id="username" value="用户名"/><br>
+                            <input type="password" name="password" id="password" value="密码输入提示"/>
+                            <fieldset data-role="controlgroup" >
+                                <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
+                                <label for="checkbox-1">保持登录状态</label>
+                            </fieldset>
+                            <a href="content/regist" data-role="button" id="toRegistBtn" data-theme="e">注册</a>
+                            <a data-role="button" id="loginBtn" data-theme="b">登录</a>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 底部tab -->
+                <div data-role="footer" data-id="mainFooter" data-position="fixed" data-theme="b">
+                    <div data-role="navbar">
+                        <ul class="apple-navbar-ui comboSprite">
+                            <li><a href="#" id="excellentBtn" class="ui-btn-active">精选</a></li>
+                            <li><a href="#" id="applicationBtn">应用</a></li>
+                            <li><a href="#" id="gameBtn">游戏</a></li>
+                            <li><a href="#" id="mineBtn">我的</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 应用详情页 -->
+            <div data-role="page" id="appDetailPage" data-title="应用商店" class="page">
+                <div data-role="header" data-theme="b">
+                    <a class="goBack" data-icon="back">返回</a>
+                    <h1 id="appDetailPageTitle">应用详情</h1>
+                </div>
+
+                <div data-role="content">
+                    <div id="appDetail"></div>
+                </div>
+            </div>
+
+            <!-- 注册页 -->
+            <div data-role="page" id="registerPage" data-title="注册" class="page">
+                <div data-role="header" data-theme="b">
+                    <a class="goBack" data-icon="back">返回</a>
+                    <h1 id="appDetailPageTitle">注册</h1>
+                </div>
+                <div data-role="content">
+                    <form method="post" id="registform">
+                        <label for="email">邮 箱</label>
+                        <input type="text" name="email" id="email"/>
+                        <label for="password">密 码</label>
+                        <input type="password" name="password" id="password"/>
+                        <label for="nicky">昵 称</label>
+                        <input type="text" name="nicky" id="nicky"/>
+                        <center>
+                            <a data-role="button" id="regist" data-theme="e">立即注册</a>
+                        </center>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/js/jquery-1.9.0.min.js"></script>
+        <script src="/static/js/jquery.lazyload.min.js"></script>
+        <script src="/static/js/artDialog.js"></script>
+        <script src="/static/js/iscroll-lite.js"></script>
+        <script src="/static/js/appBase.js"></script>
+        <script src="/static/js/jquery.mobile-1.3.1.min.js"></script>
+        <script src="/static/js/google.fastbutton.js"></script>
+        <script src="/static/js/jquery.google.fastbutton.js"></script>
+        <script src = "/static/js/appList.js"></script>
+        <script src = "/static/js/appDetail.js"></script>
+    </body>
+</html>
