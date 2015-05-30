@@ -241,10 +241,7 @@ function changePage(pageName)
 
 function appServerUrl()
 {
-//	return "http://apps.ikamobile.cn/hotelfinder/HotelFinder.php";
-//	return "http://dev.ikamobile.cn:8080/hotelfinder_staging/HotelFinder.php";
-//	return "http://10.0.0.9/hf_web/mobile/php/HotelFinder.php";
-//    return "http://localhost:8888/hf_web/mobile/php/HotelFinder.php";
+    // return "http://livew.mobdsp.com/cb/";//applist?fc=1";
     return "http://127.0.0.1:5000";
 }
 

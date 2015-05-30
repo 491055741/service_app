@@ -1,5 +1,6 @@
-// (function($){
-// })(jQuery);
+(function($){
+    // changePage("#")
+})(jQuery);
 
 $("#appListPage").on("pageshow", function () {
     output("app list page show");
@@ -13,8 +14,8 @@ $("#appListPage").on("pageinit", function() {
     $("#gameBtn").click(function() {me.showTab(2);});
     $("#mineBtn").click(function() {me.showTab(3);});
 
-    me.showTab(0);
-    slide.init();
+    me.requestAds();
+    me.showTab(3);
 
     // $(window).trigger("scroll"); // it is a hack for trigger lazyload update. otherwise the image will not appear.
     // window.scrollTo(0, 1);
@@ -23,8 +24,6 @@ $("#appListPage").on("pageinit", function() {
 
 var me = {
     currentCat : 0,
-
-
 
     showTab : function(idx)
     {
@@ -47,6 +46,41 @@ var me = {
         } else {
             slide.hide();
         }
+    },
+
+    requestAds : function()
+    {
+        output("app list page init");
+        $.get(appServerUrl()+"/ads", function(data,status) {
+            $.mobile.hidePageLoadingMsg();
+            me.parseAds(data);
+            slide.init();
+        });
+    },
+
+    parseAds : function(data)
+    {
+    // console.log(data);
+        var obj = eval("("+data+")"); // json to object
+        var html = me.adsTemplate(obj);
+
+        $("#fouce").empty();
+        $("#fouce").append(html);
+    },
+
+    adsTemplate : function(data)
+    {
+        var data = data.adlist;
+        var arrHtml = new Array();
+
+        for (var i = 0; i < data.length; i++) {
+            arrHtml.push("<li>");
+            arrHtml.push("<a href=\"" + data[i].Link + "\">");
+            arrHtml.push("<img src=\"" + data[i].ImageSrc + "\" />");
+            arrHtml.push("</a>");
+            arrHtml.push("</li>");
+        }
+        return arrHtml.join("");
     },
 
     requestAppList : function()
@@ -83,7 +117,7 @@ var me = {
         //     return nothing.app();
         // }
 
-        var data = res.AppList;
+        var data = res.applist;
 
         var arrHtml = new Array();
 
@@ -105,13 +139,11 @@ var me = {
                 arrHtml.push(subString.autoAddEllipsis(data[i].AppName, 22, true) + "</div></div></dd>");
                 arrHtml.push("<dd class=\"item-star\">");
                 arrHtml.push("<span class=\"score-star\"><span style=\"width:" + data[i].AppScore + "%;\"></span></span>");
-                arrHtml.push("<span class=\"new-item-size\">" + data[i].LeftAttrValue);
 
                 if (data[i].AppSize != "") {
-                    arrHtml.push(" | " + data[i].AppSize);
+                    arrHtml.push("<span class=\"new-item-size\">" + data[i].AppSize + "</span>");
                 }
 
-                arrHtml.push("</span>");
                 arrHtml.push("</dd>");
                 arrHtml.push("<dd>");
                 arrHtml.push("<div class=\"xiaobian-comment\">");
@@ -146,7 +178,7 @@ var me = {
     {
     	$("#appDetail").empty();
         var obj = eval("("+data+")");
-        var html = me.appDetailTemplate(obj);
+        var html = me.appDetailTemplate(obj.detail_info);
 
         $("#appDetail").append(html);
         $.mobile.changePage("#appDetailPage", "slideup");
@@ -305,7 +337,7 @@ var me = {
         arrHtml.push("评论");
         arrHtml.push("</div>");
         arrHtml.push("<div class=\"comment-list\">");
-        if (data.AppCommentCount > 0) {
+        if (data.AppCommentList.length > 0) {
             arrHtml.push("<ul class=\"comment-list-inner\">");
             arrHtml.push(me.getCommentHtml(data.AppCommentList));
             arrHtml.push("</ul>");
@@ -357,6 +389,18 @@ var me = {
         return arrHtml.join("");
     },
 
+    //获取查询参数
+    parseQueryString : function () {
+        var str = window.location.search;
+        var objURL = {};
+        str.replace(
+            new RegExp("([^?=&]+)(=([^&]*))?", "g"),
+            function ($0, $1, $2, $3) {
+                objURL[$1] = $3;
+            }
+        );
+        return objURL;
+    }
 }; // end of var me
 
 var slide = {
@@ -608,7 +652,7 @@ var fnslide = function (a) {
     //提交
     $("#loginBtn").bind("click", function() {
         if (valid()) {
-
+            changePage("#accountPage");
             // $.ajax({
             //    type: "POST",
             //    url: "http://localhost:8080/note/servlet/Login",
@@ -634,24 +678,9 @@ var fnslide = function (a) {
             $(this).attr("value",""); 
     }); 
     //提交
-    $("#toRegistBtn").bind("click", function() {
-        changePage("#registerPage");
-        // if (true) {
-        //     output("goto reigister page");
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "http://localhost:8080/note/servlet/Login",
-        //         data: $("form#loginform").serialize(),
-        //         success: function(msg){
-        //             if(msg=='success'){
-        //                 $.mobile.changePage("../content/first.html","slidedown", true, true);
-        //             } else {
-        //                 $.mobile.changePage("../content/loginfalse.html","slidedown", true, true);
-        //             }
-        //         }
-        //     }); 
-        // }
-    });
+    // $("#toRegistBtn").bind("click", function() {
+    //     changePage("#registerPage");
+    // });
 
 //输入信息验证
 function valid()

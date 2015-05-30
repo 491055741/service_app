@@ -28,29 +28,6 @@
                     <div id="divSlidePanle" style="overflow: hidden;">
                         <div id="slidebox" class="img_box" style="width: 13153px; -webkit-transition-property: -webkit-transform; transition-property: -webkit-transform; -webkit-transform-origin: 0px 0px 0px; -webkit-transform: translate3d(-5637px, 0px, 0px) scale(1);">
                             <ul id="fouce">
-                                <li style="width: 1879px; height: 217px;">
-                                    <a href="http://www.91.com/client/" title="222222">
-                                        <img src="/static/image/20150423134824150.jpg" alt="">
-                                    </a>
-                                </li>
-                                
-                                <li style="width: 1879px; height: 217px;"><a href="http://game.91.com/kuwanxishuo/21826117.html" title="">
-                                    <img src="/static/image/20150508175845980.jpg" alt=""></a></li>
-                                
-                                <li style="width: 1879px; height: 217px;"><a href="http://wan.91.com/info/150511/21826480.html" title="">
-                                    <img src="/static/image/20150511175658864.jpg" alt=""></a></li>
-                                
-                                <li style="width: 1879px; height: 217px;"><a href="http://www.app111.com/doc/100140196_1.html" title="">
-                                    <img src="/static/image/20150506174550497.jpg" alt=""></a></li>
-                                
-                                <li style="width: 1879px; height: 217px;"><a href="http://www.app111.com/doc/100140159_1.html" title="">
-                                    <img src="/static/image/20150505174546875.jpg" alt=""></a></li>
-                                
-                                <li style="width: 1879px; height: 217px;"><a href="http://www.91.com/client/" title="">
-                                    <img src="/static/image/20150423134824150.jpg" alt=""></a></li>
-                                
-                                <li style="width: 1879px; height: 217px;"><a href="http://game.91.com/kuwanxishuo/21826117.html" title="">
-                                    <img src="/static/image/20150508175845980.jpg" alt=""></a></li>
                             </ul>
                         </div>
                     </div>
@@ -76,8 +53,8 @@
                                 <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
                                 <label for="checkbox-1">保持登录状态</label>
                             </fieldset>
-                            <a href="content/regist" data-role="button" id="toRegistBtn" data-theme="e">注册</a>
-                            <a data-role="button" id="loginBtn" data-theme="b">登录</a>
+                            <a href="#registerPage" id="toRegistBtn" class="content-BaiYingFreeDownload">注册</a>
+                            <a href="" id="loginBtn" class="content-BaiYingFreeDownload">登录</a>
                         </form>
                     </div>
                 </div>
@@ -111,22 +88,46 @@
             <div data-role="page" id="registerPage" data-title="注册" class="page">
                 <div data-role="header" data-theme="b">
                     <a class="goBack" data-icon="back">返回</a>
-                    <h1 id="appDetailPageTitle">注册</h1>
+                    <h1 id="registerPageTitle">注册</h1>
                 </div>
                 <div data-role="content">
-                    <form method="post" id="registform">
-                        <label for="email">邮 箱</label>
-                        <input type="text" name="email" id="email"/>
+                    <form method="post" id="registform" style="padding:15px;">
+                        <label for="phone">手机号</label>
+                        <input type="tel" name="phone" id="phone"/>
+                        <div class="ui-grid-a">  
+                            <div class="ui-block-a" style="width:60%">
+                                <label for="verifyCode">验证码</label>
+                                <input type="text" name="verifyCode" id="verifyCode"/>
+                            </div>
+                            <div class="ui-grid-b" style="width:40%">
+                                <a class="content-BaiYingFreeDownload" name="getVerifyCode" id="getVerifyCode" style="width:90%;margin-top:25px;">获取验证码</a>
+                            </div>
+                        </div>
                         <label for="password">密 码</label>
                         <input type="password" name="password" id="password"/>
-                        <label for="nicky">昵 称</label>
-                        <input type="text" name="nicky" id="nicky"/>
                         <center>
-                            <a data-role="button" id="regist" data-theme="e">立即注册</a>
+                            <a class="content-BaiYingFreeDownload" id="regist" data-theme="e">立即注册</a>
                         </center>
                     </form>
                 </div>
             </div>
+
+            <!-- 账号页 -->
+            <div data-role="page" id="accountPage" data-title="账号" class="page">
+                <div data-role="header" data-theme="b">
+                    <a class="goBack" data-icon="back">返回</a>
+                    <h1 id="accountPageTitle">个人中心</h1>
+                </div>
+                <div data-role="content">
+                    <div class="">头像</div>
+                    <div class="">昵称</div>
+                    <div class="">登录账号: </div>
+                    <div class="">金币: </div>
+                    <div class="">修改资料 </div>
+                    <div class="">退出登录</div>
+                </div>
+            </div>
+
         </div>
 
         <script src="/static/js/jquery-1.9.0.min.js"></script>

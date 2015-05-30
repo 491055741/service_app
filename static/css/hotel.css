@@ -9,8 +9,8 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 .ui-content {padding: 0;}
 /*p { font-size: 1.5em; font-weight: bold; }*/
 .login-wrapper { padding:15px; }
-#loginBtn { float:right; margin:10px; }
-#toRegistBtn { float:left; margin:10px; }
+#loginBtn {width: 40%; float:right; margin:10px; }
+#toRegistBtn {width: 40%; float:left; margin:10px; }
 a { text-decoration: none; }
 li { list-style: none; }
 
