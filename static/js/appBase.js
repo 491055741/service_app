@@ -241,7 +241,8 @@ function changePage(pageName)
 
 function appServerUrl()
 {
-    // return "http://livew.mobdsp.com/cb/";//applist?fc=1";
-    return "http://127.0.0.1:5000";
+    // return "app.milkpapa.com:8080";
+    return "http://livew.mobdsp.com/cb";
+    // return "http://127.0.0.1:5000";
 }
 
