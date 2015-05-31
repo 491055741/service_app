@@ -21,14 +21,25 @@ def index():
 def ads():
     return get_file_content("app/adlist.json")
 
-@app.route('/applist/<cat>')
-def applist(cat):
+@app.route('/applist')
+def applist():
     return get_file_content("app/applist.json")
 
-
-@app.route('/appdetail/<appId>')
-def appdetail(appId):
+@app.route('/appdetail')
+def appdetail():
     return get_file_content("app/appdetail.json")
+
+@app.route('/appverifycode')
+def verifycode():
+    return get_file_content("app/success.json")
+
+@app.route('/appregister')
+def register():
+    return get_file_content("app/success.json")
+
+@app.route('/login')
+def login():
+    return get_file_content("app/login.json")
 
 if __name__ == '__main__':
     app.run(debug = True)

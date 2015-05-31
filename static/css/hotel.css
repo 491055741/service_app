@@ -11,6 +11,8 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 .login-wrapper { padding:15px; }
 #loginBtn {width: 40%; float:right; margin:10px; }
 #toRegistBtn {width: 40%; float:left; margin:10px; }
+.text_disabled {color:gray;}
+
 a { text-decoration: none; }
 li { list-style: none; }
 

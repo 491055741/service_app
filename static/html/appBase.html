@@ -47,8 +47,8 @@
                     <div id="mine" class="login-wrapper">
                         <p style="backg"><font color="#2EB1E8" >登录</font></p>
                         <form method="post" id="loginform">
-                            <input type="text" name="username" id="username" value="用户名"/><br>
-                            <input type="password" name="password" id="password" value="密码输入提示"/>
+                            <input type="text" name="username" id="login_username" value="用户名"/><br>
+                            <input type="password" name="password" id="login_password" value="密码输入提示"/>
                             <fieldset data-role="controlgroup" >
                                 <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
                                 <label for="checkbox-1">保持登录状态</label>
@@ -91,24 +91,24 @@
                     <h1 id="registerPageTitle">注册</h1>
                 </div>
                 <div data-role="content">
-                    <form method="post" id="registform" style="padding:15px;">
-                        <label for="phone">手机号</label>
-                        <input type="tel" name="phone" id="phone"/>
+                    <div style="padding:15px;">
+                        <label for="phoneNumbers">手机号</label>
+                        <input type="tel" name="phoneNumber" id="registPhoneNumber"/>
                         <div class="ui-grid-a">  
                             <div class="ui-block-a" style="width:60%">
                                 <label for="verifyCode">验证码</label>
-                                <input type="text" name="verifyCode" id="verifyCode"/>
+                                <input type="text" name="regist_verifyCode" id="registVerifyCode"/>
                             </div>
                             <div class="ui-grid-b" style="width:40%">
-                                <a class="content-BaiYingFreeDownload" name="getVerifyCode" id="getVerifyCode" style="width:90%;margin-top:25px;">获取验证码</a>
+                                <a class="content-BaiYingFreeDownload" name="getVerifyCode" id="verifyCodeBtn" style="width:90%;margin-top:25px;">获取验证码</a>
                             </div>
                         </div>
                         <label for="password">密 码</label>
-                        <input type="password" name="password" id="password"/>
-                        <center>
-                            <a class="content-BaiYingFreeDownload" id="regist" data-theme="e">立即注册</a>
-                        </center>
-                    </form>
+                        <input type="password" name="password" id="registPassword"/>
+                        <div style="margin-top:30px">
+                            <center><a class="content-BaiYingFreeDownload" id="registBtn" data-theme="e">立即注册</a></center>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -131,7 +131,7 @@
         </div>
 
         <script src="/static/js/jquery-1.9.0.min.js"></script>
-        <script src="/static/js/jquery.lazyload.min.js"></script>
+        <!-- <script src="/static/js/jquery.lazyload.min.js"></script>  -->
         <script src="/static/js/artDialog.js"></script>
         <script src="/static/js/iscroll-lite.js"></script>
         <script src="/static/js/appBase.js"></script>

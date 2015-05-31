@@ -2,6 +2,8 @@
     // changePage("#")
 })(jQuery);
 
+var callback = "";//callback=?";
+
 $("#appListPage").on("pageshow", function () {
     output("app list page show");
 });
@@ -16,17 +18,11 @@ $("#appListPage").on("pageinit", function() {
 
     me.requestAds();
     me.showTab(3);
-
-    // $(window).trigger("scroll"); // it is a hack for trigger lazyload update. otherwise the image will not appear.
-    // window.scrollTo(0, 1);
-
 })
 
 var me = {
     currentCat : 0,
-
-    showTab : function(idx)
-    {
+    countDownSeconds : 0, showTab : function(idx) {
         var tabs = new Array("excellent", "application", "game", "mine");
         var titles = new Array("精选", "应用", "游戏", "我的");
         for (var i = 0; i < tabs.length; i++) {
@@ -50,8 +46,9 @@ var me = {
 
     requestAds : function()
     {
-        output("app list page init");
-        $.get(appServerUrl()+"/ads", function(data,status) {
+        var url=appServerUrl()+"/ads?"+callback;
+        output("requestAds:"+url);
+        $.getJSON(url, function(data,status) {
             $.mobile.hidePageLoadingMsg();
             me.parseAds(data);
             slide.init();
@@ -61,8 +58,8 @@ var me = {
     parseAds : function(data)
     {
     // console.log(data);
-        var obj = eval("("+data+")"); // json to object
-        var html = me.adsTemplate(obj);
+        // var obj = eval("("+data+")"); // json to object
+        var html = me.adsTemplate(data);
 
         $("#fouce").empty();
         $("#fouce").append(html);
@@ -86,7 +83,10 @@ var me = {
     requestAppList : function()
     {
     	$.mobile.showPageLoadingMsg();
-        $.get(appServerUrl()+"/applist/"+currentCat, function(data,status) {
+        // +currentCat+
+        var url = appServerUrl()+"/applist?"+callback;
+        output(url);
+        $.getJSON(url, function(data, status) {
     		$.mobile.hidePageLoadingMsg();
     		me.parseAppList(data);
     	});
@@ -95,9 +95,8 @@ var me = {
     parseAppList : function(data)
     {
     // console.log(data);
-    	var obj = eval("("+data+")"); // json to object
-    	var html = me.appListTemplate(obj);
-
+    	// var obj = eval("("+data+")"); // json to object
+    	var html = me.appListTemplate(data);
 
         $("#"+currentCat).empty();
         $("#"+currentCat).append(html);
@@ -108,14 +107,6 @@ var me = {
     },
 
     appListTemplate : function(res) {
-
-        // var panle = $("#" + me.currentObj.getPanleId());
-
-        // me.currentObj.totalCount = res.TotalCount;
-
-        // if (res.TotalCount == 0) {
-        //     return nothing.app();
-        // }
 
         var data = res.applist;
 
@@ -168,7 +159,7 @@ var me = {
     requestHotelDetail : function (appId)
     {
         $.mobile.showPageLoadingMsg();
-        $.get(appServerUrl()+"/appdetail/"+appId, function(data,status) {
+        $.getJSON(appServerUrl()+"/appdetail?"+callback+"appid="+appId, function(data,status) {
             $.mobile.hidePageLoadingMsg();
             me.parseAppDetail(data);
         });
@@ -187,20 +178,6 @@ var me = {
     appDetailTemplate : function(obj)
     {
         var arrHtml  = new Array();
-        // var appId    = obj.AppleAppId;
-        // var appName  = obj.AppName;
-        // var price    = obj.AppPrice;
-        // var logo     = obj.AppLogo;
-        // // var desc     = obj.AppSummary;
-        // var brief    = '版本:' + obj.AppVersion + ' | 大小:' + obj.AppSize;
-
-        // arrHtml.push("<div class='hotelTableCell' data-app-id='" + appId + "' data-hotel-name='" + appName + "' data-theme='c'  style='margin : 2px -10px 0px -10px; height:80px; border-bottom: gray 1px dashed;'>" +
-        //    "<image width='100px' height='78px'  src='" + logo + "' style='position: absolute; vertical-align:middle; text-align:right;display:inline-block;'   /> " +
-        //    "<div style='margin-left: 100px;'>" +
-        //    "<div class='text_overflow' style='padding:6px 0px 2px 5px; max-height:30px; font-size:big; font-weight:bold; '>" + appName + "</div>" +
-        //    "<span style='padding-left:5px; font-size:small; color:gray;'>" + brief + "</span>" +
-        //    // "<div class='text_overflow' style='padding:2px 0px 0px 5px; max-height:18px; font-size:small;'> " + desc + "</div>" +
-        //    "</div></div>");
         arrHtml.push(me.appIntroTemplate(obj));
 
         arrHtml.push("<div><img style='"+ obj.ImageStyle +"' src='" + obj.ImageSrc + "'>");
@@ -232,8 +209,7 @@ var me = {
         arrHtml.push("<br>");
         arrHtml.push("<div class=\"download_size\">");
         arrHtml.push("<span>");
-        // arrHtml.push("v" + subString.autoAddEllipsis(data.AppVersion, 10, false) + "&nbsp;|&nbsp;" + data.AppSize);
-        arrHtml.push("v" + data.AppVersion + "&nbsp;|&nbsp;" + data.AppSize);
+        arrHtml.push("v" + subString.autoAddEllipsis(data.AppVersion, 10, false) + "&nbsp;|&nbsp;" + data.AppSize);
         arrHtml.push("</span>");
         arrHtml.push("</div>");
         arrHtml.push("</div>");
@@ -242,9 +218,7 @@ var me = {
         var gaAppName = data.AppName.replace(/\"/g, "”").replace(/'/g, "’");
 
         arrHtml.push("<div id=\"divdownarea\" class=\"down-area\">");
-        //详情页顶部应用信息的左下角官方下载
         arrHtml.push("<div class=\"content-btn-con\">");
-        // arrHtml.push("<a class=\"content-BaiYingFreeDownload\" onclick=\"googleStatistics.appDownload('" + pingguozushou.appId + "','" + pingguozushou.appName + "','" + pingguozushou.appSource + "','content','','');\" href=\"javascript:void(0);\">");
         arrHtml.push("<a class=\"content-BaiYingFreeDownload\" href=\"" + data.AppSource + "\">");
         arrHtml.push('下载');
         arrHtml.push("</a>");
@@ -253,26 +227,8 @@ var me = {
         arrHtml.push("<div id=\"divDownloadPanle\" class=\"content-btn-con\">");
         arrHtml.push("</div>");
         arrHtml.push("<div class=\"divDownloadTip\">提示：首次使用高速下载需要连接PC进行激活！</div>");
-        //详情页顶部应用信息的右下角安装苹果助手
-        /*arrHtml.push("<div class=\"divDownloadPingguoapp\">");
-        arrHtml.push("<a class=\"pingguoappDownload detailTopDownload\" onclick=\"pingguozushou.ipaDownload();\" href=\"javascript:void(0);\">");
-        arrHtml.push("安装苹果助手");
-        arrHtml.push("</a>");*/
         arrHtml.push("</div>");
         arrHtml.push("</section>");
-
-        // arrHtml.push("<nav class=\"xz_list\">");
-        // arrHtml.push("<ul>");
-        // arrHtml.push("<li id=\"tab_info\"" + (content.currentObj.tab == "info" ? " class=\"cur\"" : "") + ">");
-        // arrHtml.push("<a href=\"/app?action=content#appid=" + data.AppleAppId + "\">详情</a>");
-        // arrHtml.push("</li>");
-        // arrHtml.push("<li id=\"tab_comment\"" + (content.currentObj.tab == "comment" ? " class=\"cur\"" : "") + ">");
-        // arrHtml.push("<a href=\"/app?action=content#appid=" + data.AppleAppId + "&t=comment\">");
-        // arrHtml.push("评论");
-        // arrHtml.push("</a>");
-        // arrHtml.push("</li>");
-        // arrHtml.push("</ul>");
-        // arrHtml.push("</nav>");
 
         return arrHtml.join("");
     },
@@ -281,13 +237,6 @@ var me = {
         var arrHtml = new Array();
         arrHtml.push("<section class=\"description\">");
         arrHtml.push("<div class=\"content-navdes-wrapper\">");
-        /*arrHtml.push("<div class=\"content-navdes-header clearfix\">");
-        arrHtml.push("<h2>");
-        arrHtml.push("应用简介");
-        arrHtml.push("</h2>");
-        arrHtml.push("<div class=\"content-navdes-header-line\">");
-        arrHtml.push("</div>");
-        arrHtml.push("</div>");*/
         arrHtml.push("<div class=\"des-main\">");
         arrHtml.push("<div class=\"des-indent des-short\">");
         arrHtml.push("<div class=\"des-short-content\">");
@@ -309,28 +258,7 @@ var me = {
 
     commentTemplate : function (res) {
         var data = res;
-
-        // if (content.currentObj.currentPage > 1) {
-        //     return content.getCommentHtml(data);
-        // }
-
-        // if (data.AppleAppId == 0) {
-        //     return nothing.app();
-        // }
-
-        // if (data.RecommendClient == 2 && (system.iPhone || system.iPod)) {
-        //     return nothing.ipad(data);
-        // }
-
         var arrHtml = new Array();
-        // content.currentObj.totalCount = data.TotalCount;
-
-        // var existContentPanle = content.currentObj.existContentPanle();
-        // if (!existContentPanle) {
-        //     arrHtml.push("<div id=\"detail\" class=\"\">");
-        //     arrHtml.push(content.getAppBaseHtml(data));
-        //     arrHtml.push("<div id=\"subDetail_" + data.AppleAppId + "\" class=\"\">");
-        // }
 
         arrHtml.push("<section class=\"comment-area content-comment-area\">");
         arrHtml.push("<div class=\"pingfen-tab\">");
@@ -347,12 +275,8 @@ var me = {
         }
         arrHtml.push("</div>");
         arrHtml.push("</section>");
-
-        // if (!existContentPanle) {
-            arrHtml.push("</div>");
-            arrHtml.push("</div>");
-        // }
-
+        arrHtml.push("</div>");
+        arrHtml.push("</div>");
         return arrHtml.join("");
     },
 
@@ -400,7 +324,60 @@ var me = {
             }
         );
         return objURL;
-    }
+    },
+
+    requestVerifyCode : function() {
+        var phone_number = $("#login_username").attr("value");
+        var passwd       = $("#login_password").attr("value");
+        var url          = appServerUrl()+"/appverifycode?"+callback+"&phone_number="+phone_number;
+        output(url);
+        $.getJSON(url, function(data,status) {
+            var obj = eval("("+data+")"); // json to object
+            if (obj.ret_code == 0) {
+                $.mobile.showPageLoadingMsg("e", "验证码已通过短信发送", true);
+                setTimeout("$.mobile.hidePageLoadingMsg()", 2000);
+                $("#verifyCodeBtn").addClass("text_disabled");
+                me.countDownSeconds = 60;
+                setTimeout("me.countDown()", 1000);
+                $("#verifyCodeBtn").attr("disabled","disabled");
+            } else {
+                $.mobile.showPageLoadingMsg("e", obj.ret_msg, true);
+                setTimeout("$.mobile.hidePageLoadingMsg()", 3000);
+            }
+        }
+    )},
+
+    countDown : function() {
+        $("#verifyCodeBtn").text(me.countDownSeconds + "秒");
+        me.countDownSeconds = me.countDownSeconds - 1;
+        if (me.countDownSeconds <= 0) {
+            $("#verifyCodeBtn").removeClass("text_disabled").text("获取验证码");
+            $("#verifyCodeBtn").attr("disabled","");
+        } else {
+            setTimeout("me.countDown()", 1000);
+        }
+    },
+
+    validLogin : function() {
+        if ($("#login_username").attr("value")=='') {
+            return false;
+        }
+        if ($("#password").attr("value")=='') {
+            return false;
+        }
+        return true;
+    },
+
+    validRegist : function() {
+        if ($("#regist_phonenumber").attr("value")=='') {
+            return false;
+        }
+        if ($("#password").attr("value")=='') {
+            return false;
+        }
+        return true;
+    },
+
 }; // end of var me
 
 var slide = {
@@ -643,56 +620,56 @@ var fnslide = function (a) {
     a.extend(a.prototype.touchwipe, 1);
 };
 
+$("#loginBtn").bind("click", function() {
+    if (me.validLogin()) {
+        var phone_number = $("#login_username").attr("value");
+        var passwd       = $("#login_password").attr("value");
+        var url = appServerUrl()+"/login?"+callback+"&phone_number="+phone_number+"&passwd="+passwd;
+        output(url);
+        $.getJSON(url, function(data,status) {
+            var obj = eval("("+data+")"); // json to object
+            if (obj.ret_code == 0) {
+                changePage("#accountPage");
+                output("login success, coin num:" + obj.coin_num);
+            } else {
+                $.mobile.showPageLoadingMsg("e", obj.ret_msg, true);
+                setTimeout("$.mobile.hidePageLoadingMsg()", 3000);                
+            }
+        });
+    } else {
+        $.mobile.showPageLoadingMsg("e", "请输入用户名和密码", true);
+        setTimeout("$.mobile.hidePageLoadingMsg()", 3000);
+    }
+});
 
-    //输入事件
-    $("input[id]").bind("focus",function () { 
-        if ($(this).attr("id")=='username' || $(this).attr("id")=='password')
-            $(this).attr("value",""); 
-    }); 
-    //提交
-    $("#loginBtn").bind("click", function() {
-        if (valid()) {
-            changePage("#accountPage");
-            // $.ajax({
-            //    type: "POST",
-            //    url: "http://localhost:8080/note/servlet/Login",
-            //    data: $("form#loginform").serialize(),
-            //    success: function(msg){
-            //      if(msg=='success'){
-            //         $.mobile.changePage("content/first.html","slidedown", true, true);
-            //      }else{
-            //         $.mobile.changePage("content/loginfalse.html","slidedown", true, true);
-            //      }
-                  
-            //    }
-            // }); 
-        } else {
-            $.mobile.showPageLoadingMsg("e", "请输入用户名和密码", true);
-            setTimeout("$.mobile.hidePageLoadingMsg()", 3000);
-        }
-    });
+$("#registBtn").fastClick(function(){
+    if (me.validRegist()) {
+        var phone_number = $("#registPhoneNumber").attr("value");
+        var passwd       = $("#registPassword").attr("value");
+        var verify_code  = $("#verifyCode").attr("value");
+        var url = appServerUrl()+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwd+"&verify_code="+verify_code;
+        output(url);
 
-    //输入事件
-    $("input[id]").bind("focus",function () { 
-        if ($(this).attr("value")=='用户名' || $(this).attr("value")=='密码')
-            $(this).attr("value",""); 
-    }); 
-    //提交
-    // $("#toRegistBtn").bind("click", function() {
-    //     changePage("#registerPage");
-    // });
+        $.getJSON(url, function(data,status) {
+            var obj = eval("("+data+")"); // json to object
+            if (obj.ret_code == 0) {
+                changePage("#accountPage");
+            } else {
+                $.mobile.showPageLoadingMsg("e", obj.ret_msg, true);
+                setTimeout("$.mobile.hidePageLoadingMsg()", 3000);                
+            }
+        });
+    }
+});
 
-//输入信息验证
-function valid()
-{
-    if ($("#username").attr("value")=='' || $("#password").attr("value")=='') {
-        
-        return false;           
-    } 
-    return true;
-};
+$("input[id]").bind("focus",function () { 
+    if ($(this).attr("value")=='用户名' || $(this).attr("value")=='密码')
+        $(this).attr("value",""); 
+}); 
 
-
+$("#verifyCodeBtn").fastClick(function(){
+    me.requestVerifyCode();
+});
 
 function scrollToObj (obj) {
     window.scrollTo(0, obj.offset().top);
