@@ -2,8 +2,8 @@
     // changePage("#")
 })(jQuery);
 
-// var callback = "";
-var callback = "callback=?";
+var callback = "";
+// var callback = "callback=?";
 
 $("#appListPage").on("pageshow", function () {
     console.log("app list page show");
@@ -644,7 +644,7 @@ $("#loginBtn").bind("click", function() {
             if (data.ret_code == 0) {
                 changePage("#accountPage");
                 console.log("login success, coin num:" + data.coin_num);
-                $("#coin").text(data.coin_num);
+                $("#coin").text("金币数：" + data.coin_num);
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);

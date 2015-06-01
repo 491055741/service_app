@@ -186,7 +186,7 @@ function showLoader(txt) {
     $.mobile.loading('show', {  
         text: txt, //加载器中显示的文字  
         textVisible: true, //是否显示文字  
-        theme: 'a',        //加载器主题样式a-e  
+        theme: 'b',        //加载器主题样式
         textonly: onlyTxt,   //是否只显示文字  
         html: ""           //要显示的html内容，如图片等  
     });  
@@ -200,6 +200,6 @@ function hideLoader()
 function appServerUrl()
 {
     // return "app.milkpapa.com:8080";
-    return "http://livew.mobdsp.com/cb";
-    // return "http://127.0.0.1:5000";
+    // return "http://livew.mobdsp.com/cb";
+    return "http://127.0.0.1:5000";
 }
