@@ -1,11 +1,11 @@
 
-$("#appDetailPage").on("pageinit", function() {
-    output("app detail page init");
-})
+// $("#appDetailPage").on("pageinit", function() {
+//     output("app detail page init");
+// })
 
-$("#appDetailPage").on("pageshow", function () {
+// $("#appDetailPage").on("pageshow", function () {
 
-});
+// });
 
 // function clickOnRoom(obj)
 // {

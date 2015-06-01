@@ -17,9 +17,9 @@ def get_file_content(file_name):
 def index():
     return get_file_content("static/html/appBase.html")
 
-@app.route('/ads')
-def ads():
-    return get_file_content("app/adlist.json")
+# @app.route('/static/json/ads.json')
+# def ads():
+#     return get_file_content("static/json/ads.json")
 
 @app.route('/applist')
 def applist():

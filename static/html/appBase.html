@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html manifest="/hf_web/mobile/safari.manifest">
+<html><!-- manifest="safari.manifest" -->
     <head>
         <meta http-equiv="content-type" content="text/html;charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="/static/css/jquery.mobile-1.3.1.min.css" />
+        <link rel="stylesheet" href="/static/js/jquery.mobile/jquery.mobile-1.4.2.min.css" />
         <link rel="stylesheet" href="/static/css/hotel.css" />
         <link rel="stylesheet" href="/static/css/list.css" />
         <link rel="stylesheet" href="/static/css/comment.css" />
@@ -17,10 +17,8 @@
             <div data-role="page" id="appListPage" data-title="应用商店" class="page">
 
                 <!-- 导航条 -->
-                <div data-role="header" data-theme="b">
-                    <!-- <a class="goHome" data-icon="back">搜索</a> -->
+                <div data-role="header" data-theme="a">
                     <h1 id="appListTitle">精选</h1>
-                    <!-- <a class="goHome" data-icon="home" data-iconpos="notext"></a> -->
                 </div>
 
                 <!-- 广告条 -->
@@ -46,21 +44,19 @@
                     <div id="game" class="app-list"> </div>
                     <div id="mine" class="login-wrapper">
                         <p style="backg"><font color="#2EB1E8" >登录</font></p>
-                        <form method="post" id="loginform">
-                            <input type="text" name="username" id="login_username" value="用户名"/><br>
-                            <input type="password" name="password" id="login_password" value="密码输入提示"/>
-                            <fieldset data-role="controlgroup" >
-                                <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
-                                <label for="checkbox-1">保持登录状态</label>
-                            </fieldset>
-                            <a href="#registerPage" id="toRegistBtn" class="content-BaiYingFreeDownload">注册</a>
-                            <a href="" id="loginBtn" class="content-BaiYingFreeDownload">登录</a>
-                        </form>
+                        <input type="text" name="username" id="login_username" value="用户名"/><br>
+                        <input type="password" name="password" id="login_password" value="密码输入提示"/>
+                        <fieldset data-role="controlgroup" >
+                            <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
+                            <label for="checkbox-1">保持登录状态</label>
+                        </fieldset>
+                        <a class="ui-btn" href="#registerPage" id="toRegistBtn" data-theme="b">注册</a>
+                        <a class="ui-btn" href="" id="loginBtn">登录</a>
                     </div>
                 </div>
 
                 <!-- 底部tab -->
-                <div data-role="footer" data-id="mainFooter" data-position="fixed" data-theme="b">
+                <div data-role="footer" data-id="mainFooter" data-position="fixed" data-theme="a">
                     <div data-role="navbar">
                         <ul class="apple-navbar-ui comboSprite">
                             <li><a href="#" id="excellentBtn" class="ui-btn-active">精选</a></li>
@@ -74,7 +70,7 @@
 
             <!-- 应用详情页 -->
             <div data-role="page" id="appDetailPage" data-title="应用商店" class="page">
-                <div data-role="header" data-theme="b">
+                <div data-role="header" data-theme="a">
                     <a class="goBack" data-icon="back">返回</a>
                     <h1 id="appDetailPageTitle">应用详情</h1>
                 </div>
@@ -86,7 +82,7 @@
 
             <!-- 注册页 -->
             <div data-role="page" id="registerPage" data-title="注册" class="page">
-                <div data-role="header" data-theme="b">
+                <div data-role="header" data-theme="a">
                     <a class="goBack" data-icon="back">返回</a>
                     <h1 id="registerPageTitle">注册</h1>
                 </div>
@@ -95,18 +91,18 @@
                         <label for="phoneNumbers">手机号</label>
                         <input type="tel" name="phoneNumber" id="registPhoneNumber"/>
                         <div class="ui-grid-a">  
-                            <div class="ui-block-a" style="width:60%">
+                            <div class="ui-block-a" style="width:50%">
                                 <label for="verifyCode">验证码</label>
                                 <input type="text" name="regist_verifyCode" id="registVerifyCode"/>
                             </div>
-                            <div class="ui-grid-b" style="width:40%">
-                                <a class="content-BaiYingFreeDownload" name="getVerifyCode" id="verifyCodeBtn" style="width:90%;margin-top:25px;">获取验证码</a>
+                            <div class="ui-grid-b" style="width:50%">
+                                <a class="ui-btn" name="getVerifyCode" id="verifyCodeBtn">获取验证码</a>
                             </div>
                         </div>
                         <label for="password">密 码</label>
                         <input type="password" name="password" id="registPassword"/>
                         <div style="margin-top:30px">
-                            <center><a class="content-BaiYingFreeDownload" id="registBtn" data-theme="e">立即注册</a></center>
+                            <center><a class="ui-btn" id="registBtn" data-theme="a">立即注册</a></center>
                         </div>
                     </div>
                 </div>
@@ -114,7 +110,7 @@
 
             <!-- 账号页 -->
             <div data-role="page" id="accountPage" data-title="账号" class="page">
-                <div data-role="header" data-theme="b">
+                <div data-role="header" data-theme="a">
                     <a class="goBack" data-icon="back">返回</a>
                     <h1 id="accountPageTitle">个人中心</h1>
                 </div>
@@ -127,18 +123,15 @@
                     <div class="">退出登录</div>
                 </div>
             </div>
-
         </div>
 
         <script src="/static/js/jquery-1.9.0.min.js"></script>
-        <!-- <script src="/static/js/jquery.lazyload.min.js"></script>  -->
-        <script src="/static/js/artDialog.js"></script>
         <script src="/static/js/iscroll-lite.js"></script>
         <script src="/static/js/appBase.js"></script>
-        <script src="/static/js/jquery.mobile-1.3.1.min.js"></script>
+        <script src="/static/js/jquery.mobile/jquery.mobile-1.4.2.min.js"></script>
         <script src="/static/js/google.fastbutton.js"></script>
         <script src="/static/js/jquery.google.fastbutton.js"></script>
         <script src = "/static/js/appList.js"></script>
-        <script src = "/static/js/appDetail.js"></script>
+        <!-- <script src = "/static/js/appDetail.js"></script>  -->
     </body>
 </html>

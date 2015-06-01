@@ -2,14 +2,15 @@
     // changePage("#")
 })(jQuery);
 
-var callback = "";//callback=?";
+// var callback = "";
+var callback = "callback=?";
 
 $("#appListPage").on("pageshow", function () {
-    output("app list page show");
+    console.log("app list page show");
 });
 
 $("#appListPage").on("pageinit", function() {
-    output("app list page init");
+    console.log("app list page init");
     // use fastClick will cause pop to home page when tap the tab on PC.
     $("#excellentBtn").click(function() {me.showTab(0);});
     $("#applicationBtn").click(function() {me.showTab(1);});
@@ -46,11 +47,12 @@ var me = {
 
     requestAds : function()
     {
-        var url=appServerUrl()+"/ads?"+callback;
-        output("requestAds:"+url);
-        $.getJSON(url, function(data,status) {
-            $.mobile.hidePageLoadingMsg();
-            me.parseAds(data);
+        // var url=appServerUrl()+"/ads?"+callback;
+        var url = "/static/json/ads.json";
+        console.log("requestAds:"+url);
+        $.get(url, function(data, status) {
+            var obj = eval("(" + data +")");
+            me.parseAds(obj);
             slide.init();
         });
     },
@@ -82,12 +84,12 @@ var me = {
 
     requestAppList : function()
     {
-    	$.mobile.showPageLoadingMsg();
+    	showLoader();
         // +currentCat+
         var url = appServerUrl()+"/applist?"+callback;
-        output(url);
-        $.getJSON(url, function(data, status) {
-    		$.mobile.hidePageLoadingMsg();
+        console.log(url);
+        $.getJSON(url, function(data) {
+    		hideLoader();
     		me.parseAppList(data);
     	});
     },
@@ -118,8 +120,6 @@ var me = {
 
                 arrHtml.push("<li data-appid='" + data[i].AppId + "' id=\"myId" + data[i].AppId + "\" class=\"index-item list-index\" >"); // style=\"display:none;\"
                 arrHtml.push("<div class=\"index-item-main\">");
-                // arrHtml.push("<a href=\"/app?action=content#appid=" + data[i].AppId + "\">");
-                // arrHtml.push("<a href=''  >");
                 arrHtml.push("<dl class=\"clearfix\">");
                 arrHtml.push("<dt class=\"item-icon\"><span class=\"app-tags hide\"></span>");
                 arrHtml.push("<img src=\"" + data[i].AppLogo + "\" />");
@@ -139,11 +139,8 @@ var me = {
                 arrHtml.push("<dd>");
                 arrHtml.push("<div class=\"xiaobian-comment\">");
                 arrHtml.push(data[i].BriefSummary == "" ? "暂无介绍" : data[i].BriefSummary);
-                // arrHtml.push("</div></dd></dl></a></div>");
                 arrHtml.push("</div></dd></dl></div>");
                 var gaAppName = data[i].AppName.replace(/\"/g, "”").replace(/'/g, "’");
-                // arrHtml.push("<div class=\"item-side item-download item-side-download\"><a href=\"javascript:void(0);\" onclick=\"appDownload('" + data[i].AppId + "');\"><div class=\"status-download\"><span class=\"download-text" + (data[i].FreePage == 1 ? " download-text-through" : "") + "\">" + data[i].AppPrice + "</span></div></a></div>");
-                // arrHtml.push("<div class=\"item-side item-download item-side-download\"><a href=\"javascript:void(0);\" onclick=\"clickOnApp('" + data[i].AppId + "');\"></a></div>");
                 arrHtml.push("</li>");
             // }
         }
@@ -153,14 +150,16 @@ var me = {
 
     clickOnApp : function (obj)
     {
-        me.requestHotelDetail($(obj).data("appid"));
+        me.requestAppDetail($(obj).data("appid"));
     },
 
-    requestHotelDetail : function (appId)
+    requestAppDetail : function (appId)
     {
-        $.mobile.showPageLoadingMsg();
-        $.getJSON(appServerUrl()+"/appdetail?"+callback+"appid="+appId, function(data,status) {
-            $.mobile.hidePageLoadingMsg();
+        var url = appServerUrl()+"/appdetail?"+callback+"&appid="+appId;
+        console.log(url);
+        showLoader();
+        $.getJSON(url, function(data) {
+            hideLoader();
             me.parseAppDetail(data);
         });
     },
@@ -168,25 +167,25 @@ var me = {
     parseAppDetail : function (data)
     {
     	$("#appDetail").empty();
-        var obj = eval("("+data+")");
-        var html = me.appDetailTemplate(obj.detail_info);
+        // var obj = eval("("+data+")");
+        var html = me.appDetailTemplate(data.detail_info);
 
         $("#appDetail").append(html);
         $.mobile.changePage("#appDetailPage", "slideup");
     },
 
-    appDetailTemplate : function(obj)
+    appDetailTemplate : function(data)
     {
         var arrHtml  = new Array();
-        arrHtml.push(me.appIntroTemplate(obj));
+        arrHtml.push(me.appIntroTemplate(data));
 
-        arrHtml.push("<div><img style='"+ obj.ImageStyle +"' src='" + obj.ImageSrc + "'>");
-        for (var i = 0; i < obj.ImageSrcList.length; i++) {
-          arrHtml.push("<img style='"+ obj.ImageStyle +"' src='" + obj.ImageSrcList[i] + "'>");
+        arrHtml.push("<div><img style='"+ data.ImageStyle +"' src='" + data.ImageSrc + "'>");
+        for (var i = 0; i < data.ImageSrcList.length; i++) {
+          arrHtml.push("<img style='"+ data.ImageStyle +"' src='" + data.ImageSrcList[i] + "'>");
         }
         arrHtml.push("</div>");
-        arrHtml.push(me.descriptionTemplate(obj))
-        arrHtml.push(me.commentTemplate(obj));
+        arrHtml.push(me.descriptionTemplate(data))
+        arrHtml.push(me.commentTemplate(data));
         return arrHtml.join("");
     },
 
@@ -330,19 +329,18 @@ var me = {
         var phone_number = $("#login_username").attr("value");
         var passwd       = $("#login_password").attr("value");
         var url          = appServerUrl()+"/appverifycode?"+callback+"&phone_number="+phone_number;
-        output(url);
-        $.getJSON(url, function(data,status) {
-            var obj = eval("("+data+")"); // json to object
-            if (obj.ret_code == 0) {
-                $.mobile.showPageLoadingMsg("e", "验证码已通过短信发送", true);
-                setTimeout("$.mobile.hidePageLoadingMsg()", 2000);
+        console.log(url);
+        $.getJSON(url, function(data) {
+            if (data.ret_code == 0) {
+                showLoader("验证码已通过短信发送");
+                setTimeout("hideLoader()", 2000);
                 $("#verifyCodeBtn").addClass("text_disabled");
                 me.countDownSeconds = 60;
                 setTimeout("me.countDown()", 1000);
                 $("#verifyCodeBtn").attr("disabled","disabled");
             } else {
-                $.mobile.showPageLoadingMsg("e", obj.ret_msg, true);
-                setTimeout("$.mobile.hidePageLoadingMsg()", 3000);
+                showLoader(data.ret_msg);
+                setTimeout("hideLoader()", 3000);
             }
         }
     )},
@@ -625,20 +623,20 @@ $("#loginBtn").bind("click", function() {
         var phone_number = $("#login_username").attr("value");
         var passwd       = $("#login_password").attr("value");
         var url = appServerUrl()+"/login?"+callback+"&phone_number="+phone_number+"&passwd="+passwd;
-        output(url);
-        $.getJSON(url, function(data,status) {
-            var obj = eval("("+data+")"); // json to object
-            if (obj.ret_code == 0) {
+        console.log(url);
+        $.getJSON(url, function(data) {
+            // var obj = eval("("+data+")"); // json to object
+            if (data.ret_code == 0) {
                 changePage("#accountPage");
-                output("login success, coin num:" + obj.coin_num);
+                console.log("login success, coin num:" + obj.coin_num);
             } else {
-                $.mobile.showPageLoadingMsg("e", obj.ret_msg, true);
-                setTimeout("$.mobile.hidePageLoadingMsg()", 3000);                
+                showLoader(data.ret_msg);
+                setTimeout("hideLoader()", 3000);
             }
         });
     } else {
-        $.mobile.showPageLoadingMsg("e", "请输入用户名和密码", true);
-        setTimeout("$.mobile.hidePageLoadingMsg()", 3000);
+        showLoader("请输入用户名和密码", true);
+        setTimeout("hideLoader()", 3000);
     }
 });
 
@@ -648,15 +646,15 @@ $("#registBtn").fastClick(function(){
         var passwd       = $("#registPassword").attr("value");
         var verify_code  = $("#verifyCode").attr("value");
         var url = appServerUrl()+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwd+"&verify_code="+verify_code;
-        output(url);
+        console.log(url);
 
-        $.getJSON(url, function(data,status) {
-            var obj = eval("("+data+")"); // json to object
-            if (obj.ret_code == 0) {
+        $.getJSON(url, function(data) {
+            // var obj = eval("("+data+")"); // json to object
+            if (data.ret_code == 0) {
                 changePage("#accountPage");
             } else {
-                $.mobile.showPageLoadingMsg("e", obj.ret_msg, true);
-                setTimeout("$.mobile.hidePageLoadingMsg()", 3000);                
+                showLoader(data.ret_msg, true);
+                setTimeout("hidePageLoader()", 3000);
             }
         });
     }
