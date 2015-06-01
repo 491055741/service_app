@@ -1,9 +1,10 @@
+var callback = "";
+// var callback = "callback=?";
+
+
 (function($){
     // changePage("#")
 })(jQuery);
-
-// var callback = "";
-var callback = "callback=?";
 
 $("#appListPage").on("pageshow", function () {
     console.log("app list page show");
@@ -327,7 +328,7 @@ var me = {
 
     requestVerifyCode : function() {
         var phone_number = $("#registPhoneNumber").val();
-        if (phone_number == '' || phone_number == '手机号') {
+        if (phone_number == '' || phone_number == '手机号' || !isPhoneNumber(phone_number)) {
             showLoader("请填写手机号");
             setTimeout("hideLoader()", 2000);
             return;
@@ -361,7 +362,7 @@ var me = {
     },
 
     validLogin : function() {
-        if ($("#loginUsername").val()=='' || $("#loginUsername").val()=='手机号') {
+        if ($("#loginUsername").val()=='' || $("#loginUsername").val()=='手机号' || !isPhoneNumber($("#loginUsername").val())) {
             showLoader("请填写手机号");
             setTimeout("hideLoader()", 2000);
             return false;
@@ -375,7 +376,7 @@ var me = {
     },
 
     validRegist : function() {
-        if ($("#registPhoneNumber").val()=='' || $("#registPhoneNumber").val()=='手机号') {
+        if ($("#registPhoneNumber").val()=='' || $("#registPhoneNumber").val()=='手机号' || !isPhoneNumber($("#registPhoneNumber").val())) {
             showLoader("请填写手机号");
             setTimeout("hideLoader()", 2000);
             return false;

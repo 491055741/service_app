@@ -200,6 +200,6 @@ function hideLoader()
 function appServerUrl()
 {
     // return "app.milkpapa.com:8080";
-    return "http://livew.mobdsp.com/cb";
-    // return "http://127.0.0.1:5000";
+    // return "http://livew.mobdsp.com/cb";
+    return "http://127.0.0.1:5000";
 }
