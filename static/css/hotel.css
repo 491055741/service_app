@@ -14,7 +14,8 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 #toRegistBtn {width: 35%; float:left; margin-top:10px; }
 #verifyCodeBtn {width: 70%; float: right; margin-top: 20px;}
 .text_disabled {color:gray;}
-
+.account_item {font-size: 16px; }
+.avatar {width: 100%;}
 a { text-decoration: none; }
 li { list-style: none; }
 

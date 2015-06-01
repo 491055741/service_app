@@ -43,13 +43,17 @@
                     <div id="application" class="app-list"> </div>
                     <div id="game" class="app-list"> </div>
                     <div id="mine" class="login-wrapper">
-                        <p style="backg"><font color="#2EB1E8" >登录</font></p>
-                        <input type="text" name="username" id="login_username" value="用户名"/><br>
-                        <input type="password" name="password" id="login_password" value="密码输入提示"/>
-                        <fieldset data-role="controlgroup" >
+                        <p style="backg"><font color="#2EB1E8" >用户名</font></p>
+                        <input type="text" name="username" id="loginUsername" value="手机号"/>
+                        <br>
+                        <p style="backg"><font color="#2EB1E8" >密码</font></p>
+                        <input type="password" name="password" id="loginPassword" value=""/>
+                        <br>
+                        <fieldset data-role="controlgroup">
                             <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
                             <label for="checkbox-1">保持登录状态</label>
                         </fieldset>
+                        <br>
                         <a class="ui-btn" href="#registerPage" id="toRegistBtn" data-theme="b">注册</a>
                         <a class="ui-btn" href="" id="loginBtn">登录</a>
                     </div>
@@ -88,20 +92,22 @@
                 </div>
                 <div data-role="content">
                     <div style="padding:15px;">
-                        <label for="phoneNumbers">手机号</label>
-                        <input type="tel" name="phoneNumber" id="registPhoneNumber"/>
-                        <div class="ui-grid-a">  
+                        <p style="backg"><font color="#2EB1E8" >用户名</font></p>
+                        <input type="tel" id="registPhoneNumber" value="手机号"/>
+                        <br>
+                        <div class="ui-grid-a">
                             <div class="ui-block-a" style="width:50%">
-                                <label for="verifyCode">验证码</label>
-                                <input type="text" name="regist_verifyCode" id="registVerifyCode"/>
+                            <p style="backg"><font color="#2EB1E8" >验证码</font></p>
+                                <input type="text" id="registVerifyCode"/>
                             </div>
                             <div class="ui-grid-b" style="width:50%">
                                 <a class="ui-btn" name="getVerifyCode" id="verifyCodeBtn">获取验证码</a>
                             </div>
                         </div>
-                        <label for="password">密 码</label>
-                        <input type="password" name="password" id="registPassword"/>
-                        <div style="margin-top:30px">
+                        <p style="backg"><font color="#2EB1E8" >密 码</font></p>
+                        <input type="password" id="registPassword"/>
+                        <br>
+                        <div>
                             <center><a class="ui-btn" id="registBtn" data-theme="a">立即注册</a></center>
                         </div>
                     </div>
@@ -114,13 +120,21 @@
                     <a class="goBack" data-icon="back">返回</a>
                     <h1 id="accountPageTitle">个人中心</h1>
                 </div>
-                <div data-role="content">
-                    <div class="">头像</div>
-                    <div class="">昵称</div>
-                    <div class="">登录账号: </div>
-                    <div class="">金币: </div>
-                    <div class="">修改资料 </div>
-                    <div class="">退出登录</div>
+
+                <div data-role="content" style="margin:15px;">
+                    <div class="ui-grid-a" style="margin-bottom:20px;">
+                        <div class="ui-block-a" style="width:40%;">
+                            <image src="/static/images/avatar.jpg" class="avatar"/>
+                        </div>
+                        <div class="ui-block-b" style="margin-left:15px;">
+                            <div class="account_item">昵称</div>
+                            <div class="account_item">登录账号: </div>
+                        </div>
+                    </div>
+
+                    <div class="account_item" id="coin" >金币: </div>
+                    <!-- <div class="">修改资料 </div> -->
+                    <center><a href="#appListPage" class="ui-btn">退出登录</a></center>
                 </div>
             </div>
         </div>

@@ -326,8 +326,12 @@ var me = {
     },
 
     requestVerifyCode : function() {
-        var phone_number = $("#login_username").attr("value");
-        var passwd       = $("#login_password").attr("value");
+        var phone_number = $("#registPhoneNumber").val();
+        if (phone_number == '' || phone_number == '手机号') {
+            showLoader("请填写手机号");
+            setTimeout("hideLoader()", 2000);
+            return;
+        }
         var url          = appServerUrl()+"/appverifycode?"+callback+"&phone_number="+phone_number;
         console.log(url);
         $.getJSON(url, function(data) {
@@ -357,20 +361,33 @@ var me = {
     },
 
     validLogin : function() {
-        if ($("#login_username").attr("value")=='') {
+        if ($("#loginUsername").val()=='' || $("#loginUsername").val()=='手机号') {
+            showLoader("请填写手机号");
+            setTimeout("hideLoader()", 2000);
             return false;
         }
-        if ($("#password").attr("value")=='') {
+        if ($("#loginPassword").val()=='') {
+            showLoader("请填写密码");
+            setTimeout("hideLoader()", 2000);
             return false;
         }
         return true;
     },
 
     validRegist : function() {
-        if ($("#regist_phonenumber").attr("value")=='') {
+        if ($("#registPhoneNumber").val()=='' || $("#registPhoneNumber").val()=='手机号') {
+            showLoader("请填写手机号");
+            setTimeout("hideLoader()", 2000);
             return false;
         }
-        if ($("#password").attr("value")=='') {
+        if ($("#registVerifyCode").val()=='') {
+            showLoader("请填写验证码");
+            setTimeout("hideLoader()", 2000);
+            return false;
+        }
+        if ($("#registPassword").val()=='') {
+            showLoader("请填写密码");
+            setTimeout("hideLoader()", 2000);
             return false;
         }
         return true;
@@ -518,7 +535,6 @@ var slide = {
 };
 
 //手势操作
-//手势操作
 var fnslide = function (a) {
     a.prototype.touchwipe = function (c) {
         var b = {
@@ -620,36 +636,32 @@ var fnslide = function (a) {
 
 $("#loginBtn").bind("click", function() {
     if (me.validLogin()) {
-        var phone_number = $("#login_username").attr("value");
-        var passwd       = $("#login_password").attr("value");
+        var phone_number = $("#loginUsername").val();
+        var passwd       = $("#loginPassword").val();
         var url = appServerUrl()+"/login?"+callback+"&phone_number="+phone_number+"&passwd="+passwd;
         console.log(url);
         $.getJSON(url, function(data) {
-            // var obj = eval("("+data+")"); // json to object
             if (data.ret_code == 0) {
                 changePage("#accountPage");
-                console.log("login success, coin num:" + obj.coin_num);
+                console.log("login success, coin num:" + data.coin_num);
+                $("#coin").text(data.coin_num);
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
             }
         });
-    } else {
-        showLoader("请输入用户名和密码", true);
-        setTimeout("hideLoader()", 3000);
     }
 });
 
-$("#registBtn").fastClick(function(){
+$("#registBtn").fastClick(function() {
     if (me.validRegist()) {
-        var phone_number = $("#registPhoneNumber").attr("value");
-        var passwd       = $("#registPassword").attr("value");
-        var verify_code  = $("#verifyCode").attr("value");
+        var phone_number = $("#registPhoneNumber").val();
+        var passwd       = $("#registPassword").val();
+        var verify_code  = $("#registVerifyCode").val();
         var url = appServerUrl()+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwd+"&verify_code="+verify_code;
         console.log(url);
 
         $.getJSON(url, function(data) {
-            // var obj = eval("("+data+")"); // json to object
             if (data.ret_code == 0) {
                 changePage("#accountPage");
             } else {
@@ -660,16 +672,16 @@ $("#registBtn").fastClick(function(){
     }
 });
 
-$("input[id]").bind("focus",function () { 
-    if ($(this).attr("value")=='用户名' || $(this).attr("value")=='密码')
+$("input").bind("focus", function() { 
+    if ($(this).attr("value")=='手机号')
         $(this).attr("value",""); 
-}); 
+});
 
-$("#verifyCodeBtn").fastClick(function(){
+$("#verifyCodeBtn").fastClick(function() {
     me.requestVerifyCode();
 });
 
-function scrollToObj (obj) {
+function scrollToObj(obj) {
     window.scrollTo(0, obj.offset().top);
 }
 
