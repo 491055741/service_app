@@ -14,13 +14,13 @@
     </head>
 
     <body>
-        <div id="content" data-role="content">
+        <div id="content" class="ui-content">
 
             <!-- 首页 -->
-            <div data-role="page" id="appListPage" data-title="应用商店" class="page">
+            <div data-role="page" id="appListPage" data-title="Wifi酷连" class="page">
 
                 <!-- 导航条 -->
-                <div data-role="header" data-theme="a">
+                <div data-role="header" >
                     <h1 id="appListTitle">精选</h1>
                 </div>
 
@@ -41,9 +41,9 @@
                     </ol>
                 </div>
 
-                <div data-role="content">
+                <div class="ui-content">
                     <div id="excellent" class="app-list"> </div>
-                    <div id="application" class="app-list"> </div>
+                    <!-- <div id="application" class="app-list"> </div> -->
                     <div id="game" class="app-list"> </div>
                     <div id="mine">
                         <!-- 登录页 -->
@@ -59,7 +59,7 @@
                                 <label for="checkbox-1">记住密码</label>
                             </fieldset>
                             <br>
-                            <a class="ui-btn" href="#registerPage" id="toRegistBtn" data-theme="b">注册</a>
+                            <a class="ui-btn" href="#registerPage" id="toRegistBtn">注册</a>
                             <a class="ui-btn" href="" id="loginBtn">登录</a>
                         </div>
                         <!-- 账户页 -->
@@ -70,23 +70,26 @@
                                 </div>
                                 <div class="ui-block-b" style="margin-left:15px;">
                                     <div class="account_item" id="account">登录账号: </div>
+                                    <br>
                                     <div class="account_item" id="coin" >金币: </div>
                                 </div>
                             </div>
 
                             <!-- <div class="">修改资料 </div> -->
-                            <center><a href="" id="logoutBtn" class="ui-btn">退出登录</a></center>
+                            <div style="margin-top:80%;">
+                                <center><a href="" id="logoutBtn" class="ui-btn">退出登录</a></center>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <!-- 底部tab -->
-                <div data-role="footer" data-id="mainFooter" data-position="fixed" data-theme="a">
+                <div data-role="footer" data-id="mainFooter" data-position="fixed">
                     <div data-role="navbar">
                         <ul class="apple-navbar-ui comboSprite">
-                            <li><a href="#" id="excellentBtn" class="ui-btn-active">精选</a></li>
-                            <li><a href="#" id="applicationBtn">应用</a></li>
-                            <li><a href="#" id="gameBtn">游戏</a></li>
-                            <li><a href="#" id="mineBtn">我的</a></li>
+                            <li><a href="#" id="connectionBtn" data-icon="delete" class="ui-btn-icon-top">连接</a></li>
+                            <li><a href="#" id="excellentBtn" data-icon="heart" class="ui-btn-icon-top">精选</a></li>
+                            <li><a href="#" id="gameBtn" data-icon="game" class="ui-btn-icon-top">游戏</a></li>
+                            <li><a href="#" id="mineBtn" data-icon="user" class="ui-btn-icon-top ui-btn-active">我的</a></li>
                         </ul>
                     </div>
                 </div>
@@ -94,23 +97,23 @@
 
             <!-- 应用详情页 -->
             <div data-role="page" id="appDetailPage" data-title="应用商店" class="page">
-                <div data-role="header" data-theme="a">
+                <div data-role="header">
                     <a class="goBack" data-icon="back">返回</a>
                     <h1 id="appDetailPageTitle">应用详情</h1>
                 </div>
 
-                <div data-role="content">
+                <div class="ui-content">
                     <div id="appDetail"></div>
                 </div>
             </div>
 
             <!-- 注册页 -->
             <div data-role="page" id="registerPage" data-title="注册" class="page">
-                <div data-role="header" data-theme="a">
+                <div data-role="header">
                     <a class="goBack" data-icon="back">返回</a>
                     <h1 id="registerPageTitle">注册</h1>
                 </div>
-                <div data-role="content">
+                <div class="ui-content">
                     <div style="padding:15px;">
                         <p style="backg"><font color="#2EB1E8" >用户名</font></p>
                         <input type="tel" id="registPhoneNumber" value="手机号"/>
@@ -128,35 +131,12 @@
                         <input type="password" id="registPassword"/>
                         <br>
                         <div>
-                            <center><a class="ui-btn" id="registBtn" data-theme="a">立即注册</a></center>
+                            <center><a class="ui-btn" id="registBtn">立即注册</a></center>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 账号页 -->
-<!--             <div data-role="page" id="accountPage" data-title="账号" class="page">
-                <div data-role="header" data-theme="a">
-                    <a class="goBack" data-icon="back">返回</a>
-                    <h1 id="accountPageTitle">个人中心</h1>
-                </div>
-
-                <div data-role="content" style="margin:15px;">
-                    <div class="ui-grid-a" style="margin-bottom:20px;">
-                        <div class="ui-block-a" style="width:40%;">
-                            <image src="/static/images/avatar.jpg" class="avatar"/>
-                        </div>
-                        <div class="ui-block-b" style="margin-left:15px;">
-                            <div class="account_item" id="account">登录账号: </div>
-                            <div class="account_item" id="coin" >金币: </div>
-                        </div>
-                    </div>
- 
-                    <center><a href="" id="logoutBtn" class="ui-btn">退出登录</a></center>
-                    <center><a href="#appListPage" class="ui-btn">回首页</a></center>
-                </div>
-            </div>
- -->
          </div>
 
         <script src="/static/js/jquery-1.9.0.min.js"></script>

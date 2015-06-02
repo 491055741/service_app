@@ -16,6 +16,10 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 .text_disabled {color:gray;}
 .account_item {font-size: 16px; }
 .avatar {width: 100%;}
+.coin_icon {position: absolute; width: 20px; top:25px; right: 5px;}
+.coin_num  {position: absolute; width: 20px; top:30px; right: 35px; color: orange;}
+.ui-icon-game:after {background: url(/static/images/game.png);} 
+
 a { text-decoration: none; }
 li { list-style: none; }
 

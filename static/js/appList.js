@@ -1,9 +1,9 @@
 
-var appServerUrl = "http://livew.mobdsp.com/cb";
-var callback = "callback=?";
+// var appServerUrl = "http://livew.mobdsp.com/cb";
+// var callback = "callback=?";
 
-// var appServerUrl = "http://127.0.0.1:5000";
-// var callback = "";
+var appServerUrl = "http://127.0.0.1:5000";
+var callback = "";
 
 
 (function($){
@@ -17,8 +17,8 @@ $("#appListPage").on("pageshow", function () {
 $("#appListPage").on("pageinit", function() {
     console.log("app list page init");
     // use fastClick will cause pop to home page when tap the tab on PC.
-    $("#excellentBtn").click(function() {me.showTab(0);});
-    $("#applicationBtn").click(function() {me.showTab(1);});
+    $("#connectionBtn").click(function() {me.showTab(0);});
+    $("#excellentBtn").click(function() {me.showTab(1);});
     $("#gameBtn").click(function() {me.showTab(2);});
     $("#mineBtn").click(function() {me.showTab(3);});
 
@@ -26,7 +26,7 @@ $("#appListPage").on("pageinit", function() {
     $("#loginPassword").attr("value", $.cookie("passWord"));
     $("#checkbox-1").prop("checked",  $.cookie("rmbUser")).checkboxradio("refresh");
     me.requestAds();
-    me.showTab(3);
+    me.showTab(0);
 })
 
 var me = {
@@ -34,8 +34,8 @@ var me = {
     currentCat : 0,
     countDownSeconds : 0, 
     showTab : function(idx) {
-        var tabs = new Array("excellent", "application", "game", "mine");
-        var titles = new Array("精选", "应用", "游戏", "我的");
+        var tabs = new Array("connection", "excellent", "game", "mine");
+        var titles = new Array("连接", "精选", "游戏", "我的");
         for (var i = 0; i < tabs.length; i++) {
             if (i == idx) {
                 $("#" + tabs[i]).show();
@@ -150,7 +150,10 @@ var me = {
                 arrHtml.push("<div class=\"xiaobian-comment\">");
                 arrHtml.push(data[i].BriefSummary == "" ? "暂无介绍" : data[i].BriefSummary);
                 arrHtml.push("</div></dd></dl></div>");
-                var gaAppName = data[i].AppName.replace(/\"/g, "”").replace(/'/g, "’");
+
+                arrHtml.push("<div class='coin_num' >+10</div>");
+                arrHtml.push("<img class='coin_icon' src='/static/images/coins.png' />");
+
                 arrHtml.push("</li>");
             // }
         }
@@ -659,8 +662,10 @@ $("#loginBtn").bind("click", function() {
                 if (data.coin_num == undefined) {
                     data.coin_num = 0;
                 }
+
+                $("#account").text("账  号: " + phone_number);
                 $("#coin").text("金币数：" + data.coin_num);
-                $("#account").text("账号: " + phone_number);
+
                 if ($("#checkbox-1").prop("checked") == true) { 
                     $.cookie("rmbUser", "true", { expires: 365 });
                     $.cookie("userName", phone_number, { expires: 365 });
