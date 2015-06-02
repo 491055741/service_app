@@ -196,9 +196,3 @@ function hideLoader()
 {  
     $.mobile.loading('hide');  
 } 
-
-function appServerUrl()
-{
-    return "http://livew.mobdsp.com/cb";
-    // return "http://127.0.0.1:5000";
-}

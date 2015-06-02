@@ -1,13 +1,13 @@
-var callback = "";
-// var callback = "callback=?";
 
+var appServerUrl = "http://livew.mobdsp.com/cb";
+var callback = "callback=?";
+
+// var appServerUrl = "http://127.0.0.1:5000";
+// var callback = "";
 
 (function($){
     // changePage("#")
 })(jQuery);
-
-// var callback = "";
-var callback = "callback=?";
 
 $("#appListPage").on("pageshow", function () {
     console.log("app list page show");
@@ -21,6 +21,9 @@ $("#appListPage").on("pageinit", function() {
     $("#gameBtn").click(function() {me.showTab(2);});
     $("#mineBtn").click(function() {me.showTab(3);});
 
+    $("#loginUsername").attr("value", $.cookie("userName"));
+    $("#loginPassword").attr("value", $.cookie("passWord"));
+    $("#checkbox-1").prop("checked",  $.cookie("rmbUser")).checkboxradio("refresh");
     me.requestAds();
     me.showTab(3);
 })
@@ -51,7 +54,7 @@ var me = {
 
     requestAds : function()
     {
-        // var url=appServerUrl()+"/ads?"+callback;
+        // var url=appServerUrl+"/ads?"+callback;
         var url = "/static/json/ads.json";
         console.log("requestAds:"+url);
         $.get(url, function(data, status) {
@@ -90,7 +93,7 @@ var me = {
     {
     	showLoader();
         // +currentCat+
-        var url = appServerUrl()+"/applist?"+callback;
+        var url = appServerUrl+"/applist?"+callback;
         console.log(url);
         $.getJSON(url, function(data) {
     		hideLoader();
@@ -159,7 +162,7 @@ var me = {
 
     requestAppDetail : function (appId)
     {
-        var url = appServerUrl()+"/appdetail?"+callback+"&appid="+appId;
+        var url = appServerUrl+"/appdetail?"+callback+"&appid="+appId;
         console.log(url);
         showLoader();
         $.getJSON(url, function(data) {
@@ -336,7 +339,7 @@ var me = {
             setTimeout("hideLoader()", 2000);
             return;
         }
-        var url          = appServerUrl()+"/appverifycode?"+callback+"&phone_number="+phone_number;
+        var url          = appServerUrl+"/appverifycode?"+callback+"&phone_number="+phone_number;
         console.log(url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
@@ -642,13 +645,25 @@ $("#loginBtn").bind("click", function() {
     if (me.validLogin()) {
         var phone_number = $("#loginUsername").val();
         var passwd       = $("#loginPassword").val();
-        var url = appServerUrl()+"/login?"+callback+"&phone_number="+phone_number+"&passwd="+passwd;
+        var url = appServerUrl+"/login?"+callback+"&phone_number="+phone_number+"&passwd="+passwd;
         console.log(url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
                 changePage("#accountPage");
                 console.log("login success, coin num:" + data.coin_num);
+                
                 $("#coin").text("金币数：" + data.coin_num);
+                $("#account").text("账号: " + phone_number);
+                if ($("#checkbox-1").prop("checked") == true) { 
+                    $.cookie("rmbUser", "true", { expires: 365 });
+                    $.cookie("userName", phone_number, { expires: 365 });
+                    $.cookie("passWord", passwd, { expires: 365 });
+                } else {
+                    $.cookie("rmbUser", "false", { expires: -1 }); 
+                    $.cookie("userName", '', { expires: -1 }); 
+                    $.cookie("passWord", '', { expires: -1 }); 
+                }
+
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
@@ -662,7 +677,7 @@ $("#registBtn").fastClick(function() {
         var phone_number = $("#registPhoneNumber").val();
         var passwd       = $("#registPassword").val();
         var verify_code  = $("#registVerifyCode").val();
-        var url = appServerUrl()+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwd+"&verify_code="+verify_code;
+        var url = appServerUrl+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwd+"&verify_code="+verify_code;
         console.log(url);
 
         $.getJSON(url, function(data) {
