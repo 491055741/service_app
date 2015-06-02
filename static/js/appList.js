@@ -5,6 +5,7 @@ var callback = "callback=?";
 // var appServerUrl = "http://127.0.0.1:5000";
 // var callback = "";
 
+
 (function($){
     // changePage("#")
 })(jQuery);
@@ -29,8 +30,10 @@ $("#appListPage").on("pageinit", function() {
 })
 
 var me = {
+    isLogin : false,
     currentCat : 0,
-    countDownSeconds : 0, showTab : function(idx) {
+    countDownSeconds : 0, 
+    showTab : function(idx) {
         var tabs = new Array("excellent", "application", "game", "mine");
         var titles = new Array("精选", "应用", "游戏", "我的");
         for (var i = 0; i < tabs.length; i++) {
@@ -649,9 +652,13 @@ $("#loginBtn").bind("click", function() {
         console.log(url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                changePage("#accountPage");
+                me.isLogin = true;
+                $("#loginView").hide();
+                $("#accountView").show();
                 console.log("login success, coin num:" + data.coin_num);
-                
+                if (data.coin_num == undefined) {
+                    data.coin_num = 0;
+                }
                 $("#coin").text("金币数：" + data.coin_num);
                 $("#account").text("账号: " + phone_number);
                 if ($("#checkbox-1").prop("checked") == true) { 
@@ -672,6 +679,12 @@ $("#loginBtn").bind("click", function() {
     }
 });
 
+$("#logoutBtn").fastClick(function() {
+    me.isLogin = false;
+    $("#loginView").show();
+    $("#accountView").hide();
+});
+
 $("#registBtn").fastClick(function() {
     if (me.validRegist()) {
         var phone_number = $("#registPhoneNumber").val();
@@ -682,7 +695,11 @@ $("#registBtn").fastClick(function() {
 
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                changePage("#accountPage");
+                $("#loginView").hide();
+                $("#accountView").show();
+                changePage("#appListPage");
+                $("#coin").text("金币数：0");
+                $("#account").text("账号: " + phone_number);
             } else {
                 showLoader(data.ret_msg, true);
                 setTimeout("hidePageLoader()", 3000);
