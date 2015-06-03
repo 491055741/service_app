@@ -1,14 +1,19 @@
 
-// var appServerUrl = "http://livew.mobdsp.com/cb";
-// var callback = "callback=?";
+var appServerUrl = "http://livew.mobdsp.com/cb";
+var callback = "callback=?";
 
-var appServerUrl = "http://127.0.0.1:5000";
-var callback = "";
+// var appServerUrl = "http://127.0.0.1:5000";
+// var callback = "";
 
 
 (function($){
     // changePage("#")
 })(jQuery);
+
+// js-Android interface
+function refreshWifiList() {
+    me.requestWifiList();
+}
 
 $("#appListPage").on("pageshow", function () {
     console.log("app list page show");
@@ -26,6 +31,7 @@ $("#appListPage").on("pageinit", function() {
     $("#loginPassword").attr("value", $.cookie("passWord"));
     $("#checkbox-1").prop("checked",  $.cookie("rmbUser")).checkboxradio("refresh");
     me.requestAds();
+    me.requestWifiList();
     me.showTab(0);
 })
 
@@ -92,6 +98,64 @@ var me = {
         return arrHtml.join("");
     },
 
+    requestWifiList : function()
+    {
+        if (window.android == undefined) {
+            // var url=appServerUrl+"/ads?"+callback;
+            var url = "/static/json/wifilist.json";
+            console.log("requestWifiList:"+url);
+            $.get(url, function(data, status) {
+                var obj = eval("(" + data +")");
+                me.parseWifiList(obj);
+            });
+        } else {
+            var jsonStr= window.android.wifiListJsonString();
+            var obj = eval("(" + jsonStr +")");
+            me.parseWifiList(obj);
+        }
+    },
+
+    parseWifiList : function(data)
+    {
+    // console.log(data);
+        // var obj = eval("("+data+")"); // json to object
+        var html = me.wifiListTemplate(data);
+
+        $("#connection .wifi-list").empty();
+        $("#connection .wifi-list").append(html);
+    },
+
+    wifiListTemplate : function(res) {
+
+        var data = res.wifilist;
+
+        var arrHtml = new Array();
+
+        for (var i = 0; i < data.length; i++) {
+
+            // if (panle.find("#myId" + data[i].AppId).length == 0) {
+
+                arrHtml.push("<li data-wifiid='" + i + "' class=\"index-item list-index\" >"); // style=\"display:none;\"
+                arrHtml.push("<div class=\"index-item-main\">");
+                arrHtml.push("<dl class=\"clearfix\">");
+                arrHtml.push("<dt class=\"item-icon\">");
+                arrHtml.push("<img src=\"/static/images/wifi.jpg\" />");
+                arrHtml.push("</dt>");
+                arrHtml.push("<dd class=\"item-title\">");
+                arrHtml.push("<div class=\"item-title-sname\">");
+                arrHtml.push("<div class=\"baiying-name\">");
+                arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true) + "</div></div></dd>");
+                arrHtml.push("<dd>");
+                arrHtml.push("<div class=\"xiaobian-comment\">");
+                arrHtml.push("<span>"+data[i].level+"</span>");
+                arrHtml.push("</div></dd></dl></div>");
+                arrHtml.push("</li>");
+            // }
+        }
+
+        return arrHtml.join("");
+    },
+
     requestAppList : function()
     {
     	showLoader();
@@ -110,11 +174,11 @@ var me = {
     	// var obj = eval("("+data+")"); // json to object
     	var html = me.appListTemplate(data);
 
-        $("#"+currentCat).empty();
-        $("#"+currentCat).append(html);
-        
-        $(".app-list li").fastClick(function() {
-           me.clickOnApp(this);
+        $("#"+currentCat+" .app-list").empty();
+        $("#"+currentCat+" .app-list").append(html);
+
+        $("#"+currentCat+".app-list li").fastClick(function() {
+           me.clickOnWifi(this);
         });
     },
 
