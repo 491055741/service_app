@@ -19,7 +19,13 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 .coin_icon {position: absolute; width: 20px; top:25px; right: 5px;}
 .coin_num  {position: absolute; width: 20px; top:30px; right: 35px; color: orange;}
 .ui-icon-game:after {background: url(/static/images/game.png);} 
+
+.wifi-list .item, .wifi-list .index-item { height: 74px; border-top: 1px #d4d5d6 solid; background-color: #fafafa; position: relative; }
+
+.wifi-list .index-item .index-item-main .item-icon { float: left; margin-left: 7px; margin-top: 3px; height: 50px;}
 .wifi-list .index-item .index-item-main .item-icon img { width: 48px; height: 48px;}
+.wifi-list .index-item .index-item-main .item-title { font-size: 16px; color: #45484d; padding-top: 3px; padding-bottom: 1px; }
+
 a { text-decoration: none; }
 li { list-style: none; }
 

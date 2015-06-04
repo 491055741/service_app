@@ -31,6 +31,7 @@ $("#appListPage").on("pageinit", function() {
     $("#loginPassword").attr("value", $.cookie("passWord"));
     $("#checkbox-1").prop("checked",  $.cookie("rmbUser")).checkboxradio("refresh");
     me.requestAds();
+    me.requestAppList();
     me.requestWifiList();
     me.showTab(0);
 })
@@ -53,8 +54,7 @@ var me = {
             }
         }
         currentCat = tabs[idx];
-        if (idx < tabs.length-1) {
-            me.requestAppList();
+        if (idx == 1) {
             slide.show();
         } else {
             slide.hide();
@@ -104,9 +104,12 @@ var me = {
             // var url=appServerUrl+"/ads?"+callback;
             var url = "/static/json/wifilist.json";
             console.log("requestWifiList:"+url);
-            $.get(url, function(data, status) {
-                var obj = eval("(" + data +")");
-                me.parseWifiList(obj);
+            // $.get(url, function(data, status) {
+            //     // var obj = eval("(" + data +")");
+            //     me.parseWifiList(data);
+            // });
+            $.getJSON(url, function(data) {
+                me.parseWifiList(data);
             });
         } else {
             var jsonStr= window.android.wifiListJsonString();
@@ -123,6 +126,19 @@ var me = {
 
         $("#connection .wifi-list").empty();
         $("#connection .wifi-list").append(html);
+
+        $("#connection .wifi-list li").fastClick(function() {
+           me.clickOnWifi(this);
+        });
+
+    },
+
+    clickOnWifi : function (obj) {
+        if (window.android != undefined) {
+            window.android.clickOnWifi($(obj).data("wifiid"));
+        } else {
+            console.log("clickOnWifi " + $(obj).data("wifiid"));
+        }
     },
 
     wifiListTemplate : function(res) {
@@ -142,13 +158,13 @@ var me = {
                 arrHtml.push("<img src=\"/static/images/wifi.jpg\" />");
                 arrHtml.push("</dt>");
                 arrHtml.push("<dd class=\"item-title\">");
-                arrHtml.push("<div class=\"item-title-sname\">");
-                arrHtml.push("<div class=\"baiying-name\">");
-                arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true) + "</div></div></dd>");
-                arrHtml.push("<dd>");
+                arrHtml.push("<div class=\"wifi-SSID\">");
+                arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true));
+                arrHtml.push("</div>");
                 arrHtml.push("<div class=\"xiaobian-comment\">");
                 arrHtml.push("<span>"+data[i].level+"</span>");
-                arrHtml.push("</div></dd></dl></div>");
+                arrHtml.push("</div>");
+                arrHtml.push("</dd></dl></div>");
                 arrHtml.push("</li>");
             // }
         }
@@ -174,11 +190,14 @@ var me = {
     	// var obj = eval("("+data+")"); // json to object
     	var html = me.appListTemplate(data);
 
-        $("#"+currentCat+" .app-list").empty();
-        $("#"+currentCat+" .app-list").append(html);
+        // $("#"+currentCat+" .app-list").empty();
+        // $("#"+currentCat+" .app-list").append(html);
 
-        $("#"+currentCat+".app-list li").fastClick(function() {
-           me.clickOnWifi(this);
+        $(".app-list").empty();
+        $(".app-list").append(html);
+
+        $(".app-list li").fastClick(function() {
+           me.clickOnApp(this);
         });
     },
 
