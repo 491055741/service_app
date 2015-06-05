@@ -164,15 +164,10 @@ var me = {
             // if (panle.find("#myId" + data[i].AppId).length == 0) {
 
                 var level = Math.abs(data[i].level);
-                if (level > 90) {
-                    level = 1;
-                } else if (level > 70) {
-                    level = 2;
-                } else if (level > 50) {
-                    level = 3;
-                } else {
-                    level = 4;
-                }
+                if (level > 90) { level = 1;
+                } else if (level > 70) { level = 2;
+                } else if (level > 50) { level = 3;
+                } else {                 level = 4; }
                 arrHtml.push("<li data-wifiid='" + i + "' class=\"index-item list-index\" >"); // style=\"display:none;\"
                 arrHtml.push("<div class=\"index-item-main\">");
                 arrHtml.push("<dl class=\"clearfix\">");
@@ -182,9 +177,6 @@ var me = {
                 arrHtml.push("<dd class=\"item-title\">");
                 arrHtml.push("<div class=\"wifi-SSID\">");
                 arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true));
-                arrHtml.push("</div>");
-                arrHtml.push("<div class=\"xiaobian-comment\">");
-                arrHtml.push("<span>"+data[i].level+"</span>");
                 arrHtml.push("</div>");
                 arrHtml.push("</dd></dl></div>");
                 arrHtml.push("</li>");
@@ -590,6 +582,7 @@ $("#wifiSwitch").fastClick(function() {
     // $("#connectWifiBtn").css("background", "url(/static/images/avatar.jpg) no-repeat; background-size:100% 100%;");
     // $("#connectWifiBtn").css("color", "red");
     $("#wifiSwitch>img").toggle();
+    $("#connectionStatus>a").toggle();
 });
 
 

@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="/static/css/comment.css" />
     <link rel="stylesheet" href="/static/css/content.css" />
     <link rel="stylesheet" href="/static/css/circle.css" />
+    <script src="/static/js/jquery-1.9.0.min.js"></script>
+    <script src="/static/js/iscroll-lite.js"></script>
+    <script src="/static/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
+    <script src="/static/js/google.fastbutton.js"></script>
+    <script src="/static/js/jquery.google.fastbutton.js"></script>
 </head>
 
 <body>
@@ -33,7 +39,7 @@
         <br>
         <a class="ui-btn" href="#RegisterPage" id="toRegistBtn">注册</a>
         <a class="ui-btn" href="" id="loginBtn">登录</a>
- 
+
     </div>
 </div>
 
@@ -71,18 +77,24 @@
     <div role="main" class="ui-content">
 
         <div id="connectionView">
-            <div>
-                <center>
-                    <div id="wifiSwitch">
-                        <img src="/static/images/wifi.jpg">
-                        <img src="/static/images/avatar.jpg" style="display:none;">
-                    </div>
-                    <span>点击按钮连接Wifi</span>
-
-                </center>
+            <div class="wifiStatus">
+                <dl class="clearfix">
+                    <dt class="item-icon">
+                        <div id="wifiSwitch">
+                            <img src="/static/images/wifi_state_off.png">
+                            <img src="/static/images/wifi_state_on.png" style="display:none;">
+                        </div>
+                    </dt>
+                    <dd class="wifiLabel">
+                        <div id="connectionStatus">
+                            <a class="ui-btn">一键连接Wifi</a>
+                            <a class="ui-btn" style="display:none;">Wifi已连接</a>
+                        </div>
+                    </dd>
+                </dl>
             </div>
 
-            <!-- <div class="wifi-list"></div> -->
+            <div class="wifi-list"></div>
 <!--             <center><svg id="circleLoading" viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g id="circle" class="g-circles g-circles--v1">
                 <circle id="12" transform="translate(35, 16.698730) rotate(-30) translate(-35, -16.698730) " cx="35" cy="16.6987298" r="10"></circle>
@@ -166,13 +178,6 @@
     </div>
 </div>
 
-
-<script src="/static/js/jquery-1.9.0.min.js"></script>
-<script src="/static/js/iscroll-lite.js"></script>
-<script src="/static/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
-<script src="/static/js/jquery.cookie.js"></script>
-<script src="/static/js/google.fastbutton.js"></script>
-<script src="/static/js/jquery.google.fastbutton.js"></script>
 <script src="/static/js/appBase.js"></script>
 <script src= "/static/js/appList.js"></script>
 
