@@ -9,7 +9,7 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 .goBack {height: 12px;}
 .ui-content {padding: 0;}
 /*p { font-size: 1.5em; font-weight: bold; }*/
-.login-wrapper { padding:15px; }
+.account-wrapper { padding:15px; }
 #loginBtn {width: 35%; float:right; margin-top:10px; }
 #toRegistBtn {width: 35%; float:left; margin-top:10px; }
 #verifyCodeBtn {width: 70%; float: right; margin-top: 20px;}

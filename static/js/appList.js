@@ -1,13 +1,13 @@
 
-var appServerUrl = "http://livew.mobdsp.com/cb";
-var callback = "callback=?";
+// var appServerUrl = "http://livew.mobdsp.com/cb";
+// var callback = "callback=?";
 
-// var appServerUrl = "http://127.0.0.1:5000";
-// var callback = "";
+var appServerUrl = "http://127.0.0.1:5000";
+var callback = "";
 
 
 (function($){
-    // changePage("#")
+    // changePage("#LoginPage")
 })(jQuery);
 
 // js-Android interface
@@ -15,21 +15,33 @@ function refreshWifiList() {
     me.requestWifiList();
 }
 
-$("#appListPage").on("pageshow", function () {
-    console.log("app list page show");
+$("#LoginPage").on("pageshow", function () {
+    console.log("login page show");
 });
 
-$("#appListPage").on("pageinit", function() {
-    console.log("app list page init");
+$("#LoginPage").on("pageinit", function () {
+    console.log("login page init");
+    $("#loginUsername").attr("value", $.cookie("userName"));
+    $("#loginPassword").attr("value", $.cookie("passWord"));
+    $("#checkbox-1").prop("checked",  $.cookie("rmbUser")).checkboxradio("refresh");
+});
+
+$("#RegisterPage").on("pageshow", function () {
+    console.log("register page show");
+});
+
+$("#MainPage").on("pageshow", function () {
+    console.log("main page show");
+});
+
+$("#MainPage").on("pageinit", function() {
+    console.log("main page init");
     // use fastClick will cause pop to home page when tap the tab on PC.
     $("#connectionBtn").click(function() {me.showTab(0);});
     $("#excellentBtn").click(function() {me.showTab(1);});
     $("#gameBtn").click(function() {me.showTab(2);});
     $("#mineBtn").click(function() {me.showTab(3);});
 
-    $("#loginUsername").attr("value", $.cookie("userName"));
-    $("#loginPassword").attr("value", $.cookie("passWord"));
-    $("#checkbox-1").prop("checked",  $.cookie("rmbUser")).checkboxradio("refresh");
     me.requestAds();
     me.requestAppList();
     me.requestWifiList();
@@ -41,7 +53,7 @@ var me = {
     currentCat : 0,
     countDownSeconds : 0, 
     showTab : function(idx) {
-        var tabs = new Array("connection", "excellent", "game", "mine");
+        var tabs = new Array("connectionView", "choiceView", "gameView", "mineView");
         var titles = new Array("连接", "精选", "游戏", "我的");
         for (var i = 0; i < tabs.length; i++) {
             if (i == idx) {
@@ -124,10 +136,10 @@ var me = {
         // var obj = eval("("+data+")"); // json to object
         var html = me.wifiListTemplate(data);
 
-        $("#connection .wifi-list").empty();
-        $("#connection .wifi-list").append(html);
+        $("#connectionView .wifi-list").empty();
+        $("#connectionView .wifi-list").append(html);
 
-        $("#connection .wifi-list li").fastClick(function() {
+        $("#connectionView .wifi-list li").fastClick(function() {
            me.clickOnWifi(this);
         });
 
@@ -267,7 +279,7 @@ var me = {
         var html = me.appDetailTemplate(data.detail_info);
 
         $("#appDetail").append(html);
-        $.mobile.changePage("#appDetailPage", "slideup");
+        $.mobile.changePage("#AppDetailPage", "slideup");
     },
 
     appDetailTemplate : function(data)
@@ -491,246 +503,9 @@ var me = {
 
 }; // end of var me
 
-var slide = {
-    slidePanle: null,
-    scrollX: 0,
-    isGesture: false,
-    isRun: false,
-    intIndex: 1,
-    itemWidth: 0,
-    itemLen: 0,
-    interval: null,
-    bug: 0,
-    init: function () {
-        var deviceWidth, deviceHeight;
-        deviceWidth = $(document).width();
-        if (deviceWidth == 320) {
-            deviceHeight = 167;
-        }
-        else if (deviceWidth == 375) {
-            deviceHeight = 196;
-        } else {
-            deviceHeight = 217;
-        }
-        $('#slidebox').find('li').css({ 'width': (deviceWidth + 'px'), 'height': (deviceHeight + 'px') });
 
-        slide.itemLen = $('#slidebox').find('li').length;
-        slide.itemWidth = $(document).width();
 
-        var ulSlide = $('#slidebox').find('ul');
-        var liFirst = $(ulSlide).find("li").first().clone();
-        var liLast = $(ulSlide).find("li").last().clone();
-        $(ulSlide).append(liFirst).prepend(liLast);
-
-        $('#slidebox').css({ "width": slide.itemWidth * (slide.itemLen + 2) });
-        slide.bind();
-    },
-    bind: function () {
-
-        if (slide.slidePanle != null) {
-            slide.slidePanle.destroy();
-            slide.slidePanle = null;
-        }
-        slide.stop();
-        slide.slidePanle = new iScroll('divSlidePanle', {
-            momentum: false,
-            hScrollbar: false,
-            vScrollbar: false,
-            bounce: false,
-            vScroll: false
-        });
-
-        slide.intIndex = 1;
-
-        slide.slidePanle.scrollTo(0 - slide.itemWidth, 0, 0, false);
-        $("#olSlideNum").find("li:eq(0)").addClass("cur").siblings().removeClass("cur");
-
-        slide.slidePanle.disable();
-
-        fnslide(jQuery);
-        $("#divSlidePanle").touchwipe({
-            min_move_x: 20,
-            min_move_y: 40,
-            wipeLeft: function () {
-                slide.scroll(true);
-            },
-            wipeRight: function () {
-                slide.scroll(false);
-            },
-            preventDefaultEvents: false
-        });
-
-        slide.start();
-    },
-    show: function () {
-        if (!$(".fouce").is(":visible")) {
-            $(".fouce").show();
-            slide.bind();
-        }
-    },
-    hide: function () {
-        $(".fouce").hide();
-        slide.stop();
-    },
-    scroll: function (isLeft) {
-
-        if (slide.isRun) {
-            slide.bug++;
-            if (slide.bug > 1) {
-                slide.isRun = false;
-                slide.bug = 0;
-            }
-            return;
-        }
-
-        slide.isRun = true;
-        slide.stop();
-
-        if (isLeft) {
-            slide.intIndex += 1;
-        }
-        else {
-            slide.intIndex -= 1;
-        }
-
-        var scrollNum = 0 - slide.intIndex * slide.itemWidth;
-        var time = 200;
-        slide.slidePanle.scrollTo(scrollNum, 0, time, false);
-
-        setTimeout(function () {
-
-            if (slide.intIndex > slide.itemLen) {
-                slide.slidePanle.scrollTo(0 - slide.itemWidth, 0, 0, false);
-                slide.intIndex = 1;
-                $("#olSlideNum").find("li:eq(0)").addClass("cur").siblings().removeClass("cur");
-            }
-            else if (slide.intIndex < 1) {
-                slide.slidePanle.scrollTo(0 - slide.itemWidth * slide.itemLen, 0, 0, false);
-                slide.intIndex = slide.itemLen;
-                $("#olSlideNum").find("li:eq(" + (slide.itemLen - 1) + ")").addClass("cur").siblings().removeClass("cur");
-            }
-            else {
-                $("#olSlideNum").find("li:eq(" + (slide.intIndex - 1) + ")").addClass("cur").siblings().removeClass("cur");
-            }
-
-            slide.isRun = false;
-            slide.start();
-        }, time + 10);
-    },
-    start: function () {
-        slide.interval = setInterval(function () {
-            slide.scroll(true);
-        }, 4000);
-    },
-    stop: function () {
-        if (slide.interval != null) {
-            clearInterval(slide.interval);
-            slide.interval = null;
-        }
-    }
-};
-
-//手势操作
-var fnslide = function (a) {
-    a.prototype.touchwipe = function (c) {
-        var b = {
-            min_move_x: 20,
-            min_move_y: 20,
-            wipeLeft: function () {
-            },
-            wipeRight: function () {
-            },
-            wipeUp: function () {
-            },
-            wipeDown: function () {
-            },
-            wipe: function () {
-            },
-            wipehold: function () {
-            },
-            preventDefaultEvents: true
-        };
-        if (c) {
-            a.extend(b, c);
-        }
-        this.each(function () {
-            var h;
-            var g;
-            var j = false;
-            var i = false;
-            var e;
-
-            function m() {
-                this.removeEventListener("touchmove", d);
-                h = null;
-                j = false;
-                clearTimeout(e);
-            }
-
-            function d(q) {
-                if (b.preventDefaultEvents) {
-                    q.preventDefault();
-                }
-                if (j) {
-                    var n = q.touches[0].pageX;
-                    var r = q.touches[0].pageY;
-                    var p = h - n;
-                    var o = g - r;
-                    if (Math.abs(p) >= b.min_move_x) {
-                        q.preventDefault();
-                        m();
-                        if (p > 0) {
-                            b.wipeLeft();
-                        } else {
-                            b.wipeRight();
-                        }
-                    } else {
-                        if (Math.abs(o) >= b.min_move_y) {
-                            m();
-                            if (o > 0) {
-                                b.wipeUp();
-                            } else {
-                                b.wipeDown();
-                            }
-                        }
-                    }
-                }
-            }
-
-            function k() {
-                clearTimeout(e);
-                if (!i && j) {
-                    b.wipe();
-                }
-                i = false;
-            }
-
-            function l() {
-                i = true;
-                b.wipehold();
-            }
-
-            function f(n) {
-                if (n.touches.length == 1) {
-                    h = n.touches[0].pageX;
-                    g = n.touches[0].pageY;
-                    j = true;
-                    this.addEventListener("touchmove", d, false);
-                    e = setTimeout(l, 750);
-                }
-            }
-
-            if ("ontouchstart" in document.documentElement) {
-                this.addEventListener("touchstart", f, false);
-                this.addEventListener("touchend", k, false);
-            }
-        });
-        return this;
-    };
-    a.extend(a.prototype.touchwipe, 1);
-};
-
-$("#loginBtn").bind("click", function() {
+$("#loginBtn").fastClick( function() {
     if (me.validLogin()) {
         var phone_number = $("#loginUsername").val();
         var passwd       = $("#loginPassword").val();
@@ -738,9 +513,7 @@ $("#loginBtn").bind("click", function() {
         console.log(url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                me.isLogin = true;
-                $("#loginView").hide();
-                $("#accountView").show();
+                changePage("#MainPage");
                 console.log("login success, coin num:" + data.coin_num);
                 if (data.coin_num == undefined) {
                     data.coin_num = 0;
@@ -768,12 +541,11 @@ $("#loginBtn").bind("click", function() {
 });
 
 $("#logoutBtn").fastClick(function() {
-    me.isLogin = false;
-    $("#loginView").show();
-    $("#accountView").hide();
+    changePage("#LoginPage");
 });
 
 $("#registBtn").fastClick(function() {
+
     if (me.validRegist()) {
         var phone_number = $("#registPhoneNumber").val();
         var passwd       = $("#registPassword").val();
@@ -783,9 +555,7 @@ $("#registBtn").fastClick(function() {
 
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                $("#loginView").hide();
-                $("#accountView").show();
-                changePage("#appListPage");
+                changePage("#MainPage");
                 $("#coin").text("金币数：0");
                 $("#account").text("账号: " + phone_number);
             } else {
@@ -804,77 +574,3 @@ $("input").bind("focus", function() {
 $("#verifyCodeBtn").fastClick(function() {
     me.requestVerifyCode();
 });
-
-function scrollToObj(obj) {
-    window.scrollTo(0, obj.offset().top);
-}
-
-var subString = {
-    thisStr: "",
-    thisLen: 10,
-    thisFlag: true,
-    autoAddEllipsis: function (pStr, pLen, pFlag) {
-        this.thisStr = pStr;
-        this.thisLen = pLen;
-        this.thisFlag = pFlag;
-        var _ret = this.cutString();
-        var _cutFlag = _ret.cutflag;
-        var _cutStringn = _ret.cutstring;
-        if ("1" == _cutFlag && this.thisFlag) {
-            return _cutStringn + "...";
-        } else {
-            return _cutStringn;
-        }
-    },
-    cutString: function () {
-        var pStr = this.thisStr;
-        var pLen = this.thisLen;
-        var pFlag = this.thisFlag;
-        var _strLen = this.thisStr.length;
-        var _tmpCode;
-        var _cutString;
-        var _cutFlag = "1";
-        var _lenCount = 0;
-        var _ret = false;
-        if (_strLen <= pLen / 2) {
-            _cutString = pStr;
-            _ret = true;
-        }
-        if (pFlag) {
-            pLen = pLen - 3;
-        }
-        if (!_ret) {
-            for (var i = 0; i < _strLen; i++) {
-                if (this.isFull(pStr.charAt(i))) {
-                    _lenCount += 2;
-                } else {
-                    _lenCount += 1;
-                }
-                if (_lenCount > pLen) {
-                    _cutString = pStr.substring(0, i);
-                    _ret = true;
-                    break;
-                } else if (_lenCount == pLen) {
-                    _cutString = pStr.substring(0, i + 1);
-                    _ret = true;
-                    break;
-                }
-            }
-        }
-        if (!_ret) {
-            _cutString = pStr;
-            _ret = true;
-        }
-        if (_cutString.length == _strLen) {
-            _cutFlag = "0";
-        }
-        return { "cutstring": _cutString, "cutflag": _cutFlag };
-    },
-    isFull: function (pChar) {
-        if ((pChar.charCodeAt(0) > 128)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-};
