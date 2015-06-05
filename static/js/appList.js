@@ -163,11 +163,21 @@ var me = {
 
             // if (panle.find("#myId" + data[i].AppId).length == 0) {
 
+                var level = Math.abs(data[i].level);
+                if (level > 90) {
+                    level = 1;
+                } else if (level > 70) {
+                    level = 2;
+                } else if (level > 50) {
+                    level = 3;
+                } else {
+                    level = 4;
+                }
                 arrHtml.push("<li data-wifiid='" + i + "' class=\"index-item list-index\" >"); // style=\"display:none;\"
                 arrHtml.push("<div class=\"index-item-main\">");
                 arrHtml.push("<dl class=\"clearfix\">");
                 arrHtml.push("<dt class=\"item-icon\">");
-                arrHtml.push("<img src=\"/static/images/wifi.jpg\" />");
+                arrHtml.push("<img src=\"/static/images/wifi_signal_"+ level +".png\" />");
                 arrHtml.push("</dt>");
                 arrHtml.push("<dd class=\"item-title\">");
                 arrHtml.push("<div class=\"wifi-SSID\">");
@@ -574,3 +584,12 @@ $("input").bind("focus", function() {
 $("#verifyCodeBtn").fastClick(function() {
     me.requestVerifyCode();
 });
+
+$("#wifiSwitch").fastClick(function() {
+    console.log("wifi connected.");
+    // $("#connectWifiBtn").css("background", "url(/static/images/avatar.jpg) no-repeat; background-size:100% 100%;");
+    // $("#connectWifiBtn").css("color", "red");
+    $("#wifiSwitch>img").toggle();
+});
+
+
