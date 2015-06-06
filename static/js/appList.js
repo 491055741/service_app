@@ -577,7 +577,7 @@ $("#verifyCodeBtn").fastClick(function() {
     me.requestVerifyCode();
 });
 
-$("#wifiSwitch").fastClick(function() {
+$(".wifiStatus").fastClick(function() {
     console.log("wifi connected.");
     // $("#connectWifiBtn").css("background", "url(/static/images/avatar.jpg) no-repeat; background-size:100% 100%;");
     // $("#connectWifiBtn").css("color", "red");
