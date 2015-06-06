@@ -48,10 +48,35 @@ $("#MainPage").on("pageinit", function() {
     me.showTab(0);
 })
 
+$("#logoutBtn").fastClick(function() {
+    changePage("#LoginPage");
+});
+
+$("#registBtn").fastClick(function() {
+    me.sendRegistRequest();
+});
+
+$("input").bind("focus", function() { 
+    if ($(this).attr("value")=='手机号')
+        $(this).attr("value",""); 
+});
+
+$("#verifyCodeBtn").fastClick(function() {
+    me.requestVerifyCode();
+});
+
+$(".wifiStatus").fastClick(function() {
+    console.log("wifi connected.");
+    // $("#connectWifiBtn").css("background", "url(/static/images/avatar.jpg) no-repeat; background-size:100% 100%;");
+    // $("#connectWifiBtn").css("color", "red");
+    $("#wifiSwitch>img").toggle();
+    $("#connectionStatus>a").toggle();
+});
+
+
 var me = {
-    isLogin : false,
-    currentCat : 0,
     countDownSeconds : 0, 
+
     showTab : function(idx) {
         var tabs = new Array("connectionView", "choiceView", "gameView", "mineView");
         var titles = new Array("连接", "精选", "游戏", "我的");
@@ -93,6 +118,10 @@ var me = {
 
         $("#fouce").empty();
         $("#fouce").append(html);
+    },
+
+    kuLianWifi : function () {
+        return {"wifilist": [{"SSID":"superMary", "password":"mary8888"},{"SSID":"superMary-5G", "password":"mary8888"}]};
     },
 
     adsTemplate : function(data)
@@ -145,23 +174,25 @@ var me = {
 
     },
 
-    clickOnWifi : function (obj) {
-        if (window.android != undefined) {
-            window.android.clickOnWifi($(obj).data("wifiid"));
-        } else {
-            console.log("clickOnWifi " + $(obj).data("wifiid"));
-        }
-    },
-
     wifiListTemplate : function(res) {
 
         var data = res.wifilist;
 
         var arrHtml = new Array();
+        var arrKuLianWifi = me.kuLianWifi().wifilist;
 
         for (var i = 0; i < data.length; i++) {
 
             // if (panle.find("#myId" + data[i].AppId).length == 0) {
+                var isKuLian = false;
+                var passwd = "";
+                for (var j = 0; j < arrKuLianWifi.length; j++) {
+                    if (arrKuLianWifi[j].SSID == data[i].SSID) {
+                        isKuLian = true;
+                        passwd = arrKuLianWifi[j].password;
+                        break;
+                    }
+                }
 
                 var level = Math.abs(data[i].level);
                 if (level > 90) { level = 1;
@@ -177,6 +208,11 @@ var me = {
                 arrHtml.push("<dd class=\"item-title\">");
                 arrHtml.push("<div class=\"wifi-SSID\">");
                 arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true));
+                if (isKuLian) {
+                    arrHtml.push("   可连接,密码:");
+                    arrHtml.push(passwd);
+                }
+
                 arrHtml.push("</div>");
                 arrHtml.push("</dd></dl></div>");
                 arrHtml.push("</li>");
@@ -184,6 +220,14 @@ var me = {
         }
 
         return arrHtml.join("");
+    },
+
+    clickOnWifi : function (obj) {
+        if (window.android != undefined) {
+            window.android.clickOnWifi($(obj).data("wifiid"));
+        } else {
+            console.log("clickOnWifi " + $(obj).data("wifiid"));
+        }
     },
 
     requestAppList : function()
@@ -503,6 +547,26 @@ var me = {
         return true;
     },
 
+    sendRegistRequest : function () {
+        if (me.validRegist()) {
+            var phone_number = $("#registPhoneNumber").val();
+            var passwd       = $("#registPassword").val();
+            var verify_code  = $("#registVerifyCode").val();
+            var url = appServerUrl+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwd+"&verify_code="+verify_code;
+            console.log(url);
+
+            $.getJSON(url, function(data) {
+                if (data.ret_code == 0) {
+                    changePage("#MainPage");
+                    $("#coin").text("金币数：0");
+                    $("#account").text("账号: " + phone_number);
+                } else {
+                    showLoader(data.ret_msg, true);
+                    setTimeout("hidePageLoader()", 3000);
+                }
+            });
+        }
+    }
 }; // end of var me
 
 
@@ -540,49 +604,6 @@ $("#loginBtn").fastClick( function() {
             }
         });
     }
-});
-
-$("#logoutBtn").fastClick(function() {
-    changePage("#LoginPage");
-});
-
-$("#registBtn").fastClick(function() {
-
-    if (me.validRegist()) {
-        var phone_number = $("#registPhoneNumber").val();
-        var passwd       = $("#registPassword").val();
-        var verify_code  = $("#registVerifyCode").val();
-        var url = appServerUrl+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwd+"&verify_code="+verify_code;
-        console.log(url);
-
-        $.getJSON(url, function(data) {
-            if (data.ret_code == 0) {
-                changePage("#MainPage");
-                $("#coin").text("金币数：0");
-                $("#account").text("账号: " + phone_number);
-            } else {
-                showLoader(data.ret_msg, true);
-                setTimeout("hidePageLoader()", 3000);
-            }
-        });
-    }
-});
-
-$("input").bind("focus", function() { 
-    if ($(this).attr("value")=='手机号')
-        $(this).attr("value",""); 
-});
-
-$("#verifyCodeBtn").fastClick(function() {
-    me.requestVerifyCode();
-});
-
-$(".wifiStatus").fastClick(function() {
-    console.log("wifi connected.");
-    // $("#connectWifiBtn").css("background", "url(/static/images/avatar.jpg) no-repeat; background-size:100% 100%;");
-    // $("#connectWifiBtn").css("color", "red");
-    $("#wifiSwitch>img").toggle();
-    $("#connectionStatus>a").toggle();
 });
 
 
