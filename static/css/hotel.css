@@ -8,7 +8,6 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 
 .goBack {height: 12px;}
 .ui-content {padding: 0;}
-/*p { font-size: 1.5em; font-weight: bold; }*/
 .account-wrapper { padding:15px; }
 #loginBtn {width: 35%; float:right; margin-top:10px; }
 #toRegistBtn {width: 35%; float:left; margin-top:10px; }
@@ -23,11 +22,16 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 
 .text_disabled {color:gray;}
 .account_item {font-size: 16px; }
-.avatar {width: 96px; height: 96px; }
+.avatar {border-bottom: 1px #d4d5d6 solid; }
+.avatar img {width: 96px; height: 96px; margin-top: 50px; margin-bottom: 20px; }
 .coin_icon {position: absolute; width: 20px; top:25px; right: 5px;}
 .coin_num  {position: absolute; width: 20px; top:30px; right: 35px; color: orange;}
+#mineView dt {float: left; height: 30px; padding-top: 10px; }
+#mineView dd {right: 10px; text-align: right; height: 30px; padding-top: 10px; border-bottom: 1px #d4d5d6 solid; }
+#mineView dt div { font-size: 18px; color: #45484d; }
+#mineView dd div { font-size: 18px; color: #999; }
 
-/*#mainFooter .ui-btn-icon-top:after { background-size:22px,22px; border-radius: 0;}*/
+.ui-footer .ui-navbar .ui-btn {font-size: 14px; }
 .ui-icon-choice:after {background: url(/static/images/tab_choice.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
 .ui-icon-mine:after {background: url(/static/images/tab_mine.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
 .ui-icon-wifi:after {background: url(/static/images/tab_wifi.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}

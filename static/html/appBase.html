@@ -25,7 +25,7 @@
 
 <div data-role="page" id="LoginPage" data-title="Wifi酷连">
     <div role="main" class="ui-content account-wrapper">
-
+        <br>
         <p style="backg"><font color="#2EB1E8" >用户名</font></p>
          <input type="text" name="username" id="loginUsername" value="手机号"/>
         <br>
@@ -50,6 +50,7 @@
     </div>
 
     <div role="main" class="ui-content account-wrapper">
+        <br>
         <p style="backg"><font color="#2EB1E8" >用户名</font></p>
         <input type="tel" id="registPhoneNumber" value="手机号"/>
         <br>
@@ -64,6 +65,10 @@
         </div>
         <p style="backg"><font color="#2EB1E8" >密 码</font></p>
         <input type="password" id="registPassword"/>
+
+        <p style="backg"><font color="#2EB1E8" >再次输入密码</font></p>
+        <input type="password" id="repeatPassword"/>
+
         <br>
         <div>
             <center><a class="ui-btn" id="registBtn">立即注册</a></center>
@@ -73,11 +78,6 @@
 
 
 <div data-role="page" id="MainPage" data-title="Wifi酷连">
-
-<!-- 
-    <div data-role="header" >
-        <h1 id="appListTitle">精选</h1>
-    </div> -->
 
     <div role="main" class="ui-content">
 
@@ -142,17 +142,15 @@
 
         <div id="mineView">
             <div class="account-wrapper">
-                <div class="ui-grid-a" style="margin-bottom:20px;">
-                    <div class="ui-block-a" style="width:40%;">
-                        <image src="/static/images/avatar.png" class="avatar"/>
-                    </div>
-                    <div class="ui-block-b" style="margin-left:15px;">
-                        <div class="account_item" id="account">登录账号: </div>
-                        <br>
-                        <div class="account_item" id="coin" >金币: </div>
-                    </div>
+                <div class="avatar">
+                    <center><image src="/static/images/avatar.png" /></center>
                 </div>
-
+                <dl>
+                    <dt><div>账  号</div></dt>
+                    <dd><div class="account_item" id="account">account</div></dd>
+                    <dt><div>金  币</div></dt>
+                    <dd><div class="account_item" id="coin" >coin</div></dd>
+                </dl>
                 <div style="margin-top:60%;">
                     <center><a href="" id="logoutBtn" class="ui-btn">退出登录</a></center>
                 </div>

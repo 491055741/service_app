@@ -1,9 +1,6 @@
 
-// var appServerUrl = "http://livew.mobdsp.com/cb";
-// var callback = "callback=?";
-
-var appServerUrl = "http://127.0.0.1:5000";
-var callback = "";
+var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
+// var appServerUrl = "http://127.0.0.1:5000"; var callback = "";
 
 
 (function($){
@@ -53,7 +50,12 @@ $("#logoutBtn").fastClick(function() {
 });
 
 $("#registBtn").fastClick(function() {
-    me.sendRegistRequest();
+    me.register();
+});
+
+
+$("#loginBtn").fastClick( function() {
+    me.login();
 });
 
 $("input").bind("focus", function() { 
@@ -544,10 +546,15 @@ var me = {
             setTimeout("hideLoader()", 2000);
             return false;
         }
+        if ($("#repeatPassword").val()!=$("#registPassword").val()) {
+            showLoader("两次输入的密码不一致");
+            setTimeout("hideLoader()", 2000);
+            return false;
+        }
         return true;
     },
 
-    sendRegistRequest : function () {
+    register : function () {
         if (me.validRegist()) {
             var phone_number = $("#registPhoneNumber").val();
             var passwd       = $("#registPassword").val();
@@ -562,7 +569,42 @@ var me = {
                     $("#account").text("账号: " + phone_number);
                 } else {
                     showLoader(data.ret_msg, true);
-                    setTimeout("hidePageLoader()", 3000);
+                    setTimeout("hideLoader()", 3000);
+                }
+            });
+        }
+    },
+
+    login : function() {
+        if (me.validLogin()) {
+            var phone_number = $("#loginUsername").val();
+            var passwd       = $("#loginPassword").val();
+            var url = appServerUrl+"/applogin?"+callback+"&phone_number="+phone_number+"&passwd="+passwd;
+            console.log(url);
+            $.getJSON(url, function(data) {
+                if (data.ret_code == 0) {
+                    changePage("#MainPage");
+                    console.log("login success, coin num:" + data.coin_num);
+                    if (data.coin_num == undefined) {
+                        data.coin_num = 0;
+                    }
+
+                    $("#account").text(phone_number);
+                    $("#coin").text(data.coin_num);
+
+                    if ($("#checkbox-1").prop("checked") == true) { 
+                        $.cookie("rmbUser", "true", { expires: 365 });
+                        $.cookie("userName", phone_number, { expires: 365 });
+                        $.cookie("passWord", passwd, { expires: 365 });
+                    } else {
+                        $.cookie("rmbUser", "false", { expires: -1 }); 
+                        $.cookie("userName", '', { expires: -1 }); 
+                        $.cookie("passWord", '', { expires: -1 }); 
+                    }
+
+                } else {
+                    showLoader(data.ret_msg);
+                    setTimeout("hideLoader()", 3000);
                 }
             });
         }
@@ -570,40 +612,5 @@ var me = {
 }; // end of var me
 
 
-
-$("#loginBtn").fastClick( function() {
-    if (me.validLogin()) {
-        var phone_number = $("#loginUsername").val();
-        var passwd       = $("#loginPassword").val();
-        var url = appServerUrl+"/login?"+callback+"&phone_number="+phone_number+"&passwd="+passwd;
-        console.log(url);
-        $.getJSON(url, function(data) {
-            if (data.ret_code == 0) {
-                changePage("#MainPage");
-                console.log("login success, coin num:" + data.coin_num);
-                if (data.coin_num == undefined) {
-                    data.coin_num = 0;
-                }
-
-                $("#account").text("账  号: " + phone_number);
-                $("#coin").text("金币数：" + data.coin_num);
-
-                if ($("#checkbox-1").prop("checked") == true) { 
-                    $.cookie("rmbUser", "true", { expires: 365 });
-                    $.cookie("userName", phone_number, { expires: 365 });
-                    $.cookie("passWord", passwd, { expires: 365 });
-                } else {
-                    $.cookie("rmbUser", "false", { expires: -1 }); 
-                    $.cookie("userName", '', { expires: -1 }); 
-                    $.cookie("passWord", '', { expires: -1 }); 
-                }
-
-            } else {
-                showLoader(data.ret_msg);
-                setTimeout("hideLoader()", 3000);
-            }
-        });
-    }
-});
 
 

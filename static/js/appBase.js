@@ -19,11 +19,11 @@ function init()
 {
     applicationCacheHandeler();
 
-    // $("a.goBack").fastClick( function(e) {
-    //     $.mobile.back();
-    //     e.stopPropagation();
-    //     return false;
-    // });
+    $("a.goBack").fastClick( function(e) {
+        $.mobile.back();
+        e.stopPropagation();
+        return false;
+    });
     // if (typeof(document.referrer) == "undefined") {
     //     console.log("document.referrer:" + document.referrer);
     //     sessionStorage.referrer = document.referrer;
@@ -187,16 +187,13 @@ function showLoader(txt) {
     });  
 }
 
-function hideLoader()  
-{  
+function hideLoader() {  
     $.mobile.loading('hide');  
 }
 
 function scrollToObj(obj) {
     window.scrollTo(0, obj.offset().top);
 }
-
-
 
 var slide = {
     slidePanle: null,
