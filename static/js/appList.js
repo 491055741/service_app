@@ -326,7 +326,19 @@ var me = {
         var html = me.appDetailTemplate(data.detail_info);
 
         $("#appDetail").append(html);
+
+        $(".content-BaiYingFreeDownload").fastClick(function() {
+           me.downloadApp(this);
+        });
+
         $.mobile.changePage("#AppDetailPage", "slideup");
+    },
+
+    downloadApp : function (obj)
+    {
+        if (window.android != undefined) {
+            window.android.downloadApp($(obj).data("appurl"));
+        }
     },
 
     appDetailTemplate : function(data)
@@ -373,14 +385,13 @@ var me = {
 
         arrHtml.push("<div id=\"divdownarea\" class=\"down-area\">");
         arrHtml.push("<div class=\"content-btn-con\">");
-        arrHtml.push("<a class=\"content-BaiYingFreeDownload\" href=\"" + data.AppSource + "\">");
+        arrHtml.push("<a class=\"content-BaiYingFreeDownload\" data-appurl=\"" + data.AppSource + "\">");
         arrHtml.push('下载');
         arrHtml.push("</a>");
         arrHtml.push("</div>");
 
         arrHtml.push("<div id=\"divDownloadPanle\" class=\"content-btn-con\">");
         arrHtml.push("</div>");
-        arrHtml.push("<div class=\"divDownloadTip\">提示：首次使用高速下载需要连接PC进行激活！</div>");
         arrHtml.push("</div>");
         arrHtml.push("</section>");
 
@@ -563,9 +574,12 @@ var me = {
 
             $.getJSON(url, function(data) {
                 if (data.ret_code == 0) {
+                    showLoader("注册成功");
+                    setTimeout("hideLoader()", 2000);
+
                     changePage("#MainPage");
-                    $("#coin").text("金币数：0");
-                    $("#account").text("账号: " + phone_number);
+                    $("#coin").text("0");
+                    $("#account").text(phone_number);
                 } else {
                     showLoader(data.ret_msg, true);
                     setTimeout("hideLoader()", 3000);
