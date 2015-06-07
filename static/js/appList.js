@@ -36,8 +36,7 @@ $("#MainPage").on("pageinit", function() {
     // use fastClick will cause pop to home page when tap the tab on PC.
     $("#connectionBtn").click(function() {me.showTab(0);});
     $("#excellentBtn").click(function() {me.showTab(1);});
-    $("#gameBtn").click(function() {me.showTab(2);});
-    $("#mineBtn").click(function() {me.showTab(3);});
+    $("#mineBtn").click(function() {me.showTab(2);});
 
     me.requestAds();
     me.requestAppList();
@@ -80,8 +79,8 @@ var me = {
     countDownSeconds : 0, 
 
     showTab : function(idx) {
-        var tabs = new Array("connectionView", "choiceView", "gameView", "mineView");
-        var titles = new Array("连接", "精选", "游戏", "我的");
+        var tabs = new Array("connectionView", "choiceView", "mineView");
+        var titles = new Array("连接", "精选", "我的");
         for (var i = 0; i < tabs.length; i++) {
             if (i == idx) {
                 $("#" + tabs[i]).show();

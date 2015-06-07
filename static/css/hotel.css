@@ -35,7 +35,6 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 .ui-icon-choice:after {background: url(/static/images/tab_choice.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
 .ui-icon-mine:after {background: url(/static/images/tab_mine.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
 .ui-icon-wifi:after {background: url(/static/images/tab_wifi.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
-.ui-icon-game:after {background: url(/static/images/tab_game.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
 .comboSprite li a {border-left-width:0; border-right-width:0; }
 
 .wifi-list {border-bottom: 1px #d4d5d6 solid; }
