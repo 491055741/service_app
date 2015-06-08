@@ -44,10 +44,10 @@
 </div>
 
 <div data-role="page" id="RegisterPage" data-title="Wifi酷连">
-    <div data-role="header">
+<!--     <div data-role="header">
         <a class="goBack" data-icon="back">返回</a>
         <h1 id="appDetailPageTitle">注册</h1>
-    </div>
+    </div> -->
 
     <div role="main" class="ui-content account-wrapper">
         <br>
@@ -86,14 +86,14 @@
                 <dl class="clearfix">
                     <dt class="item-icon">
                         <div id="wifiSwitch">
-                            <img src="/static/images/wifi_state_off.png">
-                            <img src="/static/images/wifi_state_on.png" style="display:none;">
+                            <img class="statusOff" src="/static/images/wifi_state_off.png">
+                            <img class="statusOn" src="/static/images/wifi_state_on.png" style="display:none;">
                         </div>
                     </dt>
                     <dd class="wifiLabel">
                         <div id="connectionStatus">
-                            <a class="ui-btn">一键连接Wifi</a>
-                            <a class="ui-btn" style="display:none;">Wifi已连接</a>
+                            <a class="statusOff ui-btn">一键连接Wifi</a>
+                            <a class="statusOn ui-btn" style="display:none;">Wifi已连接</a>
                         </div>
                     </dd>
                 </dl>
@@ -168,10 +168,10 @@
 </div>
 
 <div data-role="page" id="AppDetailPage" data-title="应用商店">
-    <div data-role="header">
+<!--     <div data-role="header">
         <a class="goBack" data-icon="back">返回</a>
         <h1 id="appDetailPageTitle">应用详情</h1>
-    </div>
+    </div> -->
 
     <div role="main" class="ui-content">
         <div id="appDetail"></div>
@@ -179,7 +179,7 @@
 </div>
 
 <script src="/static/js/appBase.js"></script>
-<script src= "/static/js/appList.js"></script>
+<script src="/static/js/appList.js"></script>
 
 </body>
 </html>

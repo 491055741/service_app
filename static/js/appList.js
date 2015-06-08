@@ -8,8 +8,24 @@ var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
 })(jQuery);
 
 // js-Android interface
-function refreshWifiList() {
+var refreshWifiList = function () {
     me.requestWifiList();
+}
+// js-Android interface
+var wifiStatusChanged = function () {
+    if (window.android != undefined) {
+
+        if (window.android.isWifiAvailable()) {
+            // todo: access the special URL, and check the external link status.
+            $(".wifiStatus .statusOn").show();
+            $(".wifiStatus .statusOff").hide();
+        } else {
+            $(".wifiStatus .statusOff").show();
+            $(".wifiStatus .statusOn").hide();
+        }
+    } else {
+        console.log("window.android undefined.");
+    }
 }
 
 $("#LoginPage").on("pageshow", function () {
@@ -67,16 +83,19 @@ $("#verifyCodeBtn").fastClick(function() {
 });
 
 $(".wifiStatus").fastClick(function() {
-    console.log("wifi connected.");
-    // $("#connectWifiBtn").css("background", "url(/static/images/avatar.jpg) no-repeat; background-size:100% 100%;");
-    // $("#connectWifiBtn").css("color", "red");
-    $("#wifiSwitch>img").toggle();
-    $("#connectionStatus>a").toggle();
+    if (window.android != undefined && !window.android.isWifiAvailable()) {
+        me.connectWifi(this);
+        $(".wifiStatus .statusOff").show();
+        $(".wifiStatus .statusOn").hide();
+    } else {
+        console.log("wifi unavailable or window.android undefined.");
+    }
 });
 
 
 var me = {
     countDownSeconds : 0, 
+    kuLianWifi : {"wifilist": [{"SSID":"SuperMary", "password":"mary8888"},{"SSID":"SuperMary-5G", "password":"mary8888"}]},
 
     showTab : function(idx) {
         var tabs = new Array("connectionView", "choiceView", "mineView");
@@ -119,10 +138,6 @@ var me = {
 
         $("#fouce").empty();
         $("#fouce").append(html);
-    },
-
-    kuLianWifi : function () {
-        return {"wifilist": [{"SSID":"superMary", "password":"mary8888"},{"SSID":"superMary-5G", "password":"mary8888"}]};
     },
 
     adsTemplate : function(data)
@@ -170,7 +185,7 @@ var me = {
         $("#connectionView .wifi-list").append(html);
 
         $("#connectionView .wifi-list li").fastClick(function() {
-           me.clickOnWifi(this);
+           me.connectWifi(this);
         });
 
     },
@@ -180,7 +195,7 @@ var me = {
         var data = res.wifilist;
 
         var arrHtml = new Array();
-        var arrKuLianWifi = me.kuLianWifi().wifilist;
+        var arrKuLianWifi = me.kuLianWifi.wifilist;
 
         for (var i = 0; i < data.length; i++) {
 
@@ -191,6 +206,8 @@ var me = {
                     if (arrKuLianWifi[j].SSID == data[i].SSID) {
                         isKuLian = true;
                         passwd = arrKuLianWifi[j].password;
+                        $(".wifiStatus").data("wifissid", data[i].SSID);
+                        $(".wifiStatus").data("wifipasswd", passwd);
                         break;
                     }
                 }
@@ -200,7 +217,7 @@ var me = {
                 } else if (level > 70) { level = 2;
                 } else if (level > 50) { level = 3;
                 } else {                 level = 4; }
-                arrHtml.push("<li data-wifiid='" + i + "' class=\"index-item list-index\" >"); // style=\"display:none;\"
+                arrHtml.push("<li data-wifissid='"+data[i].SSID+"' data-wifipasswd='"+passwd+"' class=\"index-item list-index\" >"); // style=\"display:none;\"
                 arrHtml.push("<div class=\"index-item-main\">");
                 arrHtml.push("<dl class=\"clearfix\">");
                 arrHtml.push("<dt class=\"item-icon\">");
@@ -209,12 +226,10 @@ var me = {
                 arrHtml.push("<dd class=\"item-title\">");
                 arrHtml.push("<div class=\"wifi-SSID\">");
                 arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true));
-                if (isKuLian) {
-                    arrHtml.push("   可连接,密码:");
-                    arrHtml.push(passwd);
-                }
-
                 arrHtml.push("</div>");
+                if (isKuLian) {
+                    arrHtml.push("<div class=\"wifi-desc\">可连接</div>");
+                }
                 arrHtml.push("</dd></dl></div>");
                 arrHtml.push("</li>");
             // }
@@ -223,11 +238,15 @@ var me = {
         return arrHtml.join("");
     },
 
-    clickOnWifi : function (obj) {
+    connectWifi : function (obj) {
+        console.log("connectWifi " + $(obj).data("wifissid"));
+        showLoader("正在连接Wifi，请稍候");
+        setTimeout("hideLoader()", 3000);
+
         if (window.android != undefined) {
-            window.android.clickOnWifi($(obj).data("wifiid"));
+            window.android.connectWifi($(obj).data("wifissid"), $(obj).data("wifipasswd"));
         } else {
-            console.log("clickOnWifi " + $(obj).data("wifiid"));
+            console.log("try to connect wifi but window.android is undefined");
         }
     },
 
@@ -338,6 +357,8 @@ var me = {
     {
         if (window.android != undefined) {
             window.android.downloadApp($(obj).data("appurl"));
+            showLoader("已加入下载队列");
+            setTimeout("hideLoader()", 2000);
         }
     },
 
@@ -498,7 +519,7 @@ var me = {
             setTimeout("hideLoader()", 2000);
             return;
         }
-        var url          = appServerUrl+"/appverifycode?"+callback+"&phone_number="+phone_number;
+        var url = appServerUrl+"/appverifycode?"+callback+"&phone_number="+phone_number;
         console.log(url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
