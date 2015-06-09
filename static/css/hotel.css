@@ -24,8 +24,9 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 .account_item {font-size: 16px; }
 .avatar {border-bottom: 1px #d4d5d6 solid; }
 .avatar img {width: 96px; height: 96px; margin-top: 50px; margin-bottom: 20px; }
-.coin_icon {position: absolute; width: 20px; top:25px; right: 5px;}
-.coin_num  {position: absolute; width: 20px; top:30px; right: 35px; color: orange;}
+.app-list .coin_icon {position: absolute; width: 20px; top:25px; right: 5px;}
+.app-list .coin_num  {position: absolute; width: 20px; top:30px; right: 35px; color: orange;}
+.app-list .installStatus {position: absolute; width: 50px; top:30px; right: 5px; color: orange;}
 #mineView dt {float: left; height: 30px; padding-top: 10px; }
 #mineView dd {right: 10px; text-align: right; height: 30px; padding-top: 10px; border-bottom: 1px #d4d5d6 solid; }
 #mineView dt div { font-size: 18px; color: #45484d; }
