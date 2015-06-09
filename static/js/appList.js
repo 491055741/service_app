@@ -121,7 +121,7 @@ var me = {
     requestAds : function()
     {
         // var url=appServerUrl+"/ads?"+callback;
-        var url = "/static/json/ads.json";
+        var url = "json/ads.json";
         console.log("requestAds:"+url);
         $.get(url, function(data, status) {
             var obj = eval("(" + data +")");
@@ -159,7 +159,7 @@ var me = {
     {
         if (window.android == undefined) {
             // var url=appServerUrl+"/ads?"+callback;
-            var url = "/static/json/wifilist.json";
+            var url = "json/wifilist.json";
             console.log("requestWifiList:"+url);
             // $.get(url, function(data, status) {
             //     // var obj = eval("(" + data +")");
@@ -221,7 +221,7 @@ var me = {
                 arrHtml.push("<div class=\"index-item-main\">");
                 arrHtml.push("<dl class=\"clearfix\">");
                 arrHtml.push("<dt class=\"item-icon\">");
-                arrHtml.push("<img src=\"/static/images/wifi_signal_"+ level +".png\" />");
+                arrHtml.push("<img src=\"images/wifi_signal_"+ level +".png\" />");
                 arrHtml.push("</dt>");
                 arrHtml.push("<dd class=\"item-title\">");
                 arrHtml.push("<div class=\"wifi-SSID\">");
@@ -319,7 +319,7 @@ var me = {
                 arrHtml.push("<div class='installStatus'>已安装</div>");
             } else {
                 arrHtml.push("<div class='coin_num' >+10</div>");
-                arrHtml.push("<img class='coin_icon' src='/static/images/coins.png' />");
+                arrHtml.push("<img class='coin_icon' src='images/coins.png' />");
             }
 
             arrHtml.push("</li>");
