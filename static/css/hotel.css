@@ -20,12 +20,12 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 #wifiSwitch img {width: 150px; height: 100px; }
 #connectionStatus .ui-btn {width: 40%; }
 #connectionStatus .ui-btn.statusOff {width: 40%; background-color: orange; }
-#connectionStatus .ui-btn.statusOff {width: 40%; background-color: green; }
+#connectionStatus .ui-btn.statusOn {width: 40%; background-color: green; }
 
 .text_disabled {color:gray;}
 .acount_list {padding: 10px; }
 .account_item {font-size: 16px; }
-.avatar img {width: 96px; height: 96px; margin-top: 50px; margin-bottom: 20px; }
+.avatar img {width: 100%; margin-bottom: 20px; }
 .app-list .coin_icon {position: absolute; width: 20px; top:25px; right: 5px;}
 .app-list .coin_num  {position: absolute; width: 20px; top:30px; right: 35px; color: orange;}
 .app-list .installStatus {position: absolute; width: 50px; top:30px; right: 5px; color: orange;}
@@ -33,11 +33,17 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 #mineView dd {right: 10px; text-align: right; height: 30px; padding-top: 10px; border-bottom: 1px #d4d5d6 solid; }
 #mineView dt div { font-size: 18px; color: #45484d; }
 #mineView dd div { font-size: 18px; color: #999; }
+#logoutBtn {background-color: orange;}
 
-.ui-footer .ui-navbar .ui-btn {font-size: 14px; }
+.ui-footer .ui-navbar .ui-btn {font-size: 14px;}
+.ui-footer .ui-navbar .ui-btn.ui-btn-active {background-color: #f6f6f6; font-size: 14px; color: #38c; }
 .ui-icon-choice:after {background: url(../images/tab_choice.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
 .ui-icon-mine:after {background: url(../images/tab_mine.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
 .ui-icon-wifi:after {background: url(../images/tab_wifi.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
+.ui-btn-active.ui-icon-choice:after {background: url(../images/tab_choice_active.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
+.ui-btn-active.ui-icon-mine:after {background: url(../images/tab_mine_active.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
+.ui-btn-active.ui-icon-wifi:after {background: url(../images/tab_wifi_active.png) no-repeat; background-size:22px,22px; border-radius: 0; background-position: center;}
+
 .comboSprite li a {border-left-width:0; border-right-width:0; }
 
 .wifi-list {border-bottom: 1px #d4d5d6 solid; }
