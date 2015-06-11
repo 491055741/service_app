@@ -68,9 +68,12 @@ $("#registBtn").fastClick(function() {
     me.register();
 });
 
-
 $("#loginBtn").fastClick( function() {
     me.login();
+});
+
+$("#changePwdBtn").fastClick( function() {
+    me.changePwd();
 });
 
 $("input").bind("focus", function() { 
@@ -78,7 +81,7 @@ $("input").bind("focus", function() {
         $(this).attr("value",""); 
 });
 
-$("#verifyCodeBtn").fastClick(function() {
+$(".verifyCodeBtn").fastClick(function() {
     me.requestVerifyCode();
 });
 
@@ -370,6 +373,13 @@ var me = {
             window.android.downloadApp($(obj).data("appurl"));
             showLoader("已加入下载队列");
             setTimeout("hideLoader()", 2000);
+        
+            var phone_number = $(".acount_list #account").text();
+            var url = appServerUrl+"/download_report?"+callback+"&appid="+appId+"&phone_number="+phone_number;
+            console.log(url);
+            $.getJSON(url, function(data) {
+                console.log(data);
+            });
         }
     },
 
@@ -421,7 +431,7 @@ var me = {
 
         arrHtml.push("<div id=\"divdownarea\" class=\"down-area\">");
         arrHtml.push("<div class=\"content-btn-con\">");
-        arrHtml.push("<a class=\"content-BaiYingFreeDownload\" data-appurl=\"" + data.AppSource + "\"");
+        arrHtml.push("<a class=\"content-BaiYingFreeDownload\" data-appurl=\""+data.AppSource+"\" data-appid="+data.AppId);
         if (isAppInstalled) {
             arrHtml.push("data-installed='YES' >已安装</a>");
         } else {
@@ -543,10 +553,10 @@ var me = {
             if (data.ret_code == 0) {
                 showLoader("验证码已通过短信发送");
                 setTimeout("hideLoader()", 2000);
-                $("#verifyCodeBtn").addClass("text_disabled");
+                $(".verifyCodeBtn").addClass("text_disabled");
                 me.countDownSeconds = 60;
                 setTimeout("me.countDown()", 1000);
-                $("#verifyCodeBtn").attr("disabled","disabled");
+                $(".verifyCodeBtn").attr("disabled","disabled");
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
@@ -555,11 +565,11 @@ var me = {
     )},
 
     countDown : function() {
-        $("#verifyCodeBtn").text(me.countDownSeconds + "秒");
+        $(".verifyCodeBtn").text(me.countDownSeconds + "秒");
         me.countDownSeconds = me.countDownSeconds - 1;
         if (me.countDownSeconds <= 0) {
-            $("#verifyCodeBtn").removeClass("text_disabled").text("获取验证码");
-            $("#verifyCodeBtn").attr("disabled","");
+            $(".verifyCodeBtn").removeClass("text_disabled").text("获取验证码");
+            $(".verifyCodeBtn").attr("disabled","");
         } else {
             setTimeout("me.countDown()", 1000);
         }
@@ -601,6 +611,52 @@ var me = {
             return false;
         }
         return true;
+    },
+
+    validResetPwd : function() {
+        if ($("#changePwdPhoneNumber").val()=='' || $("#changePwdPhoneNumber").val()=='手机号' || !isPhoneNumber($("#changePwdPhoneNumber").val())) {
+            showLoader("请填写手机号");
+            setTimeout("hideLoader()", 2000);
+            return false;
+        }
+        if ($("#changePwdVerifyCode").val()=='') {
+            showLoader("请填写验证码");
+            setTimeout("hideLoader()", 2000);
+            return false;
+        }
+        if ($("#newPassword").val()=='') {
+            showLoader("请填写密码");
+            setTimeout("hideLoader()", 2000);
+            return false;
+        }
+        if ($("#repeatNewPassword").val()!=$("#newPassword").val()) {
+            showLoader("两次输入的密码不一致");
+            setTimeout("hideLoader()", 2000);
+            return false;
+        }
+        return true;
+    },
+
+    changePwd : function () {
+        if (me.validResetPwd()) {
+            var phone_number = $("#changePwdPhoneNumber").val();
+            var passwd       = $("#newPassword").val();
+            var verify_code  = $("#changePwdVerifyCode").val();
+            var url = appServerUrl+"/reset_passwd?"+callback+"&phone_number="+phone_number+"&new_passwd="+passwd+"&verify_code="+verify_code;
+            console.log(url);
+
+            $.getJSON(url, function(data) {
+                if (data.ret_code == 0) {
+                    showLoader("密码修改成功");
+                    setTimeout("hideLoader()", 2000);
+
+                    changePage("#LoginPage");
+                } else {
+                    showLoader(data.ret_msg, true);
+                    setTimeout("hideLoader()", 3000);
+                }
+            });
+        }
     },
 
     register : function () {

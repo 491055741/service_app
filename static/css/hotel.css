@@ -1,13 +1,14 @@
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, textarea, select, optgroup, option, fieldset, legend, p, blockquote, th, td { margin: 0; padding: 0; font-size: 14px; /*	-webkit-tap-highlight-color:rgba(0,0,0,0); 	-webkit-user-select:none; 	-webkit-touch-callout:none;*/ font-family: Helvetica,STHeiti,Droid Sans Fallback; }
 .text_overflow {white-space:nowrap; text-overflow:ellipsis; -o-text-overflow:ellipsis; overflow:hidden; }
-
+a { text-decoration:none;} 
 .goBack {height: 12px;}
 .ui-content {padding: 0;}
 .account-wrapper { padding:15px; }
 
 #loginBtn {width: 35%; float:right; margin-top:10px; background-color: #FF8800; color: white; text-shadow:0 0 0;}
 #toRegistBtn {width: 35%; float:left; margin-top:10px; }
-#verifyCodeBtn {width: 70%; float: right; margin-top: 20px; }
+.verifyCodeBtn {width: 70%; float: right; margin-top: 20px; }
+.changePwdLink {padding-top: 100px; }
 
 .connection_bg {height: 230px; background: url(../images/night.png) no-repeat; background-size: contain;}
 .wifiStatus img {margin-top: 20px; width: 150px; height: 100px; }
@@ -28,7 +29,7 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, text
 #mineView dt {float: left; height: 30px; padding-top: 10px; }
 #mineView dd {right: 10px; text-align: right; height: 30px; padding-top: 10px; border-bottom: 1px #d4d5d6 solid; }
 #mineView dt div { font-size: 18px; color: #45484d; float: right; padding-left: 5px; }
-#mineView dd div { font-size: 18px; color: #999; }
+#mineView dd div, #mineView dd a { font-size: 18px; color: #999; width: 100%;}
 #logoutBtn {background-color: #FF8800; text-shadow: 0 0 0; color: white; }
 
 .ui-footer .ui-navbar .ui-btn {font-size: 14px;}
