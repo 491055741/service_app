@@ -106,23 +106,16 @@
     <div role="main" class="ui-content">
 
         <div id="connectionView">
-            <div class="wifiStatus">
-                <dl class="clearfix">
-                    <dt class="item-icon">
-                        <div id="wifiSwitch">
-                            <img class="statusOff" src="images/wifi_state_off.png">
-                            <img class="statusOn" src="images/wifi_state_on.png" style="display:none;">
-                        </div>
-                    </dt>
-                    <dd class="wifiLabel">
-                        <div id="connectionStatus">
-                            <a class="statusOff ui-btn">一键连接Wifi</a>
-                            <a class="statusOn ui-btn" style="display:none;">Wifi已连接</a>
-                        </div>
-                    </dd>
-                </dl>
+            <div class="connection_bg">
             </div>
-
+            <center>
+            <div class="wifiStatus">
+                <img class="statusOff" src="images/wifi_state_off.png">
+                <img class="statusOn" src="images/wifi_state_on.png" style="display:none;">
+                <a class="statusOff ui-btn">一键连接WiFi</a>
+                <a class="statusOn ui-btn" style="display:none;">Wifi已连接</a>
+            </div>
+            </center>
             <!-- <div class="wifi-list"></div> -->
 <!--             <center><svg id="circleLoading" viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g id="circle" class="g-circles g-circles--v1">
@@ -163,15 +156,15 @@
         </div>
 
         <div id="mineView">
-            <div class="avatar">
+            <div class="avatar_bg">
                 <image src="images/dubai.jpg" />
             </div>
 
             <div class="account-wrapper">
                 <dl class="acount_list">
-                    <dt><div>账  号</div></dt>
+                    <dt><img src="images/avatar.png"><div>账  号</div></dt>
                     <dd><div class="account_item" id="account">account</div></dd>
-                    <dt><div>金  币</div></dt>
+                    <dt><img src="images/coins.png"><div>金  币</div></dt>
                     <dd><div class="account_item" id="coin" >coin</div></dd>
                 </dl>
                 <div style="margin-top:30%;">
