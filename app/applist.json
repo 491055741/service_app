@@ -2,41 +2,33 @@
    "applist" : [
       {
          "AppId" : 1,
-         "AppLogo" : "http://m4.app111.com/AppImg/80x80/2011/08/09/4546770081431671745391.jpg",
-         "AppName" : "黄历天气",
-         "AppSize" : "21MB",
-         "BriefSummary" : "结合天气与黄历的免费软件"
+         "AppLogo" : "http://app.milkpapa.com:8080/static/apk/TencentStock/logo.jpg",
+         "AppSource": "http://app.milkpapa.com:8080/static/apk/TencentStock/QQStock_Android_3.9.1_751.apk",
+         "AppName" : "自选股",
+         "AppSize" : "6.26MB",
+         "BriefSummary" : "简单、易用、专业的手机炒股软件",
+         "GiveCoin" : 100
       },
       {
          "AppId" : 2,
-         "AppLogo" : "http://m4.app111.com/AppImg/80x80/2015/05/10/8256229331431237685083.jpg",
-         "AppName" : "神探迪克西",
-         "AppSize" : "121MB",
-         "BriefSummary" : "一块侦探解密游戏"
+         "AppLogo" : "http://app.milkpapa.com:8080/static/apk/TencentNews/logo.png",
+         "AppSource": "http://app.milkpapa.com:8080/static/apk/TencentNews/TencentNews_751_v4.6.1-release.apk",
+         "AppName" : "腾讯新闻",
+         "AppSize" : "12.1MB",
+         "BriefSummary" : "7x24小时全方位新闻报道的新闻产品",
+         "GiveCoin" : 100
       },
       {
          "AppId" : 3,
-         "AppLogo" : "http://m1.app111.com/AppImg/80x80/2015/05/08/8988384051431050064941.jpg",
-         "AppName" : "帝国与同盟",
-         "AppSize" : "96MB",
-         "BriefSummary" : "现代军事战略游戏"
-      },
-      {
-         "AppId" : 4,
-         "AppLogo" : "http://m2.app111.com/AppImg/80x80/2015/05/08/8502566711431049955476.jpg",
-         "AppName" : "追击野兽",
-         "AppSize" : "89MB",
-         "BriefSummary" : "画面与名称都相同有意思的新游"
-      },
-      {
-         "AppId" : 5,
-         "AppLogo" : "http://m2.app111.com/AppImg/80x80/2014/10/10/9000127511422844235773.jpg",
-         "AppName" : "铁骑沙漠",
-         "AppSize" : "38MB",
-         "BriefSummary" : "玩家需要建立强大的军队"
+         "AppLogo" : "http://app.milkpapa.com:8080/static/apk/TencentVideo/logo.jpg",
+         "AppSource": "http://app.milkpapa.com:8080/static/apk/TencentVideo/TencentVideo_1080_V3.9.0.6272.apk",
+         "AppName" : "腾讯视频",
+         "AppSize" : "17.84MB",
+         "BriefSummary" : "海量高清影视平台",
+         "GiveCoin" : 100
       }
    ],
    "ret_code" : 0,
    "ret_msg" : "success",
-   "total_count" : 5
+   "total_count" : 3
 }

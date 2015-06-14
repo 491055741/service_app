@@ -1,5 +1,6 @@
 #!flask/bin/python
 from flask import Flask
+from flask import request
 import codecs
 
 app = Flask(__name__)
@@ -27,7 +28,8 @@ def applist():
 
 @app.route('/appdetail')
 def appdetail():
-    return get_file_content("app/appdetail.json")
+    appid=request.args.get('appid',0)
+    return get_file_content("app/appdetail"+appid+".json")
 
 @app.route('/appverifycode')
 def verifycode():
@@ -37,7 +39,7 @@ def verifycode():
 def register():
     return get_file_content("app/success.json")
 
-@app.route('/login')
+@app.route('/applogin')
 def login():
     return get_file_content("app/login.json")
 

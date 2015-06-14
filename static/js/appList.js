@@ -1,5 +1,5 @@
-var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
-// var appServerUrl = "http://127.0.0.1:5000"; var callback = "";
+// var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
+var appServerUrl = "http://127.0.0.1:5000"; var callback = "";
 
 (function($){
     // changePage("#LoginPage")
@@ -371,10 +371,9 @@ var me = {
 
     parseAppDetail : function (data)
     {
-    	$("#appDetail").empty();
+    	$(".appDetail").empty();
         // var obj = eval("("+data+")");
         var html = me.appDetailTemplate(data.detail_info);
-
         $(".appDetail").append(html);
 
         $(".content-BaiYingFreeDownload").fastClick(function() {
@@ -463,9 +462,6 @@ var me = {
             arrHtml.push("data-installed='NO' >安装</a>");
         }
         arrHtml.push("</div>");
-
-        arrHtml.push("<div id=\"divDownloadPanle\" class=\"content-btn-con\">");
-        arrHtml.push("</div>");
         arrHtml.push("</div>");
         arrHtml.push("</section>");
 
@@ -477,14 +473,13 @@ var me = {
         arrHtml.push("<section class=\"description\">");
         arrHtml.push("<div class=\"content-navdes-wrapper\">");
         arrHtml.push("<div class=\"des-main\">");
-        arrHtml.push("<div class=\"des-indent des-short\">");
+        // arrHtml.push("<div class=\"des-indent des-short\">");
 
         arrHtml.push("<div class=\"des-long-content\">");
-        arrHtml.push("<p>" + data.BriefSummary + "</p>");
-        arrHtml.push("<br />");
+        // arrHtml.push("<p>" + data.BriefSummary + "</p>");
         arrHtml.push("<p>" + data.AppSummary + "</p>");
         arrHtml.push("</div>");
-        arrHtml.push("</div>");
+        // arrHtml.push("</div>");
         arrHtml.push("</div>");
         arrHtml.push("</div>");
         arrHtml.push("</section>");

@@ -1,0 +1,21 @@
+{
+    "detail_info": {
+        "AppId": 3,
+        "AppLogo": "http://m1.app111.com/AppImg/160x160/2015/05/08/8988384051431050064941.jpg",
+        "AppName": "帝国与同盟```",
+        "AppPrice": "免费下载",
+        "AppScore": 85,
+        "AppSize": "96MB",
+         "AppSource": "http://app.milkpapa.com:8080/static/apk/TencentVideo/TencentVideo_1080_V3.9.0.6272.apk",
+        "AppSummary": "和好友一起，建立你的帝国",
+        "AppVersion": "1.5.884969",
+        "BriefSummary": "这是一款全新的现代军事游戏",
+        "ImageCount": 5,
+        "ImageIsVertical": 1,
+        "ImageSrc": "http://m3.app111.com/AppImg/0x0/2015/05/08/f67afe6f-3a11-4a56-a9ee-9e73b18151ba.jpg",
+        "ImageSrcList": ["http://m4.app111.com/AppImg/0x0/2015/05/08/bf89ee3a-4bf8-4ece-b803-8dfbd197a7e3.jpg", "http://m5.app111.com/AppImg/0x0/2015/05/08/79001cb6-fa18-4e8b-9998-5225e55e8696.jpg", "http://m1.app111.com/AppImg/0x0/2015/05/08/cc26f462-cec6-4a82-abf5-1b1b3a1e05be.jpg", "http://m1.app111.com/AppImg/0x0/2015/05/08/cc26f462-cec6-4a82-abf5-1b1b3a1e05be.jpg", "http://m2.app111.com/AppImg/0x0/2015/05/08/be99e717-30b2-4925-bdfb-0d8f9ede31d8.jpg"],
+        "ImageStyle": "width:92px;margin:0 0 0 21px;"
+    },
+    "ret_code": 0,
+    "ret_msg": "success"
+}
