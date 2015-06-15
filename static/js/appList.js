@@ -1,5 +1,7 @@
-// var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
-var appServerUrl = "http://127.0.0.1:5000"; var callback = "";
+var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
+// var appServerUrl = "http://127.0.0.1:5000"; //var callback = "";
+var milkPapaServerUrl = "http://app.milkpapa.com:5000";
+// var callback = "callback=?";
 
 (function($){
     // changePage("#LoginPage")
@@ -132,12 +134,12 @@ var me = {
 
     requestAds : function()
     {
-        // var url=appServerUrl+"/ads?"+callback;
-        var url = "json/ads.json";
+        var url = milkPapaServerUrl+"/ads?"+callback;
+        // var url = "json/ads.json";
         console.log("requestAds:"+url);
-        $.get(url, function(data, status) {
-            var obj = eval("(" + data +")");
-            me.parseAds(obj);
+        $.getJSON(url, function(data) {
+            // var obj = eval("(" + data +")");
+            me.parseAds(data);
             slide.init();
             if (me.currentTabIdx == 1) {
                 $(".fouce").show();
@@ -173,9 +175,9 @@ var me = {
     requestWifiList : function()
     {
         if (window.android == undefined) {
-            // var url=appServerUrl+"/ads?"+callback;
-            var url = "json/wifilist.json";
-            console.log("requestWifiList:"+url);
+            var url = milkPapaServerUrl + "/wifilist?"+callback;
+            // var url = "json/wifilist.json";
+            console.log("requestWifiList:" + url);
             // $.get(url, function(data, status) {
             //     // var obj = eval("(" + data +")");
             //     me.parseWifiList(data);
@@ -274,7 +276,7 @@ var me = {
     {
     	showLoader();
         // +currentCat+
-        var url = appServerUrl+"/applist?"+callback;
+        var url = milkPapaServerUrl+"/applist?"+callback;
         console.log(url);
         $.getJSON(url, function(data) {
     		hideLoader();
@@ -360,7 +362,7 @@ var me = {
 
     requestAppDetail : function (appId)
     {
-        var url = appServerUrl+"/appdetail?"+callback+"&appid="+appId;
+        var url = milkPapaServerUrl+"/appdetail?"+callback+"&appid="+appId;
         console.log(url);
         showLoader();
         $.getJSON(url, function(data) {

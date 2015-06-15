@@ -1,20 +1,20 @@
 {
     "detail_info": {
         "AppId": 1,
-        "AppLogo": "http://app.milkpapa.com:8080/static/apk/TencentStock/logo.jpg",
+        "AppLogo": "http://app.milkpapa.com:5000/static/apk/TencentStock/logo.jpg",
         "AppName": "自选股",
         "AppSize": "6.26MB",
-        "AppSource": "http://app.milkpapa.com:8080/static/apk/TencentStock/QQStock_Android_3.9.1_751.apk",
-        "AppSummary": "自选股从同花顺、大智慧、通达信、操盘手等同类理财炒股软件中脱颖而出，曾荣获安卓峰会的金掌奖“最具潜力”手机炒股应用及互联网大会“最佳工具应用奖”！\n自选股是腾讯出品的一款简单、易用、专业的手机炒股软件，覆盖沪深、港股、美股三大市场，适用于所有股票投资者！\n主要功能：\n1、7*24小时全球财经资讯、市场要闻实时推送；\n2、即时股价、公告、研报等重要消息提醒；\n3、QQ账号登陆，网页、手机、QQ同步查看自选股票；\n4、沪深、港股、美股Bats全市场实时行情，永久免费；\n5、采用高速股票行情数据传输接口，系统稳定，省电省流量；\n6、在股票圈与微信好友畅聊股票，分享投资心得。\n\n\n\n新增功能：\n1、全新股票圈，新年贺岁版，发表评论全体网友可见；\n2、支持投资眼光，与好友欢乐PK，更多惊喜等你发现！",
+        "AppSource": "http://app.milkpapa.com:5000/static/apk/TencentStock/QQStock_Android_3.9.1_751.apk",
+        "AppSummary": "自选股从同花顺、大智慧、通达信、操盘手等同类理财炒股软件中脱颖而出，曾荣获安卓峰会的金掌奖“最具潜力”手机炒股应用及互联网大会“最佳工具应用奖”！<br>自选股是腾讯出品的一款简单、易用、专业的手机炒股软件，覆盖沪深、港股、美股三大市场，适用于所有股票投资者！<br>主要功能：<br>1、7*24小时全球财经资讯、市场要闻实时推送；<br>2、即时股价、公告、研报等重要消息提醒；<br>3、QQ账号登陆，网页、手机、QQ同步查看自选股票；<br>4、沪深、港股、美股Bats全市场实时行情，永久免费；<br>5、采用高速股票行情数据传输接口，系统稳定，省电省流量；<br>6、在股票圈与微信好友畅聊股票，分享投资心得。<br><br><br><br>新增功能：<br>1、全新股票圈，新年贺岁版，发表评论全体网友可见；<br>2、支持投资眼光，与好友欢乐PK，更多惊喜等你发现！",
         "AppVersion": "3.9.1",
         "BriefSummary": "简单、易用、专业的手机炒股软件",
         "ImageCount": 5,
         "ImageIsVertical": 1,
-        "ImageSrc": "http://app.milkpapa.com:8080/static/apk/TencentStock/snapshot/1-800.png",
-        "ImageSrcList": ["http://app.milkpapa.com:8080/static/apk/TencentStock/snapshot/2-800.jpg",
-            "http://app.milkpapa.com:8080/static/apk/TencentStock/snapshot/3-800.jpg",
-            "http://app.milkpapa.com:8080/static/apk/TencentStock/snapshot/4-800.png",
-            "http://app.milkpapa.com:8080/static/apk/TencentStock/snapshot/5-800.png"
+        "ImageSrc": "http://app.milkpapa.com:5000/static/apk/TencentStock/snapshot/1-800.png",
+        "ImageSrcList": ["http://app.milkpapa.com:5000/static/apk/TencentStock/snapshot/2-800.jpg",
+            "http://app.milkpapa.com:5000/static/apk/TencentStock/snapshot/3-800.jpg",
+            "http://app.milkpapa.com:5000/static/apk/TencentStock/snapshot/4-800.png",
+            "http://app.milkpapa.com:5000/static/apk/TencentStock/snapshot/5-800.png"
         ],
         "ImageStyle": "width:92px;margin:0 0 0 21px;"
     },
