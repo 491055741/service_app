@@ -1,11 +1,9 @@
 {
     "detail_info": {
         "AppId": 2,
-        "AppLogo": "http://m1.app111.com/AppImg/160x160/2015/05/08/8988384051431050064941.jpg",
-        "AppName": "帝国与同盟```",
-        "AppPrice": "免费下载",
-        "AppScore": 85,
-        "AppSize": "96MB",
+        "AppLogo": "http://app.milkpapa.com:8080/static/apk/TencentNews/logo.png",
+        "AppName": "腾讯新闻",
+        "AppSize": "12.1MB",
         "AppSource": "http://app.milkpapa.com:8080/static/apk/TencentNews/TencentNews_751_v4.6.1-release.apk",
         "AppSummary": "和好友一起，建立你的帝国",
         "AppVersion": "1.5.884969",
