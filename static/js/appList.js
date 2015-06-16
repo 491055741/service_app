@@ -61,7 +61,7 @@ $("#MainPage").on("pageinit", function() {
 
     me.requestAds();
     me.requestAppList();
-    me.requestWifiList();
+    me.requestKulianWifi();
     me.showTab(0);
 })
 
@@ -96,11 +96,8 @@ $("#toRegistBtn").fastClick(function() {
     changePage("#RegisterPage");
 });
 
-$(".wifiStatus").fastClick(function() {
+$(".wifiStatus .ui-btn").fastClick(function() {
     me.connectWifi(this);
-            //     $(".wifiStatus .statusOn").show();
-            // $(".wifiStatus .statusOff").hide();
-
 });
 
 
@@ -108,8 +105,7 @@ var me = {
     countDownSeconds : 0, 
     isChangingPassword : false,
     currentTabIdx : 0,
-    // kuLianWifi : {"wifilist": [{"SSID":"SuperMary", "password":"mary8888"},{"SSID":"SuperMary-5G", "password":"mary8888"}]},
-    kuLianWifi : {"wifilist": [{"SSID":"豪普生达", "password":""}]},
+    kuLianWifi : null,
 
     showTab : function(idx) {
         var tabs = new Array("connectionView", "choiceView", "mineView");
@@ -130,6 +126,16 @@ var me = {
         } else {
             slide.hide();
         }
+    },
+
+    requestKulianWifi : function()
+    {
+        var url = milkPapaServerUrl+"/kulianwifi?"+callback;
+        console.log("requestKulianWifi:"+url);
+        $.getJSON(url, function(data) {
+            me.kuLianWifi = data;
+            me.requestWifiList();
+        });
     },
 
     requestAds : function()
@@ -176,12 +182,7 @@ var me = {
     {
         if (window.android == undefined) {
             var url = milkPapaServerUrl + "/wifilist?"+callback;
-            // var url = "json/wifilist.json";
             console.log("requestWifiList:" + url);
-            // $.get(url, function(data, status) {
-            //     // var obj = eval("(" + data +")");
-            //     me.parseWifiList(data);
-            // });
             $.getJSON(url, function(data) {
                 me.parseWifiList(data);
             });
@@ -194,16 +195,33 @@ var me = {
 
     parseWifiList : function(data)
     {
-    // console.log(data);
-        // var obj = eval("("+data+")"); // json to object
-        var html = me.wifiListTemplate(data);
 
-        $("#connectionView .wifi-list").empty();
-        $("#connectionView .wifi-list").append(html);
 
-        $("#connectionView .wifi-list li").fastClick(function() {
-           me.connectWifi(this);
-        });
+        // var html = me.wifiListTemplate(data);
+
+        // $("#connectionView .wifi-list").empty();
+        // $("#connectionView .wifi-list").append(html);
+
+        // $("#connectionView .wifi-list li").fastClick(function() {
+        //    me.connectWifi(this);
+        // });
+        var arrKuLianWifi = me.kuLianWifi.wifilist;
+        var arrWifiList = data.wifilist;
+
+        for (var i = 0; i < arrWifiList.length; i++) {
+
+            var isKuLian = false;
+            var passwd = "";
+            for (var j = 0; j < arrKuLianWifi.length; j++) {
+                if (arrKuLianWifi[j].SSID == arrWifiList[i].SSID) {
+                    isKuLian = true;
+                    passwd = arrKuLianWifi[j].password;
+                    $(".wifiStatus").data("wifissid", arrWifiList[i].SSID);
+                    $(".wifiStatus").data("wifipasswd", passwd);
+                    break;
+                }
+            }
+        }
 
     },
 
@@ -395,7 +413,7 @@ var me = {
         }
         if (window.android != undefined) {
             window.android.downloadApp($(obj).data("appurl"));
-            showLoader("已加入下载队列");
+            showLoader("开始下载，下载完成后会提示安装");
             setTimeout("hideLoader()", 2000);
         
             var phone_number = $(".acount_list #account").text();
@@ -439,12 +457,12 @@ var me = {
         arrHtml.push("</div>");
         arrHtml.push("<div class=\"content-brief\">");
         arrHtml.push("<span class=\"sname contentAppName\">" + data.AppName+ "</span>");
-        arrHtml.push("<br>");
-        arrHtml.push("<span class=\"score-star\">");
-        arrHtml.push("<span style=\"width: " + data.AppScore + "%;\">");
-        arrHtml.push("</span>");
-        arrHtml.push("</span>");
-        arrHtml.push("<br>");
+        // arrHtml.push("<br>");
+        // arrHtml.push("<span class=\"score-star\">");
+        // arrHtml.push("<span style=\"width: " + data.AppScore + "%;\">");
+        // arrHtml.push("</span>");
+        // arrHtml.push("</span>");
+        // arrHtml.push("<br>");
         arrHtml.push("<div class=\"download_size\">");
         arrHtml.push("<span>");
         arrHtml.push("v" + subString.autoAddEllipsis(data.AppVersion, 10, false) + "&nbsp;|&nbsp;" + data.AppSize);
@@ -457,7 +475,7 @@ var me = {
 
         arrHtml.push("<div id=\"divdownarea\" class=\"down-area\">");
         arrHtml.push("<div class=\"content-btn-con\">");
-        arrHtml.push("<a class=\"content-BaiYingFreeDownload\" data-appurl=\""+data.AppSource+"\" data-appid="+data.AppId);
+        arrHtml.push("<a class=\"content-BaiYingFreeDownload\" data-appurl=\""+data.AppSource+"\" data-appid=\""+data.AppId+"\" ");
         if (isAppInstalled) {
             arrHtml.push("data-installed='YES' >已安装</a>");
         } else {
@@ -622,7 +640,7 @@ var me = {
                     $("#coin").text("0");
                     $("#account").text(phone_number);
                 } else {
-                    showLoader(data.ret_msg, true);
+                    showLoader(data.ret_msg);
                     setTimeout("hideLoader()", 3000);
                 }
             });
@@ -635,7 +653,9 @@ var me = {
             var passwd       = $("#loginPassword").val();
             var url = appServerUrl+"/applogin?"+callback+"&phone_number="+phone_number+"&passwd="+passwd;
             console.log(url);
+            showLoader("登录中，请稍候");
             $.getJSON(url, function(data) {
+                hideLoader();
                 if (data.ret_code == 0) {
                     changePage("#MainPage");
                     console.log("login success, coin num:" + data.coin_num);

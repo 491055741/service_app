@@ -45,6 +45,10 @@ def applist():
 def wifilist():
     return response("app/wifilist.json")
 
+@app.route('/kulianwifi')
+def kulianwifi():
+    return response("app/kulianwifi.json")
+
 @app.route('/appdetail')
 def appdetail():
     appid=request.args.get('appid',0)

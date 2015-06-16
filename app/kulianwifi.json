@@ -1,0 +1,12 @@
+{
+    "wifilist": [{
+        "SSID": "SuperMary",
+        "password": "mary8888"
+    }, {
+        "SSID": "SuperMary-5G",
+        "password": "mary8888"
+    }, {
+        "SSID":"豪普生达",
+        "password":""
+    }]
+}
