@@ -2,8 +2,8 @@
    "applist" : [
       {
          "AppId" : 1,
-         "AppLogo" : "http://app.milkpapa.com:5000/static/apk/TencentStock/logo.jpg",
-         "AppSource": "http://app.milkpapa.com:5000/static/apk/TencentStock/QQStock_Android_3.9.1_751.apk",
+         "AppLogo" : "http://app.milkpapa.com:8080/static/apk/TencentStock/logo.jpg",
+         "AppSource": "http://app.milkpapa.com:8080/static/apk/TencentStock/QQStock_Android_3.9.1_751.apk",
          "AppName" : "自选股",
          "AppSize" : "6.26MB",
          "BriefSummary" : "简单、易用、专业的手机炒股软件",
@@ -11,8 +11,8 @@
       },
       {
          "AppId" : 2,
-         "AppLogo" : "http://app.milkpapa.com:5000/static/apk/TencentNews/logo.png",
-         "AppSource": "http://app.milkpapa.com:5000/static/apk/TencentNews/TencentNews_751_v4.6.1-release.apk",
+         "AppLogo" : "http://app.milkpapa.com:8080/static/apk/TencentNews/logo.png",
+         "AppSource": "http://app.milkpapa.com:8080/static/apk/TencentNews/TencentNews_751_v4.6.1-release.apk",
          "AppName" : "腾讯新闻",
          "AppSize" : "12.1MB",
          "BriefSummary" : "7x24小时全方位新闻报道的新闻产品",
@@ -20,8 +20,8 @@
       },
       {
          "AppId" : 3,
-         "AppLogo" : "http://app.milkpapa.com:5000/static/apk/TencentVideo/logo.jpg",
-         "AppSource": "http://app.milkpapa.com:5000/static/apk/TencentVideo/TencentVideo_1080_V3.9.0.6272.apk",
+         "AppLogo" : "http://app.milkpapa.com:8080/static/apk/TencentVideo/logo.jpg",
+         "AppSource": "http://app.milkpapa.com:8080/static/apk/TencentVideo/TencentVideo_1080_V3.9.0.6272.apk",
          "AppName" : "腾讯视频",
          "AppSize" : "17.84MB",
          "BriefSummary" : "海量高清影视平台",
