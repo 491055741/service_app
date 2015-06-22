@@ -19,11 +19,6 @@ def response(file_name):
     jsonp_callback =  request.args.get('callback', '')
     if jsonp_callback:
         content = "%s(%s);" % (jsonp_callback, content)
-        # return Response(
-                # "%s(%s);" % (jsonp_callback, resp),
-                # mimetype="text/javascript"
-                # )
-
 
     resp = make_response(content)
     resp.headers['Access-Control-Allow-Origin'] = '*'
