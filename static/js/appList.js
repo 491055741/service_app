@@ -91,7 +91,7 @@ $("#MainPage").on("pageinit", function() {
     me.requestAppList();
     me.requestKulianWifi();
     me.showTab(0);
-})
+});
 
 $("#logoutBtn").fastClick(function() {
     isAutoLogin = false;
