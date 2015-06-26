@@ -474,6 +474,8 @@ var me = {
             if (appInfo != null) {
                 var mac = window.android.getMacAddress();
                 var url= appInfo.Clickurl.replace("[M_MAC]", mac);
+                var imei = window.android.getIMEI();
+                url = url.replace("[M_IMEI]", imei);
                 $.getJSON(url, function(data) {
                     console.log("report click:"+url);
                 });
