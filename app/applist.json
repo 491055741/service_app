@@ -1,5 +1,23 @@
 {
-   "applist" : [
+    "chosenapplist": [{
+        "AppId": 93,
+        "AppLogo": "http://www.dspmind.com/upload/images/20150623/1435071269335528.jpg",
+        "AppName": "tengxunshipin",
+        "AppSize": "16005998",
+        "AppSource": "http://www.dspmind.com/upload/files/20150624/4/tengxunshipin_8200-4.apk",
+        "BriefSummary": "腾讯视频是中国最大的视频门户",
+        "Clickurl": "http://www.mobdsp.com/cb/c?k=93&m1=[M_MAC]&m2=[M_IDFA]&m3=[M_IMEI]&o=",
+        "GiveCoin": 100
+    }],
+    "chosenapplist_count": 1,
+    "gameapplist": null,
+    "gameapplist_count": 0,
+    "ret_code": 0,
+    "ret_msg": "success",
+    "toolapplist": null,
+    "toolapplist_count": 0,
+
+   "otherapplist" : [
       {
          "AppId" : 1,
          "AppLogo" : "http://app.milkpapa.com:8080/static/apk/TencentStock/logo.jpg",
@@ -27,8 +45,6 @@
          "BriefSummary" : "海量高清影视平台",
          "GiveCoin" : 100
       }
-   ],
-   "ret_code" : 0,
-   "ret_msg" : "success",
-   "total_count" : 3
+   ]
 }
+
