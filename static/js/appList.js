@@ -3,8 +3,8 @@ var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var isAutoLogin = true;
 var testNetworkUrl = "http://app.milkpapa.com:5000/version";
+
 (function($){
-    NProgress.configure({ parent: '#mainFooter' });
     $.ajaxSetup({
         timeout : 10000,
         error: function (x, e) {
@@ -20,12 +20,12 @@ var refreshWifiList = function () {
 }
 // js-Android interface
 var updateDownloadProgress = function (progress) {
-    NProgress.set(progress/100);
-    $(".spinner").hide();
+    $('.load-bar').show();
+    $('#counter').html(progress+'%'); 
 }
 // js-Android interface
 var finishDownloadProgress = function () {
-    NProgress.done();
+    $('.load-bar').hide();
 }
 // js-Android interface
 var appInstallFinished = function (appId) {
@@ -96,6 +96,7 @@ $("#MainPage").on("pageshow", function () {
     console.log("main page show");
     me.showTab(me.currentTabIdx);
     // me.checkNetwork();
+    finishDownloadProgress();
 });
 
 $("#logoutBtn").fastClick(function() {
@@ -537,7 +538,7 @@ var me = {
         var arrHtml  = new Array();
         arrHtml.push(me.appIntroTemplate(data));
 
-        arrHtml.push("<div class='snapshot'><img src='" + data.ImageSrc + "'>");
+        arrHtml.push("<div class='snapshot'>");
         for (var i = 0; i < data.ImageSrcList.length; i++) {
           arrHtml.push("<img src='" + data.ImageSrcList[i] + "'>");
         }
