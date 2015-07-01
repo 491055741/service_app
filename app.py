@@ -32,6 +32,10 @@ def response(file_name):
 def index():
     return response("static/appBase.html")
 
+@app.route('/version')
+def version():
+    return response("app/version.json");
+
 @app.route('/applist')
 def applist():
     return response("app/applist.json")
