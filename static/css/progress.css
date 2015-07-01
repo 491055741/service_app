@@ -7,12 +7,12 @@
     box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.8),  inset 0 2px 3px rgba(0, 0, 0, 0.2);
 }
-.wrapper .load-bar:hover .load-bar-inner, .wrapper .load-bar:hover #counter {
+/*.wrapper .load-bar:hover .load-bar-inner, .wrapper .load-bar:hover #counter {
     animation-play-state: paused;
     -moz-animation-play-state: paused;
     -o-animation-play-state: paused;
     -webkit-animation-play-state: paused;
-}
+}*/
 .wrapper .load-bar-inner {
     height: 99%;
     width: 0%;
@@ -25,10 +25,10 @@
     background: -o-linear-gradient(#e0f6c8, #98ad84);
     box-shadow:
  inset 0 1px 0 rgba(255, 255, 255, 1),  0 1px 5px rgba(0, 0, 0, 0.3),  0 4px 5px rgba(0, 0, 0, 0.3);
-    animation: loader 10s linear infinite;
+/*    animation: loader 10s linear infinite;
     -moz-animation: loader 10s linear infinite;
     -webkit-animation: loader 10s linear infinite;
-    -o-animation: loader 10s linear infinite;
+    -o-animation: loader 10s linear infinite;*/
 }
 .wrapper #counter {
     position: absolute;
@@ -46,10 +46,10 @@
     font-size: 12px;
     font-weight: bold;
     width: 30px;
-    animation: counter 10s linear infinite;
+/*    animation: counter 10s linear infinite;
     -moz-animation: counter 10s linear infinite;
     -webkit-animation: counter 10s linear infinite;
-    -o-animation: counter 10s linear infinite;
+    -o-animation: counter 10s linear infinite;*/
 }
 .wrapper #counter:after {
     content: "";
@@ -75,68 +75,35 @@
 .wrapper p {
     font-size: 13px;
 }
- @keyframes loader {
- from {
-width: 0%;
-}
-to {
-    width: 100%;
-}
-}
+ /*@keyframes loader {
+    from {width: 0%;}
+    to {width: 100%;}
+ }
  @-moz-keyframes loader {
- from {
-width: 0%;
-}
-to {
-    width: 100%;
-}
-}
+    from {width: 0%;}
+    to {width: 100%;}
+ }
  @-webkit-keyframes loader {
- from {
-width: 0%;
-}
-to {
-    width: 100%;
-}
-}
+    from {width: 0%;}
+    to {width: 100%;}
+ }
  @-o-keyframes loader {
- from {
-width: 0%;
-}
-to {
-    width: 100%;
-}
-}
-
+    from {width: 0%;}
+    to {width: 100%;}
+ }
  @keyframes counter {
- from {
-left: -25px;
-}
-to {
-    left: 323px;
-}
-}
+    from {left: -25px;}
+    to {left: 323px;}
+ }
  @-moz-keyframes counter {
- from {
-left: -25px;
-}
-to {
-    left: 323px;
-}
-}
+    from {left: -25px;}
+    to {left: 323px;}
+ }
  @-webkit-keyframes counter {
- from {
-left: -25px;
-}
-to {
-    left: 323px;
-}
-}
+    from {left: -25px;}
+    to {left: 323px;}
+ }
  @-o-keyframes counter {
- from {
-left: -25px;
-}
-to {
-    left: 323px;
-}
-}
+    from {left: -25px;}
+    to {left: 323px;}
+ }*/

@@ -21,7 +21,11 @@ var refreshWifiList = function () {
 // js-Android interface
 var updateDownloadProgress = function (progress) {
     $('.load-bar').show();
-    $('#counter').html(progress+'%'); 
+    $('#counter').html(progress+'%');
+    $('.wrapper .load-bar-inner').width(progress+'%');
+    var offset = (323+25)*progress/100 - 25;
+    console.log('counter offset:'+offset);
+    $('.wrapper #counter').css('left', offset+'px');
 }
 // js-Android interface
 var finishDownloadProgress = function () {
@@ -95,8 +99,9 @@ $("#MainPage").on("pageinit", function() {
 $("#MainPage").on("pageshow", function () {
     console.log("main page show");
     me.showTab(me.currentTabIdx);
-    // me.checkNetwork();
+
     finishDownloadProgress();
+    // updateDownloadProgress(50);
 });
 
 $("#logoutBtn").fastClick(function() {
