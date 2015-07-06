@@ -104,6 +104,24 @@ $("#MainPage").on("pageshow", function () {
     // updateDownloadProgress(50);
 });
 
+$("#AppDetailPage").on("pageshow", function () {
+    // setTimeout(, 1000);
+        var gallery = $('.swiper-container').swiper({
+            slidesPerView:'auto',
+            watchActiveIndex: true,
+            centeredSlides: true,
+            pagination:'.pagination',
+            paginationClickable: true,
+            resizeReInit: true,
+            keyboardControl: true,
+            grabCursor: true,
+            onImagesReady: function(){
+                gallerySwiper.changeSize();
+            }
+        });    
+        gallerySwiper.changeSize()
+});
+
 $("#logoutBtn").fastClick(function() {
     isAutoLogin = false;
     changePage("#LoginPage");
@@ -543,11 +561,15 @@ var me = {
         var arrHtml  = new Array();
         arrHtml.push(me.appIntroTemplate(data));
 
-        arrHtml.push("<div class='snapshot'>");
+        // arrHtml.push("<div class='snapshot'>");
+        // for (var i = 0; i < data.ImageSrcList.length; i++) {
+        //   arrHtml.push("<img src='" + data.ImageSrcList[i] + "'>");
+        // }
+        arrHtml.push("<div class='swiper-container'><div class='pagination' style='display:none;'></div><div class='swiper-wrapper' style='width:2424px;'>");
         for (var i = 0; i < data.ImageSrcList.length; i++) {
-          arrHtml.push("<img src='" + data.ImageSrcList[i] + "'>");
+          arrHtml.push("<div class='swiper-slide'><div class='inner'> <img src='" + data.ImageSrcList[i] + "' alt=''> </div></div>");
         }
-        arrHtml.push("</div>");
+        arrHtml.push("</div></div>");
         arrHtml.push(me.descriptionTemplate(data))
         return arrHtml.join("");
     },
@@ -607,7 +629,8 @@ var me = {
 
         arrHtml.push("<div class=\"des-long-content\">");
         // arrHtml.push("<p>" + data.BriefSummary + "</p>");
-        arrHtml.push("<p>" + data.AppSummary + "</p>");
+        var summary = data.AppSummary;
+        arrHtml.push("<p>" + summary.replace(/\n/g,"<br/>") + "</p>");
         arrHtml.push("</div>");
         // arrHtml.push("</div>");
         arrHtml.push("</div>");

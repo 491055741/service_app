@@ -28,10 +28,6 @@ def response(file_name):
 
     return resp
 
-@app.route('/')
-def index():
-    return response("static/appBase.html")
-
 @app.route('/version')
 def version():
     return response("app/version.json");
