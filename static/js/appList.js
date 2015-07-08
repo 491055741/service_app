@@ -41,6 +41,13 @@ var appInstallFinished = function (appId) {
     });
 }
 // js-Android interface
+var configBackBtn = function () {
+    // console.log("isMainPage.");
+    // if (window.android != undefined) {
+    //     window.android.showBackBtn(window.history.length >0 && ($("#MainPage").css("display") == "none"));
+    // }
+}
+// js-Android interface
 var wifiStatusChanged = function () {
     console.log("wifiStatusChanged.");
     if (window.android != undefined) {
@@ -106,20 +113,20 @@ $("#MainPage").on("pageshow", function () {
 
 $("#AppDetailPage").on("pageshow", function () {
     // setTimeout(, 1000);
-        var gallery = $('.swiper-container').swiper({
-            slidesPerView:'auto',
-            watchActiveIndex: true,
-            centeredSlides: true,
-            pagination:'.pagination',
-            paginationClickable: true,
-            resizeReInit: true,
-            keyboardControl: true,
-            grabCursor: true,
-            onImagesReady: function(){
-                gallerySwiper.changeSize();
-            }
-        });    
-        gallerySwiper.changeSize()
+    var gallery = $('.swiper-container').swiper({
+        slidesPerView:'auto',
+        watchActiveIndex: true,
+        centeredSlides: true,
+        pagination:'.pagination',
+        paginationClickable: true,
+        resizeReInit: true,
+        keyboardControl: true,
+        grabCursor: true,
+        onImagesReady: function(){
+            gallerySwiper.changeSize();
+        }
+    });
+    gallerySwiper.changeSize();
 });
 
 $("#logoutBtn").fastClick(function() {
@@ -336,10 +343,9 @@ var me = {
 
     },
 
-    wifiListTemplate : function(res) {
-
+    wifiListTemplate : function(res)
+    {
         var data = res.wifilist;
-
         var arrHtml = new Array();
         var arrKuLianWifi = me.kuLianWifi.wifilist;
 
@@ -382,7 +388,8 @@ var me = {
         return arrHtml.join("");
     },
 
-    connectWifi : function (obj) {
+    connectWifi : function (obj)
+    {
         if (window.android != undefined) {
             var ssid = $(obj).data("wifissid");
             var pwd = $(obj).data("wifipasswd");
@@ -435,8 +442,8 @@ var me = {
         });
     },
 
-    appListTemplate : function(res) {
-
+    appListTemplate : function(res)
+    {
         var data = res.chosenapplist;
         var arrHtml = new Array();
 
@@ -485,7 +492,8 @@ var me = {
         return arrHtml.join("");
     },
 
-    getAppInfoById : function (appId) {
+    getAppInfoById : function (appId)
+    {
         var choosenAppList = me.appList.chosenapplist;
         for (var i = 0; i < choosenAppList.length; i++) {
             if (choosenAppList[i].AppId == appId) {
@@ -574,8 +582,8 @@ var me = {
         return arrHtml.join("");
     },
 
-    appIntroTemplate : function (data) {
-
+    appIntroTemplate : function (data)
+    {
         var isAppInstalled = false;
         if (window.android != undefined && window.android.isAppInstalled(data.AppName, 1)) {
             isAppInstalled = true;
@@ -620,7 +628,8 @@ var me = {
         return arrHtml.join("");
     },
 
-    descriptionTemplate : function (data) {
+    descriptionTemplate : function (data)
+    {
         var arrHtml = new Array();
         arrHtml.push("<section class=\"description\">");
         arrHtml.push("<div class=\"content-navdes-wrapper\">");
@@ -630,7 +639,7 @@ var me = {
         arrHtml.push("<div class=\"des-long-content\">");
         // arrHtml.push("<p>" + data.BriefSummary + "</p>");
         var summary = data.AppSummary;
-        arrHtml.push("<p>" + summary.replace(/\n/g,"<br/>") + "</p>");
+        arrHtml.push("<p>" + summary.replace(/\r\n/g,"<br/>").replace(/\\n/g,"<br/>").replace(/\n/g,"<br/>") + "</p>");
         arrHtml.push("</div>");
         // arrHtml.push("</div>");
         arrHtml.push("</div>");
@@ -640,7 +649,8 @@ var me = {
     },
 
     //获取查询参数
-    parseQueryString : function () {
+    parseQueryString : function ()
+    {
         var str = window.location.search;
         var objURL = {};
         str.replace(
@@ -652,7 +662,8 @@ var me = {
         return objURL;
     },
 
-    showMessage : function () {
+    showMessage : function ()
+    {
         $("#twitter li:not(:first)").css("display","none");
         var B = $("#twitter li:last");
         var C = $("#twitter li:first");
@@ -668,7 +679,8 @@ var me = {
         },3000); //每3秒切换一条
     },
 
-    requestVerifyCode : function() {
+    requestVerifyCode : function()
+    {
         var phone_number = $("#registPhoneNumber").val();
         if (phone_number == '' || phone_number == '手机号' || !isPhoneNumber(phone_number)) {
             showLoader("请填写手机号");
@@ -692,7 +704,8 @@ var me = {
         }
     )},
 
-    countDown : function() {
+    countDown : function()
+    {
         $(".verifyCodeBtn").text(me.countDownSeconds + "秒");
         me.countDownSeconds = me.countDownSeconds - 1;
         if (me.countDownSeconds <= 0) {
@@ -703,7 +716,8 @@ var me = {
         }
     },
 
-    validLogin : function() {
+    validLogin : function()
+    {
         if ($("#loginUsername").val()=='' || $("#loginUsername").val()=='手机号' || !isPhoneNumber($("#loginUsername").val())) {
             showLoader("请填写手机号");
             setTimeout("hideLoader()", 2000);
@@ -717,7 +731,8 @@ var me = {
         return true;
     },
 
-    validRegist : function() {
+    validRegist : function()
+    {
         if ($("#registPhoneNumber").val()=='' || $("#registPhoneNumber").val()=='手机号' || !isPhoneNumber($("#registPhoneNumber").val())) {
             showLoader("请填写手机号");
             setTimeout("hideLoader()", 2000);
@@ -741,7 +756,8 @@ var me = {
         return true;
     },
 
-    validResetPwd : function() {
+    validResetPwd : function()
+    {
         if ($("#changePwdPhoneNumber").val()=='' || $("#changePwdPhoneNumber").val()=='手机号' || !isPhoneNumber($("#changePwdPhoneNumber").val())) {
             showLoader("请填写手机号");
             setTimeout("hideLoader()", 2000);
@@ -765,7 +781,8 @@ var me = {
         return true;
     },
 
-    register : function () {
+    register : function ()
+    {
         if (me.validRegist()) {
             var phone_number = $("#registPhoneNumber").val();
             var passwd       = $("#registPassword").val();
@@ -796,7 +813,8 @@ var me = {
         }
     },
 
-    login : function() {
+    login : function()
+    {
         if (me.validLogin()) {
             var phone_number = $("#loginUsername").val();
             var passwd       = $("#loginPassword").val();
@@ -834,7 +852,3 @@ var me = {
         }
     }
 }; // end of var me
-
-
-
-
