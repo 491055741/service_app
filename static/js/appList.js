@@ -1,5 +1,5 @@
 var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
-// var appServerUrl = "http://127.0.0.1:5000"; //var callback = "";
+// var appServerUrl = "http://127.0.0.1:5000"; var callback = "callback=?";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var isAutoLogin = true;
 var testNetworkUrl = "http://app.milkpapa.com:5000/version";
@@ -98,7 +98,7 @@ $("#MainPage").on("pageinit", function() {
     $("#excellentBtn").click(function() {me.showTab(1);});
     $("#mineBtn").click(function() {me.showTab(2);});
 
-    me.requestAds();
+    me.requestAppSlide();
     me.requestAppList();
     me.requestKulianWifi();
 });
@@ -257,14 +257,14 @@ var me = {
         });
     },
 
-    requestAds : function()
+    requestAppSlide : function()
     {
-        var url = milkPapaServerUrl+"/ads?"+callback;
+        var url = milkPapaServerUrl+"/appslide?"+callback;
         // var url = "json/ads.json";
-        console.log("requestAds:"+url);
+        console.log("requestAppSlide:"+url);
         $.getJSON(url, function(data) {
             // var obj = eval("(" + data +")");
-            me.parseAds(data);
+            me.parseAppSlide(data);
             slide.init();
             if (me.currentTabIdx == 1) {
                 $(".fouce").show();
@@ -272,17 +272,17 @@ var me = {
         });
     },
 
-    parseAds : function(data)
+    parseAppSlide : function(data)
     {
     // console.log(data);
         // var obj = eval("("+data+")"); // json to object
-        var html = me.adsTemplate(data);
+        var html = me.appSlideTemplate(data);
 
         $("#adlist").empty();
         $("#adlist").append(html);
     },
 
-    adsTemplate : function(data)
+    appSlideTemplate : function(data)
     {
         var data = data.adlist;
         var arrHtml = new Array();
@@ -638,8 +638,7 @@ var me = {
 
         arrHtml.push("<div class=\"des-long-content\">");
         // arrHtml.push("<p>" + data.BriefSummary + "</p>");
-        var summary = data.AppSummary;
-        arrHtml.push("<p>" + summary.replace(/\r\n/g,"<br/>").replace(/\\n/g,"<br/>").replace(/\n/g,"<br/>") + "</p>");
+        arrHtml.push("<p>" + data.AppSummary.replace(/\r\n/g,"<br/>").replace(/\\n/g,"<br/>").replace(/\n/g,"<br/>") + "</p>");
         arrHtml.push("</div>");
         // arrHtml.push("</div>");
         arrHtml.push("</div>");
