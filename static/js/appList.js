@@ -2,7 +2,8 @@ var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
 // var appServerUrl = "http://127.0.0.1:5000"; var callback = "callback=?";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var isAutoLogin = true;
-var testNetworkUrl = "http://app.milkpapa.com:5000/version";
+var checkNetworkInterval = 1500; // ms
+var checkNetworkUrl = "http://app.milkpapa.com:5000/version";
 
 (function($){
     $.ajaxSetup({
@@ -40,17 +41,6 @@ var appInstallFinished = function (appId) {
         // console.log(data);
     });
 }
-
-// js-Android interface
-var configBackBtn = function () {
-    var css= $("#MainPage").css("display");
-    var isMainPage = $("#MainPage").css("display") != "none";
-    var isShowBackBtn = window.history.length > 0 && !isMainPage;
-    console.log("isShowBackBtn:"+isShowBackBtn+"  isMainPage:"+isMainPage+"  history.length:"+window.history.length+"  mainPageCSS:"+css);
-    if (window.android != undefined) {
-        window.android.showBackBtn(isShowBackBtn);
-    }
-}
 // js-Android interface
 var wifiStatusChanged = function () {
     console.log("wifiStatusChanged.");
@@ -80,7 +70,7 @@ $("#LoginPage").on("pageinit", function () {
 
 $("#LoginPage").on("pageshow", function () {
     console.log("login page show");
-    configBackBtn();
+    me.showBackBtn(false);
     if (isAutoLogin && $("#loginUsername").val()!='' && $("#loginUsername").val()!='手机号' && isPhoneNumber($("#loginUsername").val())
         && $("#loginPassword").val()!='') {
         me.login();
@@ -89,12 +79,15 @@ $("#LoginPage").on("pageshow", function () {
 
 $("#RegisterPage").on("pageshow", function () {
     console.log("register page show");
-    configBackBtn();
+    me.showBackBtn(true);
     if (me.isChangingPassword) {
         setTitle("修改密码");
     } else {
         setTitle("注册");
     }
+    $("#registPassword").val('');
+    $("#registVerifyCode").val('');
+    $("#repeatPassword").val('');
 });
 
 $("#MainPage").on("pageinit", function() {
@@ -111,7 +104,7 @@ $("#MainPage").on("pageinit", function() {
 
 $("#MainPage").on("pageshow", function () {
     console.log("main page show");
-    configBackBtn();
+    me.showBackBtn(false);
     me.showTab(me.currentTabIdx);
 
     finishDownloadProgress();
@@ -120,7 +113,7 @@ $("#MainPage").on("pageshow", function () {
 
 $("#AppDetailPage").on("pageshow", function () {
     // setTimeout(, 1000);
-    configBackBtn();
+    me.showBackBtn(true);
     var gallery = $('.swiper-container').swiper({
         slidesPerView:'auto',
         watchActiveIndex: true,
@@ -195,11 +188,25 @@ var me = {
     kuLianWifi : null,
     appList : null,
 
+    showBackBtn : function (isShowBackBtn) {
+        console.log("showBackBtn:"+isShowBackBtn);
+        // var css= $("#MainPage").css("display");
+        // var isMainPage = $("#MainPage").css("display") != "none";
+        // var isShowBackBtn = window.history.length > 0 && !isMainPage;
+        // console.log("isShowBackBtn:"+isShowBackBtn+"  isMainPage:"+isMainPage+"  history.length:"+window.history.length+"  mainPageCSS:"+css);
+        if (window.android != undefined) {
+            window.android.showBackBtn(isShowBackBtn);
+        }
+        if (isShowBackBtn) {
+            console.log("ShowBackBtn: history.length:"+window.history.length);
+        }
+    },
+
     checkNetwork : function() {
-        console.log("checkNetwork: "+testNetworkUrl);
+        console.log("checkNetwork: "+checkNetworkUrl);
         $.ajax({
             type: "GET",
-            url: testNetworkUrl,
+            url: checkNetworkUrl,
             dataType : "jsonp",
             jsonp: "callback",//服务端用于接收callback调用的function名的参数
             jsonpCallback:"success_jsonpCallback",//callback的function名称
@@ -219,6 +226,11 @@ var me = {
 
     authentication : function() {
         console.log("authentication.");
+        if (checkNetworkInterval > 10000) {
+            checkNetworkInterval = 1500;
+            console.log("authentication timeout.");
+            return;
+        }
         // post the form
         $.ajax({
             type: "POST",
@@ -226,12 +238,14 @@ var me = {
             data: $("#loginform").serialize(),
             cache : false,
             success : function(data) {
-                        setTimeout(me.checkNetwork(), 1500);
+                        setTimeout(me.checkNetwork(), checkNetworkInterval);
                       },
             error : function() {
                     console.log("post authentication form fail.");
+                    setTimeout(me.authentication(), checkNetworkInterval);
             }
         });
+        checkNetworkInterval = checkNetworkInterval + 1000;
     },
 
     showTab : function(idx) {
@@ -268,7 +282,6 @@ var me = {
     requestAppSlide : function()
     {
         var url = milkPapaServerUrl+"/appslide?"+callback;
-        // var url = "json/ads.json";
         console.log("requestAppSlide:"+url);
         $.getJSON(url, function(data) {
             // var obj = eval("(" + data +")");
@@ -471,12 +484,13 @@ var me = {
             arrHtml.push("<dd class=\"item-title\">");
             arrHtml.push("<div class=\"item-title-sname\">");
             arrHtml.push("<div class=\"baiying-name\">");
-            arrHtml.push(subString.autoAddEllipsis(data[i].AppName, 22, true) + "</div></div></dd>");
+            arrHtml.push(subString.autoAddEllipsis(data[i].AppName, 40, true) + "</div></div></dd>");
             arrHtml.push("<dd class=\"item-star\">");
             // arrHtml.push("<span class=\"score-star\"><span style=\"width:" + data[i].AppScore + "%;\"></span></span>");
 
             if (data[i].AppSize != "") {
-                arrHtml.push("<span class=\"new-item-size\">" + data[i].AppSize + "</span>");
+                var size = parseFloat(data[i].AppSize/1000000).toFixed(1) + "MB";
+                arrHtml.push("<span class=\"new-item-size\">" + size + "</span>");
             }
 
             arrHtml.push("</dd>");
@@ -613,7 +627,8 @@ var me = {
         // arrHtml.push("<br>");
         arrHtml.push("<div class=\"download_size\">");
         arrHtml.push("<span>");
-        arrHtml.push("v" + subString.autoAddEllipsis(data.AppVersion, 10, false) + "&nbsp;|&nbsp;" + data.AppSize);
+        var size = parseFloat(data.AppSize/1000000).toFixed(1) + "MB";
+        arrHtml.push("v" + subString.autoAddEllipsis(data.AppVersion, 10, false) + "&nbsp;|&nbsp;" + size);
         arrHtml.push("</span>");
         arrHtml.push("</div>");
         arrHtml.push("</div>");
@@ -688,6 +703,11 @@ var me = {
 
     requestVerifyCode : function()
     {
+        if ($(".verifyCodeBtn").hasClass("text_disabled")) {
+            console.log("Please wait...");
+            return;
+        }
+
         var phone_number = $("#registPhoneNumber").val();
         if (phone_number == '' || phone_number == '手机号' || !isPhoneNumber(phone_number)) {
             showLoader("请填写手机号");
@@ -806,11 +826,11 @@ var me = {
                 if (data.ret_code == 0) {
                     if (me.isChangingPassword == false) {
                         showLoader("注册成功");
+                        $("#coin").text("0");
                     } else {
                         showLoader("密码修改成功");
                     }
                     setTimeout("changePageAndHideLoader(\"#MainPage\")", 2000);
-                    $("#coin").text("0");
                     $("#account").text(phone_number);
                 } else {
                     showLoader(data.ret_msg);
