@@ -14,11 +14,6 @@ var checkNetworkUrl = "http://app.milkpapa.com:5000/version";
         }
     });
 })(jQuery);
-
-// js-Android interface
-var refreshWifiList = function () {
-    me.requestWifiList();
-}
 // js-Android interface
 var updateDownloadProgress = function (progress) {
     $('.load-bar').show();
@@ -39,11 +34,21 @@ var appInstallFinished = function (appId) {
     console.log("Report app install:"+url);
     $.getJSON(url, function(data) {
         // console.log(data);
+        if (data.ret_code == 0) {
+            showLoader('您现在有 '+data.coin_num+' 个金币了');
+        } else {
+            showLoader(data.ret_msg);
+        }
+        setTimeout("hideLoader()", 3000);
     });
 }
 // js-Android interface
 var wifiStatusChanged = function () {
     console.log("wifiStatusChanged.");
+    if ($(".acount_list #account").text() == '') {
+        console.log('wifi status changed but not login yet.');
+        return;
+    }
     if (window.android != undefined) {
         if (window.android.isWifiAvailable()) {
             // var url="http://sucrq.tuancity.com/v1.1/?surl=http://ht.yeahwifi.com/guide/succeed/?sid=yeahwifi_222&tk=123456&uid=yeahwifi_222";
@@ -177,8 +182,10 @@ $("#toRegistBtn").fastClick(function() {
     changePage("#RegisterPage");
 });
 
-$(".wifiStatus .statusOff.ui-btn").fastClick(function() {
-    me.connectWifi(this);
+$(".wifiStatus img").fastClick(function() {
+    if ($(".wifiStatus .statusOn").css("display") == 'none') {
+        me.connectWifi(this);
+    }
 });
 
 var me = {
@@ -287,6 +294,7 @@ var me = {
             // var obj = eval("(" + data +")");
             me.parseAppSlide(data);
             slide.init();
+            $("#olSlideNum").hide();
             if (me.currentTabIdx == 1) {
                 $(".fouce").show();
             }
@@ -355,6 +363,7 @@ var me = {
                 if (arrKuLianWifi[j].SSID == arrWifiList[i].SSID) {
                     isKuLian = true;
                     passwd = arrKuLianWifi[j].password;
+                    $(".wifiStatus .statusOn").text(arrWifiList[i].SSID+' 已连接');
                     $(".wifiStatus").data("wifissid", arrWifiList[i].SSID);
                     $(".wifiStatus").data("wifipasswd", passwd);
                     break;
@@ -484,19 +493,19 @@ var me = {
             arrHtml.push("<dd class=\"item-title\">");
             arrHtml.push("<div class=\"item-title-sname\">");
             arrHtml.push("<div class=\"baiying-name\">");
-            arrHtml.push(subString.autoAddEllipsis(data[i].AppName, 40, true) + "</div></div></dd>");
+            arrHtml.push(subString.autoAddEllipsis(data[i].AppName, 30, true) + "</div></div></dd>");
             arrHtml.push("<dd class=\"item-star\">");
             // arrHtml.push("<span class=\"score-star\"><span style=\"width:" + data[i].AppScore + "%;\"></span></span>");
 
             if (data[i].AppSize != "") {
-                var size = parseFloat(data[i].AppSize/1000000).toFixed(1) + "MB";
-                arrHtml.push("<span class=\"new-item-size\">" + size + "</span>");
+                // var size = parseFloat(data[i].AppSize/1000000).toFixed(1) + "MB";
+                arrHtml.push("<span class=\"new-item-size\">" + data[i].AppSize + "</span>");
             }
 
             arrHtml.push("</dd>");
             arrHtml.push("<dd>");
             arrHtml.push("<div class=\"xiaobian-comment\">");
-            arrHtml.push(data[i].BriefSummary == "" ? "暂无介绍" : subString.autoAddEllipsis(data[i].BriefSummary, 22, true));
+            arrHtml.push(data[i].BriefSummary == "" ? "暂无介绍" : subString.autoAddEllipsis(data[i].BriefSummary, 34, true));
             arrHtml.push("</div></dd></dl></div>");
 
             arrHtml.push("<div class='coin_num' >+"+data[i].GiveCoin+"</div>");
@@ -627,8 +636,8 @@ var me = {
         // arrHtml.push("<br>");
         arrHtml.push("<div class=\"download_size\">");
         arrHtml.push("<span>");
-        var size = parseFloat(data.AppSize/1000000).toFixed(1) + "MB";
-        arrHtml.push("v" + subString.autoAddEllipsis(data.AppVersion, 10, false) + "&nbsp;|&nbsp;" + size);
+        // var size = parseFloat(data.AppSize/1000000).toFixed(1) + "MB";
+        arrHtml.push("v" + subString.autoAddEllipsis(data.AppVersion, 10, false) + "&nbsp;|&nbsp;" + data.AppSize);
         arrHtml.push("</span>");
         arrHtml.push("</div>");
         arrHtml.push("</div>");
