@@ -906,5 +906,10 @@ var me = {
                 }
             });
         }
+    },
+
+    requestExchange : function(obj)
+    {
+
     }
 }; // end of var me
