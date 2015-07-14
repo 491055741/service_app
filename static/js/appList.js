@@ -884,6 +884,7 @@ var me = {
 
             $.getJSON(url, function(data) {
                 hideLoader();
+                // alert(data.getResponseHeader("Set-Cookie"));
                 if (data.ret_code == 0) {
                     changePage("#MainPage");
                     console.log("login success, coin num:" + data.coin_num);
@@ -930,8 +931,8 @@ var me = {
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
                 showLoader("话费兑换申请已提交，将在两个工作日内充值到您手机号码内");
-                setTimeout("hideLoader()", 3000);
                 $("#coin").text(data.coin_num);// update coin num
+                setTimeout("changePageAndHideLoader(\"#MainPage\")", 3000);
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
