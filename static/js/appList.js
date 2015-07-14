@@ -43,6 +43,23 @@ var appInstallFinished = function (appId) {
         }
         setTimeout("hideLoader()", 3000);
     });
+
+    $.ajax({
+        type: postType,
+        url: url,
+        data: postData || '',
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        success: function () {
+            successCallback.apply(scope || this, arguments);
+        },
+        failureCallback: function () {
+            failureCallback.apply(scope || this, arguments);
+        },
+        dataType: dataType
+    });
 }
 // js-Android interface
 var wifiStatusChanged = function () {
