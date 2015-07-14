@@ -875,6 +875,7 @@ var me = {
                 me.resetCountDown();  // 重置验证码倒计时
                 if (data.ret_code == 0) {
                     if (me.isChangingPassword == false) {
+                        me.saveToken(data.token);
                         showLoader("注册成功");
                         $("#coin").text("0");
                     } else {
@@ -901,8 +902,8 @@ var me = {
 
             $.getJSON(url, function(data) {
                 hideLoader();
-                // alert(data.getResponseHeader("Set-Cookie"));
                 if (data.ret_code == 0) {
+                    me.saveToken(data.token);
                     changePage("#MainPage");
                     console.log("login success, coin num:" + data.coin_num);
                     if (data.coin_num == undefined) {
@@ -955,5 +956,9 @@ var me = {
                 setTimeout("hideLoader()", 3000);
             }
         });
+    },
+
+    saveToken : function(token) {
+        $.cookie("token", token, {expires:10});
     }
 }; // end of var me
