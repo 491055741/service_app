@@ -937,7 +937,7 @@ var me = {
         var phone_number = $(".acount_list #account").text();
         var url = appServerUrl+"/exchange?"+callback+"&phone_number="+phone_number+"&coin="+needCoin+"&exchange_type="+type;
         console.log(url);
-        showLoader("登录中，请稍候");
+        showLoader();
 
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
