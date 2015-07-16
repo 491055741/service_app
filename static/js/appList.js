@@ -269,7 +269,6 @@ var me = {
             type: "POST",
             url: "http://10.10.10.1/portaltt/logon.cgi",
             data: $("#loginform").serialize(),
-            cache : false,
             success : function(data) {
                         setTimeout(me.checkNetwork(), checkNetworkInterval);
                       },
