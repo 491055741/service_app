@@ -61,7 +61,7 @@ def register():
 def login():
     return response("app/login.json")
 
-@app.route('/appslide')
+@app.route('/appads')
 def ads():
     return response("app/ads.json")
 

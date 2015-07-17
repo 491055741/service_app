@@ -112,7 +112,7 @@ $("#MainPage").on("pageinit", function() {
     $("#excellentBtn").click(function() {me.showTab(1);});
     $("#mineBtn").click(function() {me.showTab(2);});
 
-    me.requestAppSlide();
+    me.requestAppAds();
     me.requestAppList();
     me.requestKulianWifi();
 });
@@ -311,13 +311,13 @@ var me = {
         });
     },
 
-    requestAppSlide : function()
+    requestAppAds : function()
     {
-        var url = milkPapaServerUrl+"/appslide?"+callback;
-        console.log("requestAppSlide:"+url);
+        var url = appServerUrl+"/appad?"+callback;
+        console.log("requestAppAds:"+url);
         $.getJSON(url, function(data) {
             // var obj = eval("(" + data +")");
-            me.parseAppSlide(data);
+            me.parseAppAds(data);
             slide.init();
             $("#olSlideNum").hide();
             if (me.currentTabIdx == 1) {
@@ -326,17 +326,17 @@ var me = {
         });
     },
 
-    parseAppSlide : function(data)
+    parseAppAds : function(data)
     {
     // console.log(data);
         // var obj = eval("("+data+")"); // json to object
-        var html = me.appSlideTemplate(data);
+        var html = me.appAdsTemplate(data);
 
         $("#adlist").empty();
         $("#adlist").append(html);
     },
 
-    appSlideTemplate : function(data)
+    appAdsTemplate : function(data)
     {
         var data = data.adlist;
         var arrHtml = new Array();
