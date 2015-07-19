@@ -3,7 +3,7 @@ var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var isAutoLogin = true;
 var checkNetworkInterval = 1500; // ms
-var checkNetworkUrl = "http://app.milkpapa.com:5000/version";
+var checkNetworkUrl = "http://app.milkpapa.com:5000/version2";
 var timer = null;
 
 (function($){
@@ -11,7 +11,7 @@ var timer = null;
         timeout: 10000,
         cache: false,
         error: function (x, e) {
-            showLoader("服务器错误，请稍后再试");
+            showLoader("网络不给力，请稍后再试");
             setTimeout("hideLoader()", 3000);
         }
     });
@@ -58,20 +58,21 @@ var appInstallFinished = function (appId) {
 }
 // js-Android interface
 var wifiStatusChanged = function () {
-    console.log("wifiStatusChanged.");
     if ($(".acount_list #account").text() == '') {
-        console.log('wifi status changed but not login yet.');
+        console.log('wifiStatusChanged: not login yet.');
         return;
     }
     if (window.android != undefined) {
         if (window.android.isWifiAvailable()) {
+            console.log("wifiStatusChanged: wifi is available.");
             me.checkNetwork();
         } else {
+            console.log("wifiStatusChanged: wifi is unavailable.");
             $(".wifiStatus .statusOff").show();
             $(".wifiStatus .statusOn").hide();
         }
     } else {
-        console.log("window.android undefined.");
+        console.log("wifiStatusChanged: window.android undefined.");
     }
 }
 
@@ -267,7 +268,7 @@ var me = {
         // post the form
         $.ajax({
             type: "POST",
-            url: "http://10.10.10.1/portaltt/logon.cgi",
+            url: "http://10.10.0.1/portaltt/logon.cgi",
             data: $("#loginform").serialize(),
             success : function(data) {
                         setTimeout(me.checkNetwork(), checkNetworkInterval);
@@ -317,11 +318,13 @@ var me = {
         console.log("requestAppAds:"+url);
         $.getJSON(url, function(data) {
             // var obj = eval("(" + data +")");
-            me.parseAppAds(data);
-            slide.init();
-            $("#olSlideNum").hide();
-            if (me.currentTabIdx == 1) {
-                $(".fouce").show();
+            if (data.total_count != undefined && data.total_count > 0) {
+                me.parseAppAds(data);
+                slide.init();
+                $("#olSlideNum").hide();
+                if (me.currentTabIdx == 1) {
+                    $(".fouce").show();
+                }
             }
         });
     },
@@ -338,13 +341,13 @@ var me = {
 
     appAdsTemplate : function(data)
     {
-        var data = data.adlist;
+        var ads = data.adlist;
         var arrHtml = new Array();
 
-        for (var i = 0; i < data.length; i++) {
+        for (var i = 0; i < ads.length; i++) {
             arrHtml.push("<li>");
-            arrHtml.push("<a href=\"" + data[i].Link + "\">");
-            arrHtml.push("<img src=\"" + data[i].ImageSrc + "\" />");
+            arrHtml.push("<a href=\"" + ads[i].Link + "\">");
+            arrHtml.push("<img src=\"" + ads[i].ImageSrc + "\" />");
             arrHtml.push("</a>");
             arrHtml.push("</li>");
         }

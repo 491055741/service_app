@@ -65,5 +65,9 @@ def login():
 def ads():
     return response("app/ads.json")
 
+@app.route('/books')
+def books():
+    return response("app/books.json")
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug = True)
