@@ -3,7 +3,7 @@ var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var isAutoLogin = true;
 var checkNetworkInterval = 1500; // ms
-var checkNetworkUrl = "http://app.milkpapa.com:5000/version2";
+var checkNetworkUrl = "http://app.milkpapa.com:5000/version";
 var timer = null;
 
 (function($){
@@ -304,12 +304,13 @@ var me = {
 
     requestKulianWifi : function()
     {
-        var url = milkPapaServerUrl+"/kulianwifi?"+callback;
-        console.log("requestKulianWifi:"+url);
-        $.getJSON(url, function(data) {
+        // var url = milkPapaServerUrl+"/kulianwifi?"+callback;
+        // console.log("requestKulianWifi:"+url);
+        // $.getJSON(url, function(data) {
+            var data = {"wifilist": [ {"SSID":"@小鸿科技","password":""}]};
             me.kuLianWifi = data;
             me.requestWifiList();
-        });
+        // });
     },
 
     requestAppAds : function()
