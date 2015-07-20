@@ -115,6 +115,7 @@ $("#MainPage").on("pageinit", function() {
 
     me.requestAppAds();
     me.requestAppList();
+    me.getVersion();    
     me.requestKulianWifi();
 });
 
@@ -955,7 +956,15 @@ var me = {
         });
     },
 
-    saveToken : function(token) {
+    saveToken : function(token)
+    {
         $.cookie("token", token, {expires:10});
+    },
+
+    getVersion : function()
+    {
+        if (window.android != undefined) {
+            $("#version").text(window.android.getVersion());
+        }
     }
 }; // end of var me
