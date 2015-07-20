@@ -125,11 +125,9 @@ $("#MainPage").on("pagebeforeshow", function () {
     me.showTab(me.currentTabIdx);
 
     finishDownloadProgress();
-    // updateDownloadProgress(50);
 });
 
 $("#AppDetailPage").on("pagebeforeshow", function () {
-    // setTimeout(, 1000);
     me.showBackBtn(true);
 });
 
@@ -207,6 +205,7 @@ $("#toRegistBtn").fastClick(function() {
 });
 
 $(".wifiStatus img").fastClick(function() {
+    me.authentication();
     if ($(".wifiStatus .statusOn").css("display") == 'none') {
         me.connectWifi(this);
     }
@@ -239,6 +238,7 @@ var me = {
 
     checkNetwork : function() {
         console.log("checkNetwork: "+checkNetworkUrl);
+        $("#statusDesc").text("检查网络...");
         $.ajax({
             type: "GET",
             url: checkNetworkUrl,
@@ -247,11 +247,13 @@ var me = {
             jsonpCallback:"success_jsonpCallback",//callback的function名称
             success : function(data) {
                         console.log("checkNetwork success.");
+                        $("#statusDesc").text("网络连接成功");
                         $(".wifiStatus .statusOn").show();
                         $(".wifiStatus .statusOff").hide();
                       },
             error : function() {
                         console.log("checkNetwork fail.");
+                        $("#statusDesc").text("网络连接失败");
                         $(".wifiStatus .statusOn").hide();
                         $(".wifiStatus .statusOff").show();
                         me.authentication();
@@ -261,24 +263,41 @@ var me = {
 
     authentication : function() {
         console.log("authentication.");
+        $("#statusDesc").text("认证中...");
         if (checkNetworkInterval > 10000) {
             checkNetworkInterval = 1500;
             console.log("authentication timeout.");
+            $("#statusDesc").text("认证超时");
             return;
         }
         // post the form
-        $.ajax({
-            type: "POST",
-            url: "http://10.10.0.1/portaltt/logon.cgi",
-            data: $("#loginform").serialize(),
-            success : function(data) {
-                        setTimeout(me.checkNetwork(), checkNetworkInterval);
-                      },
-            error : function() {
-                    console.log("post authentication form fail.");
-                    setTimeout(me.authentication(), checkNetworkInterval);
-            }
-        });
+        // $.ajax({
+        //     type: "POST",
+        //     crossDomain: true,
+        //     url: "http://120.193.39.109/portal0701/logon.cgi",// 10.10.0.1
+        //     data: $("#loginform").serialize(),
+        //     success : function(data) {
+        //                 $("#statusDesc").text("认证成功");
+        //                 setTimeout(me.checkNetwork(), checkNetworkInterval);
+        //               },
+        //     error : function() {
+        //             console.log("post authentication form fail.");
+        //             $("#statusDesc").text("认证失败");
+        //             setTimeout(me.authentication(), checkNetworkInterval);
+        //     }
+        // });
+
+        // test
+        if (window.android != undefined) {
+            console.log("android.httpRequst");
+            var url = "http://120.193.39.109/portal0701/logon.cgi";
+            var data = $("#loginform").serialize();
+            window.android.httpRequst(url, "POST", data);
+        }
+        // $(window.frames["iframe1"].document).find("#loginform").submit();
+        setTimeout(me.checkNetwork(), checkNetworkInterval);
+        // end
+
         checkNetworkInterval = checkNetworkInterval + 1000;
     },
 
@@ -878,9 +897,14 @@ var me = {
                         $("#coin").text("0");
                     } else {
                         showLoader("密码修改成功");
+                        if (data.coin_num == undefined) {
+                            data.coin_num = 0;
+                        }
+                        $("#coin").text(data.coin_num);
                     }
                     setTimeout("changePageAndHideLoader(\"#MainPage\")", 2000);
                     $("#account").text(phone_number);
+
                 } else {
                     showLoader(data.ret_msg);
                     setTimeout("hideLoader()", 3000);
