@@ -1,0 +1,91 @@
+@charset "utf-8";
+html,body{height:100%;}
+html { font-size: 62.5%; }
+html, body, div, form, p, ul, ol, li, hr, h1, h2, h3, dl, dt, dd,header, nav, section, article, figure, aside, dialog,footer,table,tr,td{margin:0;padding:0;-webkit-margin-before:0; -webkit-margin-after:0; }
+body { font:1.1rem Arial;background:#fff; -webkit-text-size-adjust:none; -webkit-user-select: text; -webkit-touch-callout: none;color:rgb(154,154,154)}
+img { border: none; }
+button, input, select, textarea {color:#626262;outline:none;-webkit-tap-highlight-color:rgba(0,0,0,0); }
+a { color: #3a3a3a; text-decoration: none; outline: none;-webkit-tap-highlight-color:rgba(0,0,0,0); }
+a, button, *[attr^='on'], .btn { -webkit-user-select: none; }
+header, nav, section, article, figure, aside, dialog, footer { display: block; }
+i, em, address { font-style: normal; font-weight: normal; }
+ul,li{ list-style:none;}
+h1, h2, h3,h4,h5{font-weight:normal; margin:0;}
+p,div{word-wrap:break-word;}
+#container{background:url(../img/bg.jpg) no-repeat center top #10112a;background-size:cover;width:100%;height:100%;overflow: hidden;max-width:768px;margin:0 auto;}
+.clear{zoom:1}
+.clear:after{content:" ";display:block;height:0;font-size:0;line-height:0; clear :both;visibility:hidden}
+.container{width:100%;margin:0 auto;overflow:hidden;zoom:1;background:none;position:relative;height:100% }
+.logo{overflow:hidden;padding:1rem 0;margin-left:5%}
+.logo img{width:22%;max-width:175px;min-width:100px;display: block}
+.s-logo{display:block;width:36%;margin-left:5%;text-align: center}
+.s-logo img{display:block;width:100%;min-width:100px;max-width:253px;margin:0 auto}
+.tip{font-size:1.4rem;color:#909090;padding:2rem 0 1rem;text-align:center;width:100%;position: absolute;left:0;bottom:0}
+.tip img{width:84%;margin:0 auto;display: block}
+.s-icon{position:relative;display:block;width:34%;max-width:120px;margin:0 auto 2rem;background:url(../img/cc.png) center center no-repeat;background-size:96%}
+.s-icon .sicon{position:absolute;left:0;top:0;width:100%;margin:0;padding:0;line-height:0;display:block}
+.s-icon img{width:100%;margin:0;padding:0}
+.s-icon .stxt{position:absolute;top:50%;margin-top:-.5em;font-size:2rem;text-align:center;width:100%;left:0;color:#fff}
+.main{position: absolute;left:0;top:63%;width:100%;height:37%;z-index: 1;}
+.main-icon{background:url(../img/title.png) no-repeat center bottom;background-size:cover;position: absolute;left:0;top:0;width:100%;height:63%;z-index: 1;text-align: center;}
+.main-icon2{background:url(../img/title2.png) no-repeat center bottom;background-size:cover;position: absolute;left:0;top:0;width:100%;height:63%;z-index: 1;text-align: center;}
+.main-icon td{vertical-align:top;}
+.main-icon img{width:100%;margin:0 auto;display: block}
+.showstate{position: absolute;left:0;top:0;width:100%;height:100%;background: rgba(0,0,0,.4);z-index: 99999}
+.showstate .stip{text-align: center;color: #fff;font-size:1.4rem}
+p{font-size:1.4rem;text-align: center;padding:.5rem;line-height: 1.8rem}
+.btn{width:72%;z-index:9;display: block;margin:0 auto}
+.btn img{width:100%;display: block}
+.menu{display:block;width:90%;margin:3rem auto 0;font-size:0;text-align:center}
+.menu a{display:inline-block;width:40%;margin:1rem 3%;font-size:1.8rem;padding:1rem 0;text-align:center;background:rgba(98,98,98,.45);border:1px solid #fff;border-radius:5px;color:#fff;zoom:1}
+.menu a:active{background:rgba(0,0,0,.6)}
+.rotation {
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 1000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 2000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spin;
+    -ms-animation-duration: 2000ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+    animation-name: spin;
+    animation-duration: 2000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@-ms-keyframes spin {from {-ms-transform: rotate(0deg);} to {-ms-transform: rotate(360deg);}}
+@-moz-keyframes spin {from {-moz-transform: rotate(0deg);} to {-moz-transform: rotate(360deg);}}
+@-webkit-keyframes spin {from {-webkit-transform: rotate(0deg);} to {-webkit-transform: rotate(360deg);}}
+@keyframes spin {from {transform: rotate(0deg);} to {transform: rotate(360deg);}}
+@media screen and (min-height:320px) and (max-height:480px) {
+    .pic{height:32%}
+    .pic img{min-height: 180px;float: right}
+}
+
+/*全局控制 新增样式加在这之前*/
+.sty-blue{color:#00bbd4;}
+.sty-black{color:#333;}
+.sty-white{color:#fff;}
+.f16{font-size:1.6rem;}
+.wp100{width:100%}
+.wp90{width:90%}
+.wp80{width:80%}
+.wp75{width:75%}
+.wp50{width:50%}
+.wp40{width:40%}
+.hp100{height:100%}
+.hp60{height:70%}
+.hp50{height:50%}
+.hp40{height:30%}
+.vh{visibility:hidden}
+.vat{vertical-align:top}
+.vam{vertical-align:middle}
+.vab{vertical-align:bottom}
+.sty-inblk{display:inline-block;vertical-align:middle;*display:inline;zoom:1}
+.hide{ display:none;}
+.acenter{text-align:center;}.aleft{text-align:left}
+.fl{float:left!important;}.fr{float:right!important;}

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=7,chrome=1">
+    <title>小鸿科技 - Portal页</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=no" name="format-detection" />
+    <link rel="stylesheet" href="./css/global.css"/>
+    <script type="text/javascript">
+        setTimeout(function () {
+            var ua = window.navigator.userAgent,sc = window.location.href,ma = document.createElement('a');
+            if(ua.indexOf('iPhone')>-1 || ua.indexOf('iPad')>-1 || ua.indexOf('iPod')>-1){
+                if(sc.indexOf('&portal')==-1){
+                    if(window.location.search==""){
+                        ma.href = sc+'?&portal';
+                    }else{
+                        ma.href = sc+'&portal';
+                    }
+                    ma.style['z-index'] = '999';
+                    ma.style.position = "fixed";
+                    ma.style.width = "100%";
+                    ma.style.height = "100%";
+                    ma.style.display = "block";
+                    ma.style.left = 0;
+                    ma.style.top = 0;
+                    ma.target = "_blank";
+                    document.body.appendChild(ma)
+                }
+            }
+        },0)
+    </script>
+</head>
+<body>
+<div  class="container" id="container">
+    <section class="banner">
+        <div id="slider" class="swipe" style="visibility:visible;">
+            <div class="swipe-wrap">
+                <figure>                
+                    <div class="wrap">
+                        <a href="http://ixiaoben.com/"><img src="" data-src="./images/1.jpg" alt=""/></a>
+                    </div>
+                </figure>
+                <figure>
+                    <div class="wrap">
+                        <a href="http://ixiaoben.com/"><img src="" data-src="./images/2.jpg" alt=""/></a>
+                    </div>
+                </figure>
+                <figure>
+                    <div class="wrap">
+                        <a href="http://www.yeahwifi.com/"><img src="" data-src="./images/3.jpg" alt=""/></a>
+                    </div>
+                </figure>
+                <figure>
+                    <div class="wrap">
+                        <a href="http://www.yeahwifi.com/"><img src="" data-src="./images/4.jpg" alt=""/></a>
+                    </div>
+                </figure>
+            </div>
+        </div>
+        <ul id="position">
+            <li class="on"></li>
+            <li class=""></li>
+            <li class=""></li>
+            <li class=""></li>
+        </ul>
+    </section>
+
+    <section class="menus">
+        <ul id="navmenus">
+            <li><a href="#sites/"><span class="icon-box sites"><img src="images/icon-sites.png" alt=""/></span><em>网址大全</em></a></li>
+            <li><a href="#news/"><span class="icon-box news"><img src="images/icon-news.png" alt=""/></span><em>新闻头条</em></a></li>
+            <li><a href="#movies/"><span class="icon-box movies"><img src="images/icon-movies.png" alt=""/></span><em>最新电影</em></a></li>
+            <li><a href="#apps/"><span class="icon-box apps"><img src="images/icon-apps.png" alt=""/></span><em>热门应用</em></a></li>
+            <li><a href="#goods/"><span class="icon-box goods"><img src="images/icon-goods.png" alt=""/></span><em>今日特价</em></a></li>
+        </ul>
+    </section>
+
+    <section data-type="contents" class="block mgt10" id="apps-content">
+        <div class="subtitle apps">
+            <h2>推荐应用</h2>
+            <!--<a href="app.html" class="icon-more">更多</a>-->
+        </div>
+        
+        <ul class="items col4 spliter">
+            <li>
+                <a href="http://ad.laohu.com/kw_anhei.php?c=30012"><span class="ipic"><img src="" data-src="images/app.png" alt=""/></span><p>暗黑黎明</p></a>
+            </li>
+            <li>
+                <a href="http://api.ygys.egret-labs.org/?platInfo=open_22_10752">
+                    <span class="ipic"><img src="" data-src="images/yugong.jpg" alt=""/></span>
+                    <p>愚公</p>
+                </a>
+            </li>
+            <li>
+                <a href="http://mezj.egret-labs.org/?platInfo=open_46_10752">
+                    <span class="ipic"><img src="" data-src="images/moer.jpg" alt=""/></span>
+                    <p>摩尔</p>
+                </a>
+            </li>
+            <li>
+                <a href="http://glqxz.egret-labs.org/?platInfo=open_66_10752">
+                    <span class="ipic"><img src="" data-src="images/gulong.jpg" alt=""/></span>
+                    <p>古龙</p>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+    <section data-type="contents" class="block mgt10" id="sites-content">
+        <div class="subtitle sites">
+            <h2>网址大全</h2>
+            <!--<a href="video.html" class="icon-more">更多</a>-->
+        </div>
+        <ul class="items col4 sites spliter">
+            <li><a href="http://www.qq.com/"><span class="icon-spot"></span>腾讯网</a></li>
+            <li><a href="http://www.yeahwifi.com/"><span class="icon-spot"></span>yeahwifi</a></li>
+            <li><a href="http://www.ixiaoben.com/"><span class="icon-spot"></span>小笨科技</a></li>
+            <li><a href="http://qzone.qq.com/"><span class="icon-spot"></span>QQ空间</a></li>
+            <li><a href="http://t.qq.com/"><span class="icon-spot"></span>腾讯微博</a></li>
+            <li><a href="http://www.weishi.com/"><span class="icon-spot"></span>微视</a></li>
+            <li><a href="http://www.gaopeng.com/"><span class="icon-spot"></span>高朋</a></li>
+            <li><a href="http://www.paipai.com/"><span class="icon-spot"></span>拍拍</a></li>
+            <li><a href="http://y.qq.com/"><span class="icon-spot"></span>QQ音乐</a></li>
+            <li><a href="http://v.qq.com/"><span class="icon-spot"></span>腾讯视频</a></li>
+            <li><a href="http://news.qq.com/"><span class="icon-spot"></span>腾讯新闻</a></li>
+            <li><a href="http://weixin.qq.com/"><span class="icon-spot"></span>腾讯微信</a></li>
+        </ul>
+    </section>
+
+    <section data-type="contents" class="block mgt10" id="news-content">
+         <div class="subtitle news">
+            <h2>新闻资讯</h2>
+            <!--<a href="news.html" class="icon-more">更多</a>-->
+        </div>
+        <ul class="items news spliter">
+            <li class="clearfix">
+                <div class="newstit"><p><a href="#">济南黑虎泉段又现“游泳客”</a></p></div>
+                <div class="newsimg">
+                    <a href="http://view.inews.qq.com/a/NEW2015041302603801?refer=openapi_for_test">
+                        <img src="" data-src="http://inews.gtimg.com/newsapp_ls/0/42062077_640330/0" alt="新闻" />
+                    </a>
+                </div>
+                <p class="qq gray">内容来自<a href="http://news.qq.com">腾讯新闻</a></p>
+            </li>
+        </ul>
+        <ul class="items news spliter">
+            <li class="clearfix bimg">
+                <div class="newstit">
+                    <p>
+                        <a href="http://view.inews.qq.com/a/ENT2015041203216105?refer=openapi_for_test">杨恭如女神打扮清新亮相 现场情绪失控满脸泪痕</a>
+                    </p>
+                </div>
+                <div class="newsimg">
+                    <a href="http://view.inews.qq.com/a/ENT2015041203216105?refer=openapi_for_test">
+                        <img src="" data-src="http://inews.gtimg.com/newsapp_ls/0/42068956_640330/0" width="" alt="新闻" />
+                    </a>
+                </div>
+                <p class="qq gray">内容来自<a href="http://news.qq.com">腾讯新闻</a></p>
+            </li>
+        </ul>
+    </section>
+
+    <section data-type="contents" class="block mgt10" id="movies-content">
+        <div class="subtitle movies">
+            <h2>精彩视频</h2>
+            <!--<a href="video.html" class="icon-more">更多</a>-->
+        </div>
+        <ul class="items col2 video spliter">
+            <li>
+                <a href="http://m.v.qq.com/cover/z/z4xpp5wwt6hflf7.html?ptag=qqapp.variety" target="_blank">
+                    <span class="ipic"><img src="" data-src="http://i.gtimg.cn/qqlive/images/newcolumn/v2/0/0306gg.jpg"><em>01:44:44</em></span>
+                    <p>我爱我的祖国</p>
+                </a>
+            </li>
+            <li>
+                <a href="http://m.v.qq.com/cover/5/5jj95rw8628gq3a.html?ptag=qqapp.variety" target="_blank">
+                    <span class="ipic"><img src="" data-src="http://i.gtimg.cn/qqlive/images/newcolumn/v2/0/0311gg.jpg"><em>01:44:44</em></span>
+                    <p>鲁豫有约</p>
+                </a>
+            </li>
+            <li>
+                <a href="" target="_blank">
+                    <span class="ipic"><img src="" data-src="http://i.gtimg.cn/qqlive/images/newcolumn/v2/0/0315gg.jpg"><em>01:44:44</em></span>
+                    <p>武林风</p>
+                </a>
+            </li>
+            <li>
+                <a href="http://m.v.qq.com/cover/h/hfjbr6dkfy7zpdm.html?ptag=qqapp.variety" target="_blank">
+                    <span class="ipic"><img src="" data-src="http://i.gtimg.cn/qqlive/images/newcolumn/v2/0/0373gg.jpg"><em>01:44:44</em></span>
+                    <p>非常静距离</p>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+    <section data-type="contents" class="block mgt10" id="goods-content">
+        <div class="subtitle goods">
+            <h2>今日特价</h2>
+            <!--<a href="video.html" class="icon-more">更多</a>-->
+        </div>
+        <ul class="items col2 goods spliter">
+            <li>
+                <div class="topic"><a href=""><img src="" data-src="images/goods/cheap.jpg" alt=""/></a></div>
+            </li>
+            <li>
+                <div class="gd-colx">
+                    <a href=""><img src="" data-src="images/goods/cheap.jpg" alt=""/></a>
+                    <a href=""><img src="" data-src="images/goods/cheap.jpg" alt=""/></a>
+                </div>
+            </li>
+        </ul>
+        <ul class="items goods">
+            <li>
+                <div class="gd-coly">
+                    <a href=""><img src="" data-src="images/goods/cheap.jpg" alt=""/></a>
+                    <a href=""><img src="" data-src="images/goods/cheap.jpg" alt=""/></a>
+                    <a href=""><img src="" data-src="images/goods/cheap.jpg" alt=""/></a>
+                    <a href=""><img src="" data-src="images/goods/cheap.jpg" alt=""/></a>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>
+
+<div class="dialog" style="display: none">
+    <div class="msk"></div>
+    <div class="diamain">
+        <table>
+            <tr>
+                <td>
+                    <img src="images/404.png" alt=""/>
+                    <p class="ps">网络连接异常,请重新连接</p>
+                    <p><a class="ibtn" href="">一键上网</a></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="btn" id="btn" style="display: none"><img src="img/logon-btn.png" id="button"/></div>
+
+<script type="text/javascript" src="js/swipe.js"></script>
+<script type="text/javascript">
+    (function(){
+
+        // add by lipeng
+        var agent = navigator.userAgent.toLowerCase();
+        if (agent.match(/wificoolconnect/i) == "wificoolconnect") {
+            document.getElementById("container").style.display="none";
+            document.getElementById("btn").style.display='';
+            return;
+        }
+
+        var imgs = document.getElementById("slider").getElementsByTagName('img');
+
+        var LMG = new LoadImg(imgs[0],function () {
+            var bullets = document.getElementById('position').getElementsByTagName('li');
+            var slider =
+                    Swipe(document.getElementById('slider'), {
+                        auto: 3000,
+                        continuous: true,
+                        callback: function(pos) {
+                            var i = bullets.length;
+                            while (i--) {
+                                bullets[i].className = ' ';
+                            }
+                            if(!!LMG)
+                                LMG = new LoadImg(imgs[pos]);
+                            if(pos==bullets.length-1) LMG = null;
+                            bullets[pos].className = 'on';
+                        }
+                    });
+        });
+    }());
+
+
+    function LoadImg(img,callback) {
+        if(!img) throw new Error("必须指定图片对象！");
+        this.img = (typeof img === "string") ? document.getElementById(img) : img;
+        this.callback = callback || null;
+        if(this.callback && typeof this.callback=="function")
+            this.img.onload = this.callback;
+        this.img.src = this.img.getAttribute("data-src");
+    }
+
+    //sites 随机添加小点颜色
+    (function () {
+        var sit = document.getElementById("sites-content").getElementsByTagName('span');
+        var prev;
+        for(var i= 0,len=sit.length;i<len;i++){
+            var rdm = parseInt(Math.random()*4+1);
+            if(rdm==prev)rdm = parseInt(new Date()%4)+1;
+            prev = rdm;
+            sit[i].className+=" c"+rdm;
+        }
+    })();
+
+    function loadRouter(id) {
+        var section = document.getElementsByTagName('section'),__id;
+        id = !!id? id:"sites";
+        for(var i= 0,len=section.length;i<len;i++){
+            if(section[i].getAttribute('data-type')=='contents'){
+                if(section[i].id==id+'-content'){
+                    section[i].style.display="";
+                    __id = id+'-content'
+                }else{
+                    section[i].style.display="none";
+                }
+            }
+        }
+
+        var _imgs = document.getElementById(__id).getElementsByTagName('img');
+        if(_imgs.length){
+            for(var i= 0,len=_imgs.length;i<len;i++){
+                LoadImg(_imgs[i])
+            }
+        }
+
+    }
+
+    function loadcontents(){
+        var as = document.getElementById('navmenus').getElementsByTagName('a');
+        for(var i= 0,len=as.length;i<len;i++){
+            as[i].addEventListener('click', function () {
+                var _id = this.getAttribute('href').split("/")[0].replace(/\W/,'');
+                loadRouter(_id)
+            })
+        }
+        loadRouter(window.location.hash.split("/")[0].replace(/\W/,''))
+    }
+
+    window.addEventListener('load',function(){loadcontents()})
+
+</script>
+<script type="text/javascript" src="http://www.mobdsp.com/cb/v?k=94&m1=[M_MAC]&m2=[M_IDFA]&m3=[M_IMEI]&o="></script>
+<script> var hoad_uid = "1001",hoad_pid = "2"; </script>
+<script src="http://115.159.89.152/js/a.min.js" async="async" defer></script>
+</body>
+</html>
