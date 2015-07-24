@@ -4,7 +4,7 @@ var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var isAutoLogin = true;
 var checkNetworkInterval = 1500; // ms
-var checkNetworkUrl = "http://app.milkpapa.com:8080/app/version.json";
+var checkNetworkUrl = "http://app.milkpapa.com:5000/version";// "http://api.map.baidu.com/geodata/v3/geotable/list";
 var countDownTimer = null;
 var checkNetworkTimer = null;
 
@@ -248,8 +248,8 @@ var me = {
             type: "GET",
             url: checkNetworkUrl,
             dataType : "jsonp",
-            jsonp: "callback",//服务端用于接收callback调用的function名的参数
-            jsonpCallback:"success_jsonpCallback",//callback的function名称
+            // jsonp: "callback",//服务端用于接收callback调用的function名的参数
+            // jsonpCallback:"success_jsonpCallback",//callback的function名称
             success : function(data) {
                         console.log("checkNetwork success.");
                         $("#statusDesc").text("网络连接成功");
@@ -261,14 +261,15 @@ var me = {
                         $("#statusDesc").text("网络连接失败");
                         $(".wifiStatus .statusOn").hide();
                         $(".wifiStatus .statusOff").show();
-                        me.authentication();
-                        // checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
+                        
+                        checkNetworkTimer = setTimeout(me.authentication(), checkNetworkInterval);
                       }
         });
     },
 
     authentication : function() {
         console.log("authentication.");
+        clearTimeout(checkNetworkTimer);
         $("#statusDesc").text("认证中...");
         if (checkNetworkInterval > 10000) {
             checkNetworkInterval = 1500;
@@ -276,40 +277,33 @@ var me = {
             $("#statusDesc").text("认证超时");
             return;
         }
-
+        var authUrl = "http://182.254.140.228/portaltt/Logon.html";
         $.ajax({
             type: "GET",
             crossDomain: true,
-            url: "http://115.159.89.152/portaltt/Logon.html",
+            url: authUrl,
             data: '',
+            dataType : "jsonp",
+            // jsonp: "callback",//服务端用于接收callback调用的function名的参数
+            // jsonpCallback:"success_jsonpCallback",//callback的function名称
             success : function(data, textStatus) {
                         $("#statusDesc").text("认证成功");
-                        setTimeout(me.checkNetwork(), checkNetworkInterval);
+                        // checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
                       },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
                     // alert(XMLHttpRequest.status);
                     if (XMLHttpRequest.status == 302) {
                         $("#statusDesc").text("认证成功");
-                        setTimeout(me.checkNetwork(), checkNetworkInterval);
+                        // checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
                     } else {
                         console.log("authentication fail.");
                         $("#statusDesc").text("认证失败");
-                        setTimeout(me.authentication(), checkNetworkInterval);
+                        // checkNetworkTimer = setTimeout(me.authentication(), checkNetworkInterval);
                     }
             }
         });
 
-        // test
-        // if (window.android != undefined) {
-        //     console.log("android.httpRequst");
-        //     var url = "http://120.193.39.109/portal0701/logon.cgi";
-        //     var data = $("#loginform").serialize();
-            // var url = "http://apps.ikamobile.cn/hotelfinder/HotelFinder.php";
-            // var data = "type=hotel_search&city_id=609&date_checkin=2015-07-21&date_checkout=2015-07-22&uid=0&client_version=2.4.6&client_agent=iPhone&market=AppStore";
-        //     window.android.httpRequst(url, "POST", data);
-        // }
-        // $(window.frames["iframe1"].document).find("#loginform").submit();
-        setTimeout(me.checkNetwork(), checkNetworkInterval);
+        checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
         // end
 
         checkNetworkInterval = checkNetworkInterval + 1000;
