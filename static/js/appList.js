@@ -863,32 +863,18 @@ var me = {
             setTimeout("hideLoader()", 2000);
             return false;
         }
+        if ($("#registPassword").val().length>16) {
+            showLoader("密码长度不能超过16位");
+            setTimeout("hideLoader()", 2000);
+            return false;
+        }
+        var filter=/[`~!@#$^&*()\-\+=|\\\[\]\{\}:;'\,.<>/?]/;
+        if (filter.test($("#registPassword").val())) {
+            showLoader("密码只能包含字母、数字和下划线");
+            setTimeout("hideLoader()", 2000);
+            return false;
+        }
         if ($("#repeatPassword").val()!=$("#registPassword").val()) {
-            showLoader("两次输入的密码不一致");
-            setTimeout("hideLoader()", 2000);
-            return false;
-        }
-        return true;
-    },
-
-    validResetPwd : function()
-    {
-        if ($("#changePwdPhoneNumber").val()=='' || $("#changePwdPhoneNumber").val()=='手机号' || !isPhoneNumber($("#changePwdPhoneNumber").val())) {
-            showLoader("请填写手机号");
-            setTimeout("hideLoader()", 2000);
-            return false;
-        }
-        if ($("#changePwdVerifyCode").val()=='') {
-            showLoader("请填写验证码");
-            setTimeout("hideLoader()", 2000);
-            return false;
-        }
-        if ($("#newPassword").val()=='') {
-            showLoader("请填写密码");
-            setTimeout("hideLoader()", 2000);
-            return false;
-        }
-        if ($("#repeatNewPassword").val()!=$("#newPassword").val()) {
             showLoader("两次输入的密码不一致");
             setTimeout("hideLoader()", 2000);
             return false;
