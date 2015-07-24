@@ -4,7 +4,7 @@ var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var isAutoLogin = true;
 var checkNetworkInterval = 1500; // ms
-var checkNetworkUrl = "http://app.milkpapa.com:5000/version";
+var checkNetworkUrl = "http://app.milkpapa.com:8080/app/version.json";
 var countDownTimer = null;
 var checkNetworkTimer = null;
 
@@ -211,6 +211,7 @@ $("#toRegistBtn").fastClick(function() {
 $(".wifiStatus img").fastClick(function() {
     if ($(".wifiStatus .statusOn").css("display") == 'none') {
         me.connectWifi(this);
+        me.checkNetwork();
     }
 });
 
@@ -231,10 +232,6 @@ var me = {
 
     showBackBtn : function (isShowBackBtn) {
         console.log("showBackBtn:"+isShowBackBtn);
-        // var css= $("#MainPage").css("display");
-        // var isMainPage = $("#MainPage").css("display") != "none";
-        // var isShowBackBtn = window.history.length > 0 && !isMainPage;
-        // console.log("isShowBackBtn:"+isShowBackBtn+"  isMainPage:"+isMainPage+"  history.length:"+window.history.length+"  mainPageCSS:"+css);
         if (window.android != undefined) {
             window.android.showBackBtn(isShowBackBtn);
         }
@@ -264,12 +261,12 @@ var me = {
                         $("#statusDesc").text("网络连接失败");
                         $(".wifiStatus .statusOn").hide();
                         $(".wifiStatus .statusOff").show();
-                        // me.authentication();
-                        checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
+                        me.authentication();
+                        // checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
                       }
         });
     },
-/*
+
     authentication : function() {
         console.log("authentication.");
         $("#statusDesc").text("认证中...");
@@ -279,39 +276,45 @@ var me = {
             $("#statusDesc").text("认证超时");
             return;
         }
-        // post the form
-        // $.ajax({
-        //     type: "POST",
-        //     crossDomain: true,
-        //     url: "http://120.193.39.109/portal0701/logon.cgi",// 10.10.0.1
-        //     data: $("#loginform").serialize(),
-        //     success : function(data) {
-        //                 $("#statusDesc").text("认证成功");
-        //                 setTimeout(me.checkNetwork(), checkNetworkInterval);
-        //               },
-        //     error : function() {
-        //             console.log("post authentication form fail.");
-        //             $("#statusDesc").text("认证失败");
-        //             setTimeout(me.authentication(), checkNetworkInterval);
-        //     }
-        // });
+
+        $.ajax({
+            type: "GET",
+            crossDomain: true,
+            url: "http://115.159.89.152/portaltt/Logon.html",
+            data: '',
+            success : function(data, textStatus) {
+                        $("#statusDesc").text("认证成功");
+                        setTimeout(me.checkNetwork(), checkNetworkInterval);
+                      },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    // alert(XMLHttpRequest.status);
+                    if (XMLHttpRequest.status == 302) {
+                        $("#statusDesc").text("认证成功");
+                        setTimeout(me.checkNetwork(), checkNetworkInterval);
+                    } else {
+                        console.log("authentication fail.");
+                        $("#statusDesc").text("认证失败");
+                        setTimeout(me.authentication(), checkNetworkInterval);
+                    }
+            }
+        });
 
         // test
-        if (window.android != undefined) {
-            console.log("android.httpRequst");
-            var url = "http://120.193.39.109/portal0701/logon.cgi";
-            var data = $("#loginform").serialize();
+        // if (window.android != undefined) {
+        //     console.log("android.httpRequst");
+        //     var url = "http://120.193.39.109/portal0701/logon.cgi";
+        //     var data = $("#loginform").serialize();
             // var url = "http://apps.ikamobile.cn/hotelfinder/HotelFinder.php";
             // var data = "type=hotel_search&city_id=609&date_checkin=2015-07-21&date_checkout=2015-07-22&uid=0&client_version=2.4.6&client_agent=iPhone&market=AppStore";
-            window.android.httpRequst(url, "POST", data);
-        }
+        //     window.android.httpRequst(url, "POST", data);
+        // }
         // $(window.frames["iframe1"].document).find("#loginform").submit();
         setTimeout(me.checkNetwork(), checkNetworkInterval);
         // end
 
         checkNetworkInterval = checkNetworkInterval + 1000;
     },
-*/
+
     showTab : function(idx) {
         var tabs = new Array("connectionView", "choiceView", "mineView");
         for (var i = 0; i < tabs.length; i++) {
