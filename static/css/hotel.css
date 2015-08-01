@@ -45,7 +45,7 @@ a { text-decoration:none;}
 
 .avatar_bg {position: relative; height: 50px; overflow: hidden;}
 .avatar_bg img {width: 100%; }
-.avatar_bg span {    position: absolute; z-index: 2; color: #fff; top: 50%; margin-top: -18px; height: 36px; display: block; width: 100%; text-align: center; font-size: 20px;}
+.avatar_bg span {    position: absolute; z-index: 2; color: #fff; top: 50%; margin-top: -18px; height: 36px; line-height: 36px;  display: block; width: 100%; text-align: center; font-size: 20px;}
 .acount_list {padding: 10px; }
 .account_item {font-size: 16px; }
 .acount_list img {width: 25px; height: 25px; float: left; }
