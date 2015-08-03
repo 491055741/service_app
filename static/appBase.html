@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="css/progress.css" />
     <link rel="stylesheet" href="js/gallery/idangerous.swiper.css">
     <link rel="stylesheet" href="js/gallery/gallery-app.css">
+    <link rel="stylesheet" href="js/tabs/jquery.mobile.tabs.css">
     <script src="js/jquery-1.9.0.min.js"></script>
     <script src="js/iscroll-lite.js"></script>
     <script src="js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
@@ -123,28 +124,52 @@
 
         <div id="choiceView">
 
-            <div class="fouce" style="display: none;">
-                <div id="divSlidePanle" style="overflow: hidden;">
-                    <div id="slidebox" class="img_box" style="width: 13153px; -webkit-transition-property: -webkit-transform; transition-property: -webkit-transform; -webkit-transform-origin: 0px 0px 0px; -webkit-transform: translate3d(-5637px, 0px, 0px) scale(1);">
-                        <ul id="adlist">
-                        </ul>
-                    </div>
+            <div data-role="header" data-position="fixed" >
+                <div data-role="tabs">
+                    <ul>
+                        <li><a href="#tab-1" class="">精选</a></li>
+                        <li><a href="#tab-2" class="">游戏</a></li>
+                        <li><a href="#tab-3" class="">工具</a></li>
+                    </ul>
                 </div>
-                <ol id="olSlideNum">
-                    <li class=""></li>
-                    <li class=""></li>
-                    <li class="cur"></li>
-                    <li class=""></li>
-                    <li class=""></li>
-                </ol>
             </div>
-            <div class="app-list"></div>
-            <center>
-                <div class="refresh-app-list" style="display:none;">
-                    <img class="refresh-image" src="images/refresh.png">
-                    <p>点击重新加载</p>
+
+            <div data-role="content">
+                <div id="tab-1">
+                    <div class="fouce" style="display: none;">
+                        <div id="divSlidePanle" style="overflow: hidden;">
+                            <div id="slidebox" class="img_box" style="width: 13153px; -webkit-transition-property: -webkit-transform; transition-property: -webkit-transform; -webkit-transform-origin: 0px 0px 0px; -webkit-transform: translate3d(-5637px, 0px, 0px) scale(1);">
+                                <ul id="adlist">
+                                </ul>
+                            </div>
+                        </div>
+                        <ol id="olSlideNum">
+                            <li class=""></li>
+                            <li class=""></li>
+                            <li class="cur"></li>
+                            <li class=""></li>
+                            <li class=""></li>
+                        </ol>
+                    </div>
+                    <div class="app-list"></div>
+                    <center>
+                        <div class="refresh-app-list" style="display:none;">
+                            <img class="refresh-image" src="images/refresh.png">
+                            <p>点击重新加载</p>
+                        </div>
+                    </center>
                 </div>
-            </center>
+
+                <div id="tab-2">
+                    <div class="app-list"></div>
+                </div>
+
+                <div id="tab-3">
+                    <div class="app-list"></div>
+                </div>
+
+            </div>
+
         </div>
 
         <div id="mineView">
@@ -256,6 +281,6 @@
 <script src="js/appList.js"></script>
 <script src="js/gallery/idangerous.swiper-2.0.min.js"></script> 
 <script src="js/gallery/gallery-app.js"></script>
-
+<script src="js/tabs/jquery.mobile.tabs.js"></script>
 </body>
 </html>

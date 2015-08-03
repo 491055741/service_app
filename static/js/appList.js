@@ -502,15 +502,33 @@ var me = {
 
     requestAppList : function()
     {
-    	showLoader();
+        // http://livew.mobdsp.com/cb/applist_page?apptype=1&page=1
+        showLoader();
         $(".refresh-app-list").show();
-        var url = appServerUrl+"/applist?"+callback;
+        for (var type = 1; type <= 3; type++) {
+            me.requestAppTypePage(type, 1);
+        }
+    },
+
+    requestAppTypePage : function(type, page)
+    {
+        var url = appServerUrl+"/applist_page?apptype="+type+"&page="+page+"&"+callback;
         console.log("requestAppList:" + url);
         $.getJSON(url, function(data) {
-    		hideLoader();
+            hideLoader();
             me.appList = data;
-    		me.parseAppList(data);
-    	});
+            var html = me.parseAppList(data);
+            $("#tab-"+type+" .app-list").empty();
+            $("#tab-"+type+" .app-list").append(html);
+
+            $(".app-list li").fastClick(function() {
+               me.clickOnApp(this);
+            });
+            $(".app-list .installBtn").fastClick(function() {
+               me.downloadApp(this);
+               $(this).addClass("inactive");
+            });
+        });
     },
 
     parseAppList : function(data)
@@ -518,20 +536,7 @@ var me = {
         // console.log(data);
     	// var obj = eval("("+data+")"); // json to object
     	var html = me.appListTemplate(data);
-
-        // $("#"+currentCat+" .app-list").empty();
-        // $("#"+currentCat+" .app-list").append(html);
-
-        $(".app-list").empty();
-        $(".app-list").append(html);
-
-        $(".app-list li").fastClick(function() {
-           me.clickOnApp(this);
-        });
-        $(".app-list .installBtn").fastClick(function() {
-           me.downloadApp(this);
-           $(this).addClass("inactive");
-        });
+        return html;
     },
 
     appListTemplate : function(res)
