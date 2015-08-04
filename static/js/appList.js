@@ -521,10 +521,10 @@ var me = {
             $("#tab-"+type+" .app-list").empty();
             $("#tab-"+type+" .app-list").append(html);
 
-            $(".app-list li").fastClick(function() {
+            $("#tab-"+type+" .app-list li").fastClick(function() {
                me.clickOnApp(this);
             });
-            $(".app-list .installBtn").fastClick(function() {
+            $("#tab-"+type+" .app-list .installBtn").fastClick(function() {
                me.downloadApp(this);
                $(this).addClass("inactive");
             });
@@ -541,7 +541,11 @@ var me = {
 
     appListTemplate : function(res)
     {
-        var data = res.chosenapplist;
+        var data = res.applist;
+        if (data == null || data == undefined) {
+            return;
+        }
+
         var arrHtml = new Array();
 
         if (data.length > 0) {
