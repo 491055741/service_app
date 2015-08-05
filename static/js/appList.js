@@ -417,7 +417,7 @@ var me = {
             var obj = eval("(" + jsonStr +")");
             me.parseWifiList(obj);
         }
-        wifiStatusChanged();
+        // wifiStatusChanged();
     },
 
     parseWifiList : function(data)
