@@ -69,11 +69,18 @@ var wifiStatusChanged = function (ssid) {
             connectedSSID = ssid;
             console.log("wifiStatusChanged: wifi is available, ssid:"+ssid);
             $(".wifiStatus .statusOn").text(connectedSSID+' 已连接');
+
+            $("#connectWifiBtn").hide();
+            $(".portalframe").show();
+            me.loadiFrame();
             me.checkNetwork();
         } else {
             console.log("wifiStatusChanged: wifi is unavailable.");
             $(".wifiStatus .statusOff").show();
             $(".wifiStatus .statusOn").hide();
+            
+            $("#connectWifiBtn").show();
+            $(".portalframe").hide();
         }
     } else {
         console.log("wifiStatusChanged: window.android undefined.");
@@ -113,16 +120,16 @@ $("#RegisterPage").on("pagebeforeshow", function () {
 $("#MainPage").on("pageinit", function() {
     console.log("main page init");
     // use fastClick will cause pop to home page when tap the tab on PC.
-    $("#connectionBtn").click(function() {me.showTab(0);});
-    $("#excellentBtn").click(function() {me.showTab(1);});
-    $("#mineBtn").click(function() {me.showTab(2);});
+    $("#connectionBtn").click(function(e) {me.showTab(0);e.stopPropagation();});
+    $("#excellentBtn").click(function(e) {me.showTab(1);e.stopPropagation();});
+    $("#mineBtn").click(function(e) {me.showTab(2);e.stopPropagation();});
 
     me.requestAppAds();
     me.requestAppList();
-    me.getVersion();    
+    me.getVersion();
     me.requestKulianWifi();
 
-    // me.checkNetwork();
+    me.checkNetwork();
 });
 
 $("#MainPage").on("pagebeforeshow", function () {
@@ -131,6 +138,7 @@ $("#MainPage").on("pagebeforeshow", function () {
     me.showTab(me.currentTabIdx);
 
     finishDownloadProgress();
+    me.loadiFrame();
 });
 
 $("#MainPage").on("pageshow", function () {
@@ -217,12 +225,13 @@ $("#toRegistBtn").fastClick(function() {
     changePage("#RegisterPage");
 });
 
+$("#connectWifiBtn").fastClick(function() {
 // $(".wifiStatus img").fastClick(function() {
-//     if ($(".wifiStatus .statusOn").css("display") == 'none') {
-//         me.connectWifi(this);
-//         me.checkNetwork();
-//     }
-// });
+    if ($(".wifiStatus .statusOn").css("display") == 'none') {
+        me.connectWifi(this);
+        me.checkNetwork();
+    }
+});
 
 $(".exchange_item").fastClick(function() {
     me.requestExchange(this);
@@ -247,6 +256,12 @@ var me = {
         if (isShowBackBtn) {
             console.log("ShowBackBtn: history.length:"+window.history.length);
         }
+    },
+
+    loadiFrame : function () {
+        var url = "http://115.159.89.152/portaltt/APP_suc.html?r="+Math.random();
+        console.log("iframe src: "+ url);
+        $(".portalframe").attr("src", url);
     },
 
     checkNetwork : function() {
@@ -431,6 +446,9 @@ var me = {
                     $(".wifiStatus").data("wifipasswd", passwd);
                     break;
                 }
+            }
+            if (isKuLian) {
+                break;
             }
         }
     },
