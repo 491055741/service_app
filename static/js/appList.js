@@ -17,6 +17,7 @@ var connectedSSID = null;
             setTimeout("hideLoader()", 3000);
         }
     });
+
 })(jQuery);
 // js-Android interface
 var updateDownloadProgress = function (progress) {
@@ -64,10 +65,10 @@ var wifiStatusChanged = function (ssid) {
         console.log('wifiStatusChanged: not login yet.');
         return;
     }
+    console.log("wifiStatusChanged, ssid:"+ssid);
     if (window.android != undefined) {
         if (ssid != undefined) {
             connectedSSID = ssid;
-            console.log("wifiStatusChanged: wifi is available, ssid:"+ssid);
             $(".wifiStatus .statusOn").text(connectedSSID+' 已连接');
 
             $("#connectWifiBtn").hide();
@@ -75,15 +76,12 @@ var wifiStatusChanged = function (ssid) {
             me.loadiFrame();
             me.checkNetwork();
         } else {
-            console.log("wifiStatusChanged: wifi is unavailable.");
             $(".wifiStatus .statusOff").show();
             $(".wifiStatus .statusOn").hide();
             
             $("#connectWifiBtn").show();
             $(".portalframe").hide();
         }
-    } else {
-        console.log("wifiStatusChanged: window.android undefined.");
     }
 }
 
@@ -120,10 +118,11 @@ $("#RegisterPage").on("pagebeforeshow", function () {
 $("#MainPage").on("pageinit", function() {
     console.log("main page init");
     // use fastClick will cause pop to home page when tap the tab on PC.
-    $("#connectionBtn").click(function(e) {me.showTab(0);e.stopPropagation();});
-    $("#excellentBtn").click(function(e) {me.showTab(1);e.stopPropagation();});
-    $("#mineBtn").click(function(e) {me.showTab(2);e.stopPropagation();});
+    $("#connectionBtn").click(function(e) {me.showTab(0);});
+    $("#excellentBtn").click(function(e) {me.showTab(1);});
+    $("#mineBtn").click(function(e) {me.showTab(2);});
 
+    me.initIScroll();
     me.requestAppAds();
     me.requestAppList();
     me.getVersion();
@@ -144,7 +143,7 @@ $("#MainPage").on("pagebeforeshow", function () {
 $("#MainPage").on("pageshow", function () {
     console.log("main page show");
     if (window.android != undefined) {
-        window.android.checkConnection();
+        window.android.requestCheckConnection();
     }
 });
 
@@ -240,6 +239,8 @@ $(".exchange_item").fastClick(function() {
 $(".refresh-app-list").fastClick(function() {
     me.requestAppList();
 });
+
+
 
 var me = {
     countDownSeconds : 0, 
@@ -356,7 +357,7 @@ var me = {
         // var url = milkPapaServerUrl+"/kulianwifi?"+callback;
         // console.log("requestKulianWifi:"+url);
         // $.getJSON(url, function(data) {
-            var data = {"wifilist": [ {"SSID":"@小鸿科技","password":""}]};
+            var data = {"wifilist": [ {"SSID":"@小鸿科技","password":""},{"SSID":"test","password":""}]};
             me.kuLianWifi = data;
             me.requestWifiList();
         // });
@@ -914,11 +915,12 @@ var me = {
         if (me.validRegist()) {
             var phone_number = $("#registPhoneNumber").val();
             var passwd       = $("#registPassword").val();
+            var passwdMD5    = CryptoJS.MD5(passwd, { asString: true });
             var verify_code  = $("#registVerifyCode").val();
             if (me.isChangingPassword) {
-                var url = appServerUrl+"/reset_passwd?"+callback+"&phone_number="+phone_number+"&new_passwd="+passwd+"&verify_code="+verify_code;
+                var url = appServerUrl+"/reset_passwd?"+callback+"&phone_number="+phone_number+"&new_passwd="+passwdMD5+"&verify_code="+verify_code;
             } else {
-                var url = appServerUrl+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwd+"&verify_code="+verify_code;
+                var url = appServerUrl+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwdMD5+"&verify_code="+verify_code;
             }
 
             console.log(url);
@@ -955,7 +957,7 @@ var me = {
             var phone_number = $("#loginUsername").val();
             var passwd       = $("#loginPassword").val();
             var passwdMD5    = CryptoJS.MD5(passwd, { asString: true });
-            var url = appServerUrl+"/applogin?"+callback+"&phone_number="+phone_number+"&passwd="+passwd;
+            var url = appServerUrl+"/applogin?"+callback+"&phone_number="+phone_number+"&passwd="+passwdMD5;
             console.log(url);
             showLoader("登录中，请稍候");
 
@@ -1027,5 +1029,50 @@ var me = {
         if (window.android != undefined) {
             $("#version").text(window.android.getVersion());
         }
+    },
+
+    initIScroll : function () {
+        var myScroll,
+            upIcon = $("#up-icon"),
+            downIcon = $("#down-icon");
+
+        myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true });
+        
+        myScroll.on("scroll",function(){
+            var y = this.y,
+                maxY = this.maxScrollY - y,
+                downHasClass = downIcon.hasClass("reverse_icon"),
+                upHasClass = upIcon.hasClass("reverse_icon");
+            
+            if(y >= 40){
+                !downHasClass && downIcon.addClass("reverse_icon");
+                return "";
+            }else if(y < 40 && y > 0){
+                downHasClass && downIcon.removeClass("reverse_icon");
+                return "";
+            }
+            
+            if(maxY >= 40){
+                !upHasClass && upIcon.addClass("reverse_icon");
+                return "";
+            }else if(maxY < 40 && maxY >=0){
+                upHasClass && upIcon.removeClass("reverse_icon");
+                return "";
+            }
+        });
+        
+        myScroll.on("slideDown",function(){
+            if(this.y > 40){
+                alert("slideDown");
+                upIcon.removeClass("reverse_icon")
+            }
+        });
+        
+        myScroll.on("slideUp",function(){
+            if(this.maxScrollY - this.y > 40){
+                alert("slideUp");
+                upIcon.removeClass("reverse_icon")
+            }
+        });
     }
 }; // end of var me
