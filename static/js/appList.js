@@ -7,6 +7,7 @@ var checkNetworkUrl = "http://115.159.3.16/cb/app_test";
 var countDownTimer = null;
 var checkNetworkTimer = null;
 var connectedSSID = null;
+var myScroll;
 
 (function($){
     $.ajaxSetup({
@@ -122,7 +123,6 @@ $("#MainPage").on("pageinit", function() {
     $("#excellentBtn").click(function(e) {me.showTab(1);});
     $("#mineBtn").click(function(e) {me.showTab(2);});
 
-    me.initIScroll();
     me.requestAppAds();
     me.requestAppList();
     me.getVersion();
@@ -240,12 +240,12 @@ $(".refresh-app-list").fastClick(function() {
     me.requestAppList();
 });
 
-
-
 var me = {
     countDownSeconds : 0, 
     isChangingPassword : false,
-    currentTabIdx : 0,
+    currentTabIdx : 0, // bottom tab
+    curAppTabIdx : 0, // app top tab
+    curAppPageIdx : [1,1,1], // current page of each app tab
     kuLianWifi : null,
     appList : null,
 
@@ -348,6 +348,10 @@ var me = {
         } else {
             slide.hide();
         }
+        if (idx == 1) {
+            me.initIScroll();
+        }
+
         var titles = new Array("连接", "精选", "我的");
         setTitle(titles[idx]);
     },
@@ -408,11 +412,11 @@ var me = {
     requestWifiList : function()
     {
         if (window.android == undefined) {
-            var url = milkPapaServerUrl + "/wifilist?"+callback;
-            console.log("requestWifiList:" + url);
-            $.getJSON(url, function(data) {
-                me.parseWifiList(data);
-            });
+            // var url = milkPapaServerUrl + "/wifilist?"+callback;
+            // console.log("requestWifiList:" + url);
+            // $.getJSON(url, function(data) {
+            //     me.parseWifiList(data);
+            // });
         } else {
             var jsonStr= window.android.wifiListJsonString();
             var obj = eval("(" + jsonStr +")");
@@ -1031,11 +1035,17 @@ var me = {
         }
     },
 
+    showAppTab : function (tabIdx) {
+        me.curAppTabIdx = tabIdx;
+    },
+
     initIScroll : function () {
-        var myScroll,
-            upIcon = $("#up-icon"),
+        var upIcon = $("#up-icon"),
             downIcon = $("#down-icon");
 
+        if(myScroll!=null){
+            myScroll.destroy();
+        }
         myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true });
         
         myScroll.on("scroll",function(){
@@ -1069,10 +1079,11 @@ var me = {
         });
         
         myScroll.on("slideUp",function(){
-            if(this.maxScrollY - this.y > 40){
-                alert("slideUp");
+            if (this.maxScrollY - this.y > 40){
+                me.requestAppTypePage(curAppTabIdx, curAppPageIdx[curAppTabIdx]);
                 upIcon.removeClass("reverse_icon")
             }
         });
+        setTimeout(myScroll.refresh(), 200);
     }
 }; // end of var me

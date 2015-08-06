@@ -15,8 +15,8 @@ $.widget( "mobile.tabs", $.mobile.widget, {
 		grid: null,
 		load: function(event, ui) { },
 		beforeTabHide: function(event, ui) { },
-		beforeTabShow: function(event, ui) { },
-		afterTabShow:  function(event, ui) { }
+		beforeTabShow: function(event, ui) {me.showAppTab($(ui.nextTab).data("idx")); },
+		afterTabShow:  function(event, ui) {me.initIScroll(); }
 	},
 	_create: function(){
 		var
@@ -66,7 +66,7 @@ $.widget( "mobile.tabs", $.mobile.widget, {
 			$( this ).addClass( "ui-btn-active" );
 			$this.changeTab(event, {
 				currentTab: $navbtns.eq($this.currentTab()),
-				nextTab: $(this),
+				nextTab: this, // $(this)   modify by lipeng
 				currentContent: $this.currentContent(),
 				nextContent: $content.children($(this).attr('href'))
 			});
