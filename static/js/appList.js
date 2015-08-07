@@ -124,7 +124,7 @@ $("#MainPage").on("pageinit", function() {
     $("#mineBtn").click(function(e) {me.showTab(2);});
 
     me.requestAppAds();
-    me.requestAppList();
+    // me.requestAppList();
     me.getVersion();
     me.requestKulianWifi();
 
@@ -165,7 +165,7 @@ $("#AppDetailPage").on("pageshow", function () {
             gallerySwiper.changeSize();
         }
     });
-    gallerySwiper.changeSize();
+    setTimeout(gallerySwiper.changeSize(), 100);
 });
 
 $("#ExchangePage").on("pagebeforeshow", function () {
@@ -349,6 +349,9 @@ var me = {
             slide.hide();
         }
         if (idx == 1) {
+            if (myScroll == null) {
+                me.requestAppList();
+            }
             me.initIScroll();
         }
 
@@ -541,9 +544,8 @@ var me = {
             hideLoader();
             me.appList = data;
             var html = me.parseAppList(data);
-            $("#tab-"+type+" .app-list").empty();
+            // $("#tab-"+type+" .app-list").empty();
             $("#tab-"+type+" .app-list").append(html);
-            // myScroll.refresh();
 
             $("#tab-"+type+" .app-list li").fastClick(function() {
                me.clickOnApp(this);
@@ -552,6 +554,10 @@ var me = {
                me.downloadApp(this);
                $(this).addClass("inactive");
             });
+
+            if (myScroll != null) {
+                setTimeout(myScroll.refresh(), 200);
+            }
         });
     },
 
@@ -575,7 +581,7 @@ var me = {
         if (data.length > 0) {
             $(".refresh-app-list").hide();
         }
-
+        // for (var j = 0; j < 4; j++) {  /// for debug
         for (var i = 0; i < data.length; i++) {
 
             if (data[i].PackageName == undefined) {
@@ -586,7 +592,8 @@ var me = {
             if (window.android != undefined && window.android.isAppInstalled(data[i].PackageName, 1)) {
                 isAppInstalled = true;
             }
-
+            // arrHtml.push("<li style='height:50px;'>aaa");
+///*
             arrHtml.push("<li data-appid='" + data[i].AppId + "' id=\"myId" + data[i].AppId +"\" class=\"index-item list-index\" >");
             arrHtml.push("<div class=\"index-item-main\">");
             arrHtml.push("<dl class=\"clearfix\">");
@@ -619,10 +626,10 @@ var me = {
             } else {
                 arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
             }
-
+//*/
             arrHtml.push("</li>");
         }
-
+        // }
         return arrHtml.join("");
     },
 
@@ -661,11 +668,11 @@ var me = {
         var html = me.appDetailTemplate(data.detail_info);
         $(".appDetail").append(html);
 
-        $(".content-BaiYingFreeDownload").fastClick(function() {
+        $(".DownloadBtn").fastClick(function() {
            me.downloadApp(this);
         });
 
-        $.mobile.changePage("#AppDetailPage", "slideup");
+        changePage("#AppDetailPage");
     },
 
     downloadApp : function (obj)
@@ -709,7 +716,7 @@ var me = {
         // }
         arrHtml.push("<div class='swiper-container'><div class='pagination' style='display:none;'></div><div class='swiper-wrapper' style='width:2424px;'>");
         for (var i = 0; i < data.ImageSrcList.length; i++) {
-          arrHtml.push("<div class='swiper-slide'><div class='inner'> <img src='" + data.ImageSrcList[i] + "' alt=''> </div></div>");
+          arrHtml.push("<div class='swiper-slide'><div class='inner'> <img src='" + data.ImageSrcList[i] + "' alt=''/> </div></div>");
         }
         arrHtml.push("</div></div>");
         arrHtml.push(me.descriptionTemplate(data))
@@ -750,7 +757,7 @@ var me = {
 
         arrHtml.push("<div id=\"divdownarea\" class=\"down-area\">");
         arrHtml.push("<div class=\"content-btn-con\">");
-        arrHtml.push("<a class=\"content-BaiYingFreeDownload\" data-appurl=\""+data.AppSource+"\" data-appname=\""+data.AppName+"\" data-appid=\""+data.AppId+"\" data-pkgname=\""+data.PackageName+"\" ");
+        arrHtml.push("<a class=\"DownloadBtn\" data-appurl=\""+data.AppSource+"\" data-appname=\""+data.AppName+"\" data-appid=\""+data.AppId+"\" data-pkgname=\""+data.PackageName+"\" ");
         if (isAppInstalled) {
             arrHtml.push("data-installed='YES' >已安装</a>");
         } else {
@@ -1041,27 +1048,27 @@ var me = {
     },
 
     initIScroll : function () {
-        var upIcon = $("#tab-"+me.curAppTabIdx+" .up-icon"),
-            downIcon = $("#tab-"+me.curAppTabIdx+" .down-icon");
+        var upIcon = $("#tab-"+me.curAppTabIdx+" .up-icon");
+            // var downIcon = $("#tab-"+me.curAppTabIdx+" .down-icon");
 
         if(myScroll!=null){
             myScroll.destroy();
         }
-        myScroll = new IScroll("#tab-"+me.curAppTabIdx+" .wrapper", { probeType: 3, mouseWheel: true });  // '#wrapper'
+        myScroll = new IScroll("#tab-"+me.curAppTabIdx+" .wrapper", { probeType: 3, mouseWheel: true });
         
         myScroll.on("scroll",function(){
             var y = this.y,
                 maxY = this.maxScrollY - y,
-                downHasClass = downIcon.hasClass("reverse_icon"),
+                // downHasClass = downIcon.hasClass("reverse_icon"),
                 upHasClass = upIcon.hasClass("reverse_icon");
             
-            if(y >= 40){
-                !downHasClass && downIcon.addClass("reverse_icon");
-                return "";
-            }else if(y < 40 && y > 0){
-                downHasClass && downIcon.removeClass("reverse_icon");
-                return "";
-            }
+            // if(y >= 40){
+            //     !downHasClass && downIcon.addClass("reverse_icon");
+            //     return "";
+            // }else if(y < 40 && y > 0){
+            //     downHasClass && downIcon.removeClass("reverse_icon");
+            //     return "";
+            // }
             
             if(maxY >= 40){
                 !upHasClass && upIcon.addClass("reverse_icon");
