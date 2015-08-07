@@ -244,7 +244,7 @@ var me = {
     countDownSeconds : 0, 
     isChangingPassword : false,
     currentTabIdx : 0, // bottom tab
-    curAppTabIdx : 0, // app top tab
+    curAppTabIdx : 1, // app top tab
     curAppPageIdx : [1,1,1], // current page of each app tab
     kuLianWifi : null,
     appList : null,
@@ -543,6 +543,7 @@ var me = {
             var html = me.parseAppList(data);
             $("#tab-"+type+" .app-list").empty();
             $("#tab-"+type+" .app-list").append(html);
+            // myScroll.refresh();
 
             $("#tab-"+type+" .app-list li").fastClick(function() {
                me.clickOnApp(this);
@@ -1040,13 +1041,13 @@ var me = {
     },
 
     initIScroll : function () {
-        var upIcon = $("#up-icon"),
-            downIcon = $("#down-icon");
+        var upIcon = $("#tab-"+me.curAppTabIdx+" .up-icon"),
+            downIcon = $("#tab-"+me.curAppTabIdx+" .down-icon");
 
         if(myScroll!=null){
             myScroll.destroy();
         }
-        myScroll = new IScroll('#wrapper', { probeType: 3, mouseWheel: true });
+        myScroll = new IScroll("#tab-"+me.curAppTabIdx+" .wrapper", { probeType: 3, mouseWheel: true });  // '#wrapper'
         
         myScroll.on("scroll",function(){
             var y = this.y,
@@ -1073,14 +1074,14 @@ var me = {
         
         myScroll.on("slideDown",function(){
             if(this.y > 40){
-                alert("slideDown");
+                // alert("slideDown");
                 upIcon.removeClass("reverse_icon")
             }
         });
         
         myScroll.on("slideUp",function(){
             if (this.maxScrollY - this.y > 40){
-                me.requestAppTypePage(curAppTabIdx, curAppPageIdx[curAppTabIdx]);
+                me.requestAppTypePage(me.curAppTabIdx, me.curAppPageIdx[me.curAppTabIdx]);
                 upIcon.removeClass("reverse_icon")
             }
         });
