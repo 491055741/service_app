@@ -124,7 +124,7 @@ $("#MainPage").on("pageinit", function() {
     $("#mineBtn").click(function(e) {me.showTab(2);});
 
     me.requestAppAds();
-    // me.requestAppList();
+    me.requestAppList();
     me.getVersion();
     me.requestKulianWifi();
 
@@ -144,6 +144,9 @@ $("#MainPage").on("pageshow", function () {
     console.log("main page show");
     if (window.android != undefined) {
         window.android.requestCheckConnection();
+    }
+    if (myScroll) {
+        setTimeout(me.initIScroll(), 100);
     }
 });
 
@@ -349,9 +352,6 @@ var me = {
             slide.hide();
         }
         if (idx == 1) {
-            if (myScroll == null) {
-                me.requestAppList();
-            }
             me.initIScroll();
         }
 
@@ -532,6 +532,7 @@ var me = {
         showLoader();
         $(".refresh-app-list").show();
         for (var type = 1; type <= 3; type++) {
+            $("#tab-"+type+" .app-list").empty();
             me.requestAppTypePage(type, 1);
         }
     },
@@ -542,14 +543,22 @@ var me = {
         console.log("requestAppList:" + url);
         $.getJSON(url, function(data) {
             hideLoader();
+
+            if (data.applist_count == 0) {  // last page
+                $("#tab-"+type+" .scroller-pullUp").hide();
+                return;
+            }
+
+            me.curAppPageIdx[type] = page + 1;
             me.appList = data;
             var html = me.parseAppList(data);
-            // $("#tab-"+type+" .app-list").empty();
+
             $("#tab-"+type+" .app-list").append(html);
 
-            $("#tab-"+type+" .app-list li").fastClick(function() {
+            $("#tab-"+type+" .app-list li").click(function() {  // don't use fastclick, it will eat 'touchbegin' event
                me.clickOnApp(this);
             });
+
             $("#tab-"+type+" .app-list .installBtn").fastClick(function() {
                me.downloadApp(this);
                $(this).addClass("inactive");
@@ -581,7 +590,18 @@ var me = {
         if (data.length > 0) {
             $(".refresh-app-list").hide();
         }
-        // for (var j = 0; j < 4; j++) {  /// for debug
+
+///888888888888888
+
+        // for (var j = 0; j < 50; j++) {  /// for debug
+        //     arrHtml.push("<li>pretty app " + j + "</li>");
+        // }
+        // return arrHtml.join("");
+
+///888888888888888
+
+// for (var j = 0; j < 4; j++) {
+
         for (var i = 0; i < data.length; i++) {
 
             if (data[i].PackageName == undefined) {
@@ -629,7 +649,7 @@ var me = {
 //*/
             arrHtml.push("</li>");
         }
-        // }
+// }
         return arrHtml.join("");
     },
 
@@ -1048,14 +1068,15 @@ var me = {
     },
 
     initIScroll : function () {
+        console.log("initIScroll");
         var upIcon = $("#tab-"+me.curAppTabIdx+" .up-icon");
             // var downIcon = $("#tab-"+me.curAppTabIdx+" .down-icon");
 
         if(myScroll!=null){
             myScroll.destroy();
         }
-        myScroll = new IScroll("#tab-"+me.curAppTabIdx+" .wrapper", { probeType: 3, mouseWheel: true });
-        
+        myScroll = new IScroll("#tab-"+me.curAppTabIdx+" .wrapper", {click:true, probeType: 3, mouseWheel: true, fadeScrollbars: true });
+
         myScroll.on("scroll",function(){
             var y = this.y,
                 maxY = this.maxScrollY - y,
