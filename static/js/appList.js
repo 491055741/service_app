@@ -559,9 +559,27 @@ var me = {
                me.clickOnApp(this);
             });
 
-            $("#tab-"+type+" .app-list .installBtn").fastClick(function() {
-               me.downloadApp(this);
-               $(this).addClass("inactive");
+            $("#tab-"+type+" .app-list .installBtn").fastClick(function(e) {
+                e.stopPropagation();
+                if($(this).hasClass('inactive')) {
+                    return;
+                }
+                console.log(123);
+                me.downloadApp(this);
+                $(this).addClass("inactive");
+                //创建圆形进度条
+                $(this).radialIndicator({
+                    radius: 18,
+                    barColor: '#fff',
+                    barBgColor: '#48D1CC',
+                    barWidth: 3,
+                    initValue: 0,
+                    roundCorner : true,
+                    percentage: true
+                });
+                //获取进度条实例
+                var raObj = $(this).data('radialIndicator');
+                raObj.animate(99);
             });
 
             if (myScroll != null) {
@@ -638,15 +656,19 @@ var me = {
             arrHtml.push(data[i].BriefSummary == "" ? "暂无介绍" : subString.autoAddEllipsis(data[i].BriefSummary, 34, true));
             arrHtml.push("</div></dd></dl></div>");
 
-            arrHtml.push("<div class='coin_num' >+"+data[i].GiveCoin+"</div>");
-            arrHtml.push("<img class='coin_icon' src='images/coins.png' />");
-
+            arrHtml.push("<div class='app_down'>");
+                arrHtml.push("<div class='app_coins'>");
+                    arrHtml.push("<div class='coin_num' ><span>"+data[i].GiveCoin+"</span> 金币</div>");
+                    //arrHtml.push("<img class='coin_icon' src='images/coins.png' />");
+                arrHtml.push("</div>");
             if (isAppInstalled) {
-                arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' ></div>");
+                arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' ><span>已装</span></div>");
             } else {
                 arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
             }
 //*/
+                arrHtml.push("</div>");
+            arrHtml.push("</div>");
             arrHtml.push("</li>");
         }
 // }
