@@ -31,7 +31,7 @@ var updateDownloadProgress = function (appId, progress) {
 var finishDownloadProgress = function (appId) {
     console.log('app['+appId+'] download finished.');
     $("div.installBtn[data-appid="+appId+"]").empty();
-    $("div.installBtn[data-appid="+appId+"]").append("<span>已装</span>");
+    $("div.installBtn[data-appid="+appId+"]").append("<span>已下载</span>");
 }
 // js-Android interface
 var appInstallFinished = function (appId) {
@@ -648,9 +648,9 @@ var me = {
 
             arrHtml.push("</div>");
             if (isAppInstalled) {
-                arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' ><span>已装</span></div>");
+                arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' ><span>已安装</span></div>");
             } else {
-                arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
+                arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
             }
 
             arrHtml.push("</div>");
@@ -703,17 +703,17 @@ var me = {
         changePage("#AppDetailPage");
     },
 
-    downloadApp : function (obj)
+    downloadApp : function (installBtn)
     {
         console.log("downloadApp");
-        if ($(obj).data("installed") == 'YES') {
+        if ($(installBtn).data("installed") == 'YES') {
             showLoader("您已经安装了这个软件");
             setTimeout("hideLoader()", 2000);
             return;
         }
-
+        me.addToAppManageTab(installBtn);
         if (window.android != undefined) {
-            var appId = $(obj).data("appid");
+            var appId = $(installBtn).data("appid");
             var appInfo = me.getAppInfoById(appId);
             if (appInfo != null) {
                 var mac = window.android.getMacAddress();
@@ -725,13 +725,52 @@ var me = {
                 });
             }
 
-            window.android.downloadApp(appId, $(obj).data("appname"), $(obj).data("pkgname"), $(obj).data("appurl"));
+            window.android.downloadApp(appId, $(installBtn).data("appname"), $(installBtn).data("pkgname"), $(installBtn).data("appurl"));
             showLoader("开始下载，完成安装前请不要退出本应用");
             setTimeout("hideLoader()", 2000);
         } else {
-            console.log("window.android undefined. url:" + $(obj).data("appurl"));
-            setTimeout("updateDownloadProgress("+$(obj).data("appid")+",50)", 1000);
+            console.log("window.android undefined. url:" + $(installBtn).data("appurl"));
+            setTimeout("updateDownloadProgress("+$(installBtn).data("appid")+",50)", 1000);
         }
+    },
+
+    addToAppManageTab : function(installBtn)
+    {
+        var arrHtml = new Array();
+        arrHtml.push("<li data-appid='" + $(installBtn).data("appid") + "' \" class=\"index-item list-index\" >");
+        arrHtml.push("<div class=\"index-item-main\">");
+        arrHtml.push("<dl class=\"clearfix\">");
+        arrHtml.push("<dt class=\"item-icon\"><span class=\"app-tags hide\"></span>");
+        arrHtml.push("<img src=\"" + $(installBtn).data("applogo") + "\" />");
+        arrHtml.push("</dt>");
+        arrHtml.push("<dd class=\"item-title\">");
+        arrHtml.push("<div class=\"item-title-sname\">");
+        arrHtml.push("<div class=\"baiying-name\">");
+        arrHtml.push(subString.autoAddEllipsis($(installBtn).data("appname"), 30, true) + "</div></div></dd>");
+        arrHtml.push("</dl></div>");
+
+        arrHtml.push("<div class='app_down'>");
+        arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-appid="+$(installBtn).data("appid")+"></div>");
+
+        arrHtml.push("</div>");
+        arrHtml.push("</div>");
+        arrHtml.push("</li>");
+
+        var html = arrHtml.join("");
+        $("#tab-4 .app-list").append(html);
+
+        $("#tab-4 .installBtn[data-appid='" + $(installBtn).data('appid') + "']").addClass("inactive");
+        //创建圆形进度条
+        $("#tab-4 .installBtn[data-appid='" + $(installBtn).data('appid') + "']").radialIndicator({
+            radius: 18,
+            barColor: '#fff',
+            barBgColor: '#48D1CC',
+            barWidth: 3,
+            initValue: 0,
+            roundCorner : true,
+            percentage: true
+        });
+
     },
 
     appDetailTemplate : function(data)
