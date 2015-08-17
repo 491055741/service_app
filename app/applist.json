@@ -1,5 +1,5 @@
 {
-   "chosenapplist" : [
+   "applist" : [
       {
          "AppId" : 101,
          "AppLogo" : "http://www.dspmind.com/upload/images/20150707/1436280389564840.png",
@@ -111,11 +111,7 @@
          "GiveCoin" : 100
       }
    ],
-   "chosenapplist_count" : 10,
-   "gameapplist" : null,
-   "gameapplist_count" : 0,
+   "applist_count" : 10,
    "ret_code" : 0,
    "ret_msg" : "success",
-   "toolapplist" : null,
-   "toolapplist_count" : 0
 }

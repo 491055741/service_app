@@ -1,5 +1,5 @@
 var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
-// var localServerUrl = "http://127.0.0.1:5000"; var callback = "callback=?";
+var localServerUrl = "http://127.0.0.1:5000"; var callback = "callback=?";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var isAutoLogin = true;
 var checkNetworkInterval = 1500; // ms
@@ -21,17 +21,17 @@ var myScroll;
 
 })(jQuery);
 // js-Android interface
-var updateDownloadProgress = function (progress) {
-    $('.load-bar').show();
-    $('#counter').html(progress+'%');
-    $('.wrapper .load-bar-inner').width(progress+'%');
-    var offset = (323+25)*progress/100 - 25;
-    // console.log('counter offset:'+offset);
-    $('.wrapper #counter').css('left', offset+'px');
+var updateDownloadProgress = function (appId, progress) {
+    console.log('app['+appId+'] download progress: '+progress);
+    //获取进度条实例
+    var raObj = $("div.installBtn[data-appid="+appId+"]").data('radialIndicator');
+    raObj.animate(progress);
 }
 // js-Android interface
-var finishDownloadProgress = function () {
-    $('.load-bar').hide();
+var finishDownloadProgress = function (appId) {
+    console.log('app['+appId+'] download finished.');
+    $("div.installBtn[data-appid="+appId+"]").empty();
+    $("div.installBtn[data-appid="+appId+"]").append("<span>已装</span>");
 }
 // js-Android interface
 var appInstallFinished = function (appId) {
@@ -528,7 +528,6 @@ var me = {
 
     requestAppList : function()
     {
-        // http://livew.mobdsp.com/cb/applist_page?apptype=1&page=1
         showLoader();
         $(".refresh-app-list").show();
         for (var type = 1; type <= 3; type++) {
@@ -559,12 +558,12 @@ var me = {
                me.clickOnApp(this);
             });
 
-            $("#tab-"+type+" .app-list .installBtn").fastClick(function(e) {
+            $("#tab-"+type+" .app-list .installBtn").click(function(e) {
                 e.stopPropagation();
                 if($(this).hasClass('inactive')) {
                     return;
                 }
-                console.log(123);
+                console.log('click on installBtn');
                 me.downloadApp(this);
                 $(this).addClass("inactive");
                 //创建圆形进度条
@@ -577,9 +576,7 @@ var me = {
                     roundCorner : true,
                     percentage: true
                 });
-                //获取进度条实例
-                var raObj = $(this).data('radialIndicator');
-                raObj.animate(99);
+
             });
 
             if (myScroll != null) {
@@ -609,17 +606,6 @@ var me = {
             $(".refresh-app-list").hide();
         }
 
-///888888888888888
-
-        // for (var j = 0; j < 50; j++) {  /// for debug
-        //     arrHtml.push("<li>pretty app " + j + "</li>");
-        // }
-        // return arrHtml.join("");
-
-///888888888888888
-
-// for (var j = 0; j < 4; j++) {
-
         for (var i = 0; i < data.length; i++) {
 
             if (data[i].PackageName == undefined) {
@@ -631,7 +617,7 @@ var me = {
                 isAppInstalled = true;
             }
             // arrHtml.push("<li style='height:50px;'>aaa");
-///*
+
             arrHtml.push("<li data-appid='" + data[i].AppId + "' id=\"myId" + data[i].AppId +"\" class=\"index-item list-index\" >");
             arrHtml.push("<div class=\"index-item-main\">");
             arrHtml.push("<dl class=\"clearfix\">");
@@ -657,30 +643,30 @@ var me = {
             arrHtml.push("</div></dd></dl></div>");
 
             arrHtml.push("<div class='app_down'>");
-                arrHtml.push("<div class='app_coins'>");
-                    arrHtml.push("<div class='coin_num' ><span>"+data[i].GiveCoin+"</span> 金币</div>");
-                    //arrHtml.push("<img class='coin_icon' src='images/coins.png' />");
-                arrHtml.push("</div>");
+            arrHtml.push("<div class='app_coins'>");
+            arrHtml.push("<div class='coin_num' ><span>"+data[i].GiveCoin+"</span> 金币</div>");
+
+            arrHtml.push("</div>");
             if (isAppInstalled) {
                 arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' ><span>已装</span></div>");
             } else {
                 arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
             }
-//*/
-                arrHtml.push("</div>");
+
+            arrHtml.push("</div>");
             arrHtml.push("</div>");
             arrHtml.push("</li>");
         }
-// }
+
         return arrHtml.join("");
     },
 
     getAppInfoById : function (appId)
     {
-        var choosenAppList = me.appList.chosenapplist;
-        for (var i = 0; i < choosenAppList.length; i++) {
-            if (choosenAppList[i].AppId == appId) {
-                return choosenAppList[i];
+        var appList = me.appList.applist;
+        for (var i = 0; i < appList.length; i++) {
+            if (appList[i].AppId == appId) {
+                return appList[i];
             }
         }
         return null;
@@ -744,6 +730,7 @@ var me = {
             setTimeout("hideLoader()", 2000);
         } else {
             console.log("window.android undefined. url:" + $(obj).data("appurl"));
+            setTimeout("updateDownloadProgress("+$(obj).data("appid")+",50)", 1000);
         }
     },
 

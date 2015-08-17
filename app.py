@@ -36,6 +36,10 @@ def version():
 def applist():
     return response("app/applist.json")
 
+@app.route('/applist_page')
+def applistpage():
+    return response("app/applist.json")
+
 @app.route('/wifilist')
 def wifilist():
     return response("app/wifilist.json")
