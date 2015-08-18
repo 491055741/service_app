@@ -7,6 +7,7 @@ var checkNetworkUrl = "http://115.159.3.16/cb/app_test";
 var countDownTimer = null;
 var checkNetworkTimer = null;
 var connectedSSID = null;
+var version = null;
 var myScroll;
 
 (function($){
@@ -125,7 +126,7 @@ $("#MainPage").on("pageinit", function() {
 
     me.requestAppAds();
     me.requestAppList();
-    me.getVersion();
+    me.fillVersion();
     me.requestKulianWifi();
 
     me.checkNetwork();
@@ -1106,9 +1107,19 @@ var me = {
 
     getVersion : function()
     {
-        if (window.android != undefined) {
-            $("#version").text(window.android.getVersion());
+        if (version == null) {
+            if (window.android != undefined) {
+                version = window.android.getVersion();
+            } else {
+                version = '1.0build0';
+            }            
         }
+        return version;
+    },
+
+    fillVersion : function()
+    {
+        $("#version").text(me.getVersion());
     },
 
     showAppTab : function (tabIdx) {
