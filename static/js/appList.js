@@ -8,6 +8,7 @@ var countDownTimer = null;
 var checkNetworkTimer = null;
 var connectedSSID = null;
 var version = null;
+var usePortalAuth = false;
 var myScroll;
 
 (function($){
@@ -69,13 +70,15 @@ var wifiStatusChanged = function (ssid) {
     }
     console.log("wifiStatusChanged, ssid:"+ssid);
     if (window.android != undefined) {
-        if (ssid != undefined) {
+        if (ssid != undefined) { // wifi已连接
             connectedSSID = ssid;
             $(".wifiStatus .statusOn").text(connectedSSID+' 已连接');
 
-            $("#connectWifiBtn").hide();
-            $(".portalframe").show();
-            me.loadiFrame();
+            if (usePortalAuth) {
+                $("#connectWifiBtn").hide(); // 隐藏连接wifi按钮
+                $(".portalframe").show();  // 显示认证portal frame
+                me.loadiFrame();
+            }
             me.checkNetwork();
         } else {
             $(".wifiStatus .statusOff").show();
@@ -292,48 +295,51 @@ var me = {
                         $(".wifiStatus .statusOn").hide();
                         $(".wifiStatus .statusOff").show();
                         
-                        // checkNetworkTimer = setTimeout(me.authentication(), checkNetworkInterval);
-                        checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
-                      }
+                        if (usePortalAuth) {
+                            checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
+                        } else {
+                            checkNetworkTimer = setTimeout(me.authentication(), checkNetworkInterval);
+                        }
+                    }
         });
     },
 
-    // authentication : function() {
-    //     console.log("authentication.");
-    //     clearTimeout(checkNetworkTimer);
-    //     $("#statusDesc").text("认证中...");
-    //     if (checkNetworkInterval > 10000) {
-    //         checkNetworkInterval = 1500;
-    //         console.log("authentication timeout.");
-    //         $("#statusDesc").text("认证超时");
-    //         return;
-    //     }
-    //     var authUrl = "http://182.254.140.228/portaltt/Logon.html";
-    //     $.ajax({
-    //         type: "GET",
-    //         crossDomain: true,
-    //         url: authUrl,
-    //         data: '',
-    //         dataType : "jsonp",
-    //         // jsonp: "callback",//服务端用于接收callback调用的function名的参数
-    //         // jsonpCallback:"success_jsonpCallback",//callback的function名称
-    //         success : function(data, textStatus) {
-    //                     $("#statusDesc").text("认证成功");
-    //                   },
-    //         error : function(XMLHttpRequest, textStatus, errorThrown) {
-    //                 // alert(XMLHttpRequest.status);
-    //                 if (XMLHttpRequest.status == 302) {
-    //                     $("#statusDesc").text("认证成功");
-    //                 } else {
-    //                     console.log("authentication fail.");
-    //                     $("#statusDesc").text("认证失败");
-    //                 }
-    //         }
-    //     });
+    authentication : function() {
+        console.log("authentication.");
+        clearTimeout(checkNetworkTimer);
+        $("#statusDesc").text("认证中...");
+        if (checkNetworkInterval > 10000) {
+            checkNetworkInterval = 1500;
+            console.log("authentication timeout.");
+            $("#statusDesc").text("认证超时");
+            return;
+        }
+        var authUrl = "http://182.254.140.228/portaltt/Logon.html";
+        $.ajax({
+            type: "GET",
+            crossDomain: true,
+            url: authUrl,
+            data: '',
+            dataType : "jsonp",
+            // jsonp: "callback",//服务端用于接收callback调用的function名的参数
+            // jsonpCallback:"success_jsonpCallback",//callback的function名称
+            success : function(data, textStatus) {
+                        $("#statusDesc").text("认证成功");
+                      },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    // alert(XMLHttpRequest.status);
+                    if (XMLHttpRequest.status == 302) {
+                        $("#statusDesc").text("认证成功");
+                    } else {
+                        console.log("authentication fail.");
+                        $("#statusDesc").text("认证失败");
+                    }
+            }
+        });
 
-    //     checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
-    //     checkNetworkInterval = checkNetworkInterval + 1000;
-    // },
+        checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
+        checkNetworkInterval = checkNetworkInterval + 1000;
+    },
 
     showTab : function(idx) {
         var tabs = new Array("connectionView", "choiceView", "mineView");
