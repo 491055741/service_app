@@ -25,10 +25,16 @@ var myScroll;
 // js-Android interface
 var updateDownloadProgress = function (appId, progress) {
     console.log('app['+appId+'] download progress: '+progress);
-    //获取进度条实例
-    var raObj = $("div.installBtn[data-appid="+appId+"]").data('radialIndicator');
-    raObj.animate(progress);
-}
+    //已安装的应用
+    var installApps = $("div.installBtn[data-appid="+appId+"]");
+    //var raObj = $("div.installBtn[data-appid="+appId+"]").data('radialIndicator');
+    $.each(installApps, function (index,el) {
+        //获取进度条实例
+        var raObj = $(el).data('radialIndicator');
+        console.log(raObj);
+        raObj.animate(progress);
+    });
+};
 // js-Android interface
 var finishDownloadProgress = function (appId) {
     console.log('app['+appId+'] download finished.');
