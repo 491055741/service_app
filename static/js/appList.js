@@ -30,14 +30,8 @@ var updateDownloadProgress = function (appId, progress) {
     //var raObj = $("div.installBtn[data-appid="+appId+"]").data('radialIndicator');
     $.each(installApps, function (index,el) {
         //获取进度条实例
-        if ($(el).siblings('canvas-mask')) {
-            console.log("i'm canvas-mask");
-            var raObj = $(el).siblings('canvas-mask').data('radialIndicator');
-        }else {
             console.log("i'm installbtn");
             var raObj = $(el).data('radialIndicator');
-        }
-        
         console.log(raObj);
         raObj.animate(progress);
     });
@@ -588,16 +582,20 @@ var me = {
                 me.downloadApp(this);
                 $(this).addClass("inactive");
                 //创建圆形进度条
-                $(this).siblings('canvas-mask').radialIndicator({
-                    radius: 18,
+                var width = parseInt($(this).parent().width()/5);
+                var height = $(this).siblings('.app-img').children('img').height();
+                $(this).height(height);
+                console.log(width);
+                $(this).radialIndicator({
+                    radius: width,
                     barColor: '#fff',
-                    barBgColor: '#48D1CC',
-                    barWidth: 3,
+                    barBgColor: 'rgba(255,255,255,0.4)',
+                    barWidth: 6,
                     initValue: 0,
                     roundCorner : true,
                     percentage: true
                 });
-
+                $(this).siblings('.app-down-des').text('下载中...');
             });
 
             if (myScroll != null) {
@@ -647,7 +645,6 @@ var me = {
                     arrHtml.push("<img src=\"" + data[i].AppLogo + "\" />");
                 arrHtml.push("</div>");
                 //遮罩层
-                arrHtml.push("<div class='canvas-mask'></div>")    
             // arrHtml.push("</dt>");
             // arrHtml.push("<dd class=\"item-title\">");
             // arrHtml.push("<div class=\"item-title-sname\">");
@@ -676,11 +673,15 @@ var me = {
 
             // arrHtml.push("<div class='coin_num' >下载并安装<span>"+data[i].GiveCoin+"</span></div>");
 
+            //if (isAppInstalled) {
             if (isAppInstalled) {
-                arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' ><span>已安装</span></div>");
+                arrHtml.push("<div class='ui-btn installBtn h-installBtn inactive' data-installed='YES' ></div>");
+                arrHtml.push("<div class='app-down-des'>已安装</div>");
             } else {
-                arrHtml.push("<div class='ui-btn installBtn h-installBtn' data-installed='NO' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"><span>下载并安装+"+data[i].GiveCoin+"</span></div>");
+                arrHtml.push("<div class='ui-btn installBtn h-installBtn' data-installed='NO' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
+                arrHtml.push("<div class='app-down-des'>下载并安装+"+data[i].GiveCoin+"</div>");
             }
+
             arrHtml.push("</div>");
             arrHtml.push("</li>");
         }

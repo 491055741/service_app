@@ -29,7 +29,7 @@ div#list-more.margin-0 { margin:0;border-top:none;;border-left:1px solid #c6c6c6
 	position: relative;
 	height: 100%;
 }
-.app-list .app-img {background: #846B6B;}
+.app-list .app-img {}
 .app-list .app-img img {width: 100%;max-height: 110px;}
 .app-list .item .item-main > a, .app-list .index-item .index-item-main > a { display: block; padding: 6px 8px 4px; min-height: 74px; }
 .list-status-download { width: 64px; height: 64px; font-size: 0; line-height: 0; margin-top:10px; border-left:1px solid #D6D7D8;}
