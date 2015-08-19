@@ -638,12 +638,12 @@ var me = {
             // arrHtml.push("<li style='height:50px;'>aaa");
 
             arrHtml.push("<li data-appid='" + data[i].AppId + "' id=\"myId" + data[i].AppId +"\" class=\"index-item list-index h-list-item\" >");
-                arrHtml.push("<div class=\"index-item-w\">");
+            arrHtml.push("<div class=\"index-item-w\">");
             // arrHtml.push("<dl class=\"clearfix\">");
             // arrHtml.push("<dt class=\"item-icon\"><span class=\"app-tags hide\"></span>");
-                arrHtml.push("<div class='app-img'>");
-                    arrHtml.push("<img src=\"" + data[i].AppLogo + "\" />");
-                arrHtml.push("</div>");
+            arrHtml.push("<div class='app-img'>");
+            arrHtml.push("<img src=\"" + data[i].AppLargeLogo + "\" />");
+            arrHtml.push("</div>");
                 //遮罩层
             // arrHtml.push("</dt>");
             // arrHtml.push("<dd class=\"item-title\">");
