@@ -675,7 +675,7 @@ var me = {
 
             //if (isAppInstalled) {
             if (isAppInstalled) {
-                arrHtml.push("<div class='ui-btn installBtn h-installBtn inactive' data-installed='YES' ></div>");
+                arrHtml.push("<div class='ui-btn installBtn h-installBtn hasIns inactive' data-installed='YES' ></div>");
                 arrHtml.push("<div class='app-down-des'>已安装</div>");
             } else {
                 arrHtml.push("<div class='ui-btn installBtn h-installBtn' data-installed='NO' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
