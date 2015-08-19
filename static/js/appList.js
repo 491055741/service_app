@@ -233,6 +233,13 @@ $(".feedbackBtn").fastClick(function() {
     }
 });
 
+$(".socialShareBtn").fastClick(function() {
+    console.log("social share");
+    if (window.android != undefined) {
+        window.android.socialShare();
+    }
+});
+
 $("#toRegistBtn").fastClick(function() {
     me.isChangingPassword = false;
     changePage("#RegisterPage");
