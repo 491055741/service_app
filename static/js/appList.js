@@ -1,5 +1,6 @@
-var appServerUrl = "http://livew.mobdsp.com/cb"; var callback = "callback=?";
-var localServerUrl = "http://127.0.0.1:5000"; var callback = "callback=?";
+var appServerUrl = "http://livew.mobdsp.com/cb";
+var callback = "callback=?";
+var localServerUrl = "http://127.0.0.1:5000";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var isAutoLogin = true;
 var checkNetworkInterval = 1500; // ms
@@ -436,11 +437,11 @@ var me = {
     requestWifiList : function()
     {
         if (window.android == undefined) {
-            // var url = milkPapaServerUrl + "/wifilist?"+callback;
-            // console.log("requestWifiList:" + url);
-            // $.getJSON(url, function(data) {
-            //     me.parseWifiList(data);
-            // });
+            var url = localServerUrl + "/wifilist?"+callback;
+            console.log("requestWifiList:" + url);
+            $.getJSON(url, function(data) {
+                me.parseWifiList(data);
+            });
         } else {
             var jsonStr= window.android.wifiListJsonString();
             var obj = eval("(" + jsonStr +")");
@@ -451,14 +452,15 @@ var me = {
 
     parseWifiList : function(data)
     {
-        // var html = me.wifiListTemplate(data);
+        var html = me.wifiListTemplate(data);
 
-        // $("#connectionView .wifi-list").empty();
-        // $("#connectionView .wifi-list").append(html);
+        $("#connectionView .wifi-list").empty();
+        $("#connectionView .wifi-list").append(html);
 
-        // $("#connectionView .wifi-list li").fastClick(function() {
-        //    me.connectWifi(this);
-        // });
+        $("#connectionView .wifi-list li").fastClick(function() {
+           me.connectWifi(this);
+        });
+
         var arrKuLianWifi = me.kuLianWifi.wifilist;
         var arrWifiList = data.wifilist;
 
