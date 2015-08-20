@@ -516,11 +516,11 @@ var me = {
             arrHtml.push("<img src=\"images/wifi_signal_"+ level +".png\" />");
             arrHtml.push("</dt>");
             arrHtml.push("<dd class=\"item-title\">");
-            arrHtml.push("<div class=\"wifi-SSID\">");
+            arrHtml.push("<span class=\"wifi-SSID\">");
             arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true));
-            arrHtml.push("</div>");
+            arrHtml.push("</span>");
             if (isKuLian) {
-                arrHtml.push("<div class=\"wifi-desc\">可连接</div>");
+                arrHtml.push("<span class=\"wifi-desc\">首选免费连接</span>");
             }
             arrHtml.push("</dd></dl></div>");
             arrHtml.push("</li>");
@@ -744,7 +744,7 @@ var me = {
     {
         console.log("downloadApp");
         if ($(installBtn).data("installed") == 'YES') {
-            showLoader("您已经安装了这个软件");
+            showLoader("软件已经安装了");
             setTimeout("hideLoader()", 2000);
             return;
         }
@@ -763,7 +763,7 @@ var me = {
             }
 
             window.android.downloadApp(appId, $(installBtn).data("appname"), $(installBtn).data("pkgname"), $(installBtn).data("appurl"));
-            showLoader("开始下载，完成安装前请不要退出本应用");
+            showLoader("保持WIFI酷连打开，完成安装后才会赠送金币哦");
             setTimeout("hideLoader()", 2000);
         } else {
             console.log("window.android undefined. url:" + $(installBtn).data("appurl"));
