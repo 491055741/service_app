@@ -566,6 +566,7 @@ var me = {
         }
     },
 
+    // type : 1 ~ 3
     requestAppTypePage : function(type, page)
     {
         var url = appServerUrl+"/applist_page?apptype="+type+"&page="+page+"&"+callback;
@@ -580,7 +581,12 @@ var me = {
 
             me.curAppPageIdx[type] = page + 1;
             me.appList = data;
-            var html = me.parseAppList(data);
+            var html;
+            if (type == 1) {
+                html = me.appBigLogoListTemplate(data);
+            } else {
+                html = me.appListTemplate(data);
+            }
 
             $("#tab-"+type+" .app-list").append(html);
 
@@ -620,16 +626,76 @@ var me = {
         });
     },
 
-    parseAppList : function(data)
-    {
-        // console.log(data);
-    	// var obj = eval("("+data+")"); // json to object
-    	var html = me.appListTemplate(data);
-        return html;
-    },
-
     appListTemplate : function(res)
     {
+        var data = res.applist;
+        if (data == null || data == undefined) {
+            return;
+        }
+
+        var arrHtml = new Array();
+
+        if (data.length > 0) {
+            $(".refresh-app-list").hide();
+        }
+
+        for (var i = 0; i < data.length; i++) {
+
+            if (data[i].PackageName == undefined) {
+                break;
+            }
+
+            var isAppInstalled = false;
+            if (window.android != undefined && window.android.isAppInstalled(data[i].PackageName, 1)) {
+                isAppInstalled = true;
+            }
+            // arrHtml.push("<li style='height:50px;'>aaa");
+
+            arrHtml.push("<li data-appid='" + data[i].AppId + "' id=\"myId" + data[i].AppId +"\" class=\"index-item list-index\" >");
+            arrHtml.push("<div class=\"index-item-main\">");
+            arrHtml.push("<dl class=\"clearfix\">");
+            arrHtml.push("<dt class=\"item-icon\"><span class=\"app-tags hide\"></span>");
+            arrHtml.push("<img src=\"" + data[i].AppLogo + "\" />");
+            arrHtml.push("</dt>");
+            arrHtml.push("<dd class=\"item-title\">");
+            arrHtml.push("<div class=\"item-title-sname\">");
+            arrHtml.push("<div class=\"baiying-name\">");
+            arrHtml.push(subString.autoAddEllipsis(data[i].AppName, 30, true) + "</div></div></dd>");
+            arrHtml.push("<dd class=\"item-star\">");
+            // arrHtml.push("<span class=\"score-star\"><span style=\"width:" + data[i].AppScore + "%;\"></span></span>");
+
+            if (data[i].AppSize != "") {
+                // var size = parseFloat(data[i].AppSize/1000000).toFixed(1) + "MB";
+                arrHtml.push("<span class=\"new-item-size\">" + data[i].AppSize + "</span>");
+            }
+
+            arrHtml.push("</dd>");
+            arrHtml.push("<dd>");
+            arrHtml.push("<div class=\"xiaobian-comment\">");
+            arrHtml.push(data[i].BriefSummary == "" ? "暂无介绍" : subString.autoAddEllipsis(data[i].BriefSummary, 34, true));
+            arrHtml.push("</div></dd></dl></div>");
+
+            arrHtml.push("<div class='app_down'>");
+            arrHtml.push("<div class='app_coins'>");
+            arrHtml.push("<div class='coin_num' ><span>"+data[i].GiveCoin+"</span> 金币</div>");
+
+            arrHtml.push("</div>");
+            if (isAppInstalled) {
+                arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' ><span>已安装</span></div>");
+            } else {
+                arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
+            }
+
+            arrHtml.push("</div>");
+            arrHtml.push("</div>");
+            arrHtml.push("</li>");
+        }
+
+        return arrHtml.join("");
+    },
+
+    appBigLogoListTemplate : function (res) {
+
         var data = res.applist;
         if (data == null || data == undefined) {
             return;
@@ -1176,9 +1242,11 @@ var me = {
         if(myScroll!=null){
             myScroll.destroy();
         }
-        myScroll = new IScroll("#tab-"+me.curAppTabIdx+" .wrapper", {click:true, probeType: 3, mouseWheel: true, fadeScrollbars: true });
+        myScroll = new IScroll("#tab-"+me.curAppTabIdx+" .wrapper", 
+                                {click:true, probeType: 3, mouseWheel: true, fadeScrollbars: true }
+                                );
 
-        myScroll.on("scroll",function(){
+        myScroll.on("scroll",function() {
             var y = this.y,
                 maxY = this.maxScrollY - y,
                 // downHasClass = downIcon.hasClass("reverse_icon"),
@@ -1209,9 +1277,9 @@ var me = {
         });
         
         myScroll.on("slideUp",function(){
-            if (this.maxScrollY - this.y > 40){
+            if (this.maxScrollY - this.y > 40) {
                 me.requestAppTypePage(me.curAppTabIdx, me.curAppPageIdx[me.curAppTabIdx]);
-                upIcon.removeClass("reverse_icon")
+                upIcon.removeClass("reverse_icon");
             }
         });
         setTimeout(myScroll.refresh(), 200);
