@@ -77,10 +77,14 @@ var wifiStatusChanged = function (ssid) {
         return;
     }
     console.log("wifiStatusChanged, ssid:"+ssid);
-    if (window.android != undefined) {
+    // if (window.android != undefined) {
         if (ssid != undefined) { // wifi已连接
             connectedSSID = ssid;
             $(".wifiStatus .statusOn").text(connectedSSID+' 已连接');
+
+            $("div.wifi-list li[data-ssid=\""+ssid+"\"]").remove();
+            $("div.connected-wifi").show();
+            $("div.connected-wifi span.ssid").text(ssid);
 
             if (usePortalAuth) {
                 $("#connectWifiBtn").hide(); // 隐藏连接wifi按钮
@@ -92,10 +96,15 @@ var wifiStatusChanged = function (ssid) {
             $(".wifiStatus .statusOff").show();
             $(".wifiStatus .statusOn").hide();
             
+            $("div.connected-wifi").hide();
+
             $("#connectWifiBtn").show();
-            $(".portalframe").hide();
+            if (usePortalAuth) {
+                $(".portalframe").hide();
+            }
         }
-    }
+    // }
+
 }
 
 $("#LoginPage").on("pageinit", function () {
@@ -148,14 +157,17 @@ $("#MainPage").on("pagebeforeshow", function () {
     me.showBackBtn(false);
     me.showTab(me.currentTabIdx);
 
-    finishDownloadProgress();
-    me.loadiFrame();
+    if (usePortalAuth) {
+        me.loadiFrame();
+    }
 });
 
 $("#MainPage").on("pageshow", function () {
     console.log("main page show");
     if (window.android != undefined) {
         window.android.requestCheckConnection();
+    } else {
+        setTimeout(wifiStatusChanged("SuperMary"), 2000);
     }
     if (myScroll) {
         setTimeout(me.initIScroll(), 100);
@@ -269,7 +281,12 @@ var me = {
     curAppTabIdx : 1, // app top tab
     curAppPageIdx : [1,1,1], // current page of each app tab
     kuLianWifi : null,
+    wifiList : null,
     appList : null,
+
+    reloadWifiListTable : function () {
+
+    },
 
     showBackBtn : function (isShowBackBtn) {
         console.log("showBackBtn:"+isShowBackBtn);
@@ -447,7 +464,6 @@ var me = {
             var obj = eval("(" + jsonStr +")");
             me.parseWifiList(obj);
         }
-        // wifiStatusChanged();
     },
 
     parseWifiList : function(data)
@@ -458,7 +474,7 @@ var me = {
         $("#connectionView .wifi-list").append(html);
 
         $("#connectionView .wifi-list li").fastClick(function() {
-           me.connectWifi(this);
+            me.connectWifi(this);
         });
 
         var arrKuLianWifi = me.kuLianWifi.wifilist;
@@ -509,19 +525,21 @@ var me = {
             else if (level > 70) { level = 2; }
             else if (level > 50) { level = 3; }
             else { level = 4; }
-            arrHtml.push("<li data-wifissid='"+data[i].SSID+"' data-wifipasswd='"+passwd+"' class=\"index-item list-index\" >"); // style=\"display:none;\"
+            arrHtml.push("<li data-ssid='"+data[i].SSID+"' data-passwd='"+passwd+"' class=\"index-item list-index\" >"); // style=\"display:none;\"
             arrHtml.push("<div class=\"index-item-main\">");
             arrHtml.push("<dl class=\"clearfix\">");
             arrHtml.push("<dt class=\"item-icon\">");
             arrHtml.push("<img src=\"images/wifi_signal_"+ level +".png\" />");
             arrHtml.push("</dt>");
             arrHtml.push("<dd class=\"item-title\">");
-            arrHtml.push("<span class=\"wifi-SSID\">");
+            arrHtml.push("<span class=\"ssid\">");
             arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true));
             arrHtml.push("</span>");
+            arrHtml.push("<span class=\"desc\">");
             if (isKuLian) {
-                arrHtml.push("<span class=\"wifi-desc\">首选免费连接</span>");
+                arrHtml.push("首选免费连接");
             }
+            arrHtml.push("</span>");
             arrHtml.push("</dd></dl></div>");
             arrHtml.push("</li>");
         }
@@ -532,8 +550,8 @@ var me = {
     connectWifi : function (obj)
     {
         if (window.android != undefined) {
-            var ssid = $(obj).data("wifissid");
-            var pwd = $(obj).data("wifipasswd");
+            var ssid = $(obj).data("ssid");
+            var pwd = $(obj).data("passwd");
             if (ssid == undefined) {
                 ssid = me.kuLianWifi.wifilist[0].SSID;
                 pwd = me.kuLianWifi.wifilist[0].password;
