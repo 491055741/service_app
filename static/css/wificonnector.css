@@ -55,8 +55,8 @@ a { text-decoration:none;}
     line-height: 25px;
     top: 0;
     right: 0;
-    /*background: url(../images/app_download.png) no-repeat 50% 25%;*/
-    background: transparent;
+    background: url("../images/app_download.png") no-repeat 50% 25%;
+    /*background: transparent;*/
     background-size: 25px;
     border-radius: 0;
     border: 0;

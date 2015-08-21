@@ -676,7 +676,7 @@ var me = {
             arrHtml.push("</dd>");
             arrHtml.push("<dd>");
             arrHtml.push("<div class=\"xiaobian-comment\">");
-            arrHtml.push(data[i].BriefSummary == "" ? "暂无介绍" : subString.autoAddEllipsis(data[i].BriefSummary, 34, true));
+            arrHtml.push(data[i].BriefSummary == "" ? "暂无介绍" : subString.autoAddEllipsis(data[i].BriefSummary, 25, true));
             arrHtml.push("</div></dd></dl></div>");
 
             arrHtml.push("<div class='app_down'>");
