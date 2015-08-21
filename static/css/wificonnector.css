@@ -30,6 +30,7 @@ a { text-decoration:none;}
 .text_disabled {color:gray;}
 
 .refresh-app-list {margin-top: 150px; }
+#choiceView .ui-tabs-content {margin-top: 0; }
 .app-list .coin_icon {position: absolute; width: 20px; top:30px; right: 75px;}
 .app-list .coin_num {
     position: absolute;

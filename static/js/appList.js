@@ -394,7 +394,13 @@ var me = {
 
     requestAppAds : function()
     {
-        var url = appServerUrl+"/appad?"+callback;
+        var url;
+        if (window.android == undefined) {
+            var url = localServerUrl+"/appad?"+callback;
+        } else {
+            var url = appServerUrl+"/appad?"+callback;
+        }
+
         console.log("requestAppAds:"+url);
         $.getJSON(url, function(data) {
             // var obj = eval("(" + data +")");
@@ -402,7 +408,8 @@ var me = {
                 me.parseAppAds(data);
                 slide.init();
                 $("#olSlideNum").hide();
-                if (me.currentTabIdx == 1) {
+                $("#tab-1 .wrapper").css("top", 200);
+                if (me.currentTabIdx == 0) {
                     $(".fouce").show();
                 }
             }
@@ -682,7 +689,6 @@ var me = {
 
             // arrHtml.push("<div class='coin_num' >下载并安装<span>"+data[i].GiveCoin+"</span></div>");
 
-            //if (isAppInstalled) {
             if (isAppInstalled) {
                 arrHtml.push("<div class='ui-btn installBtn h-installBtn hasIns inactive' data-installed='YES' ></div>");
                 arrHtml.push("<div class='app-down-des'>已安装</div>");
