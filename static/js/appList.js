@@ -454,19 +454,18 @@ var me = {
             var obj = eval("(" + jsonStr +")");
             me.parseWifiList(obj);
         }
-        // wifiStatusChanged();
     },
 
     parseWifiList : function(data)
     {
-        var html = me.wifiListTemplate(data);
+        // var html = me.wifiListTemplate(data);
 
-        $("#connectionView .wifi-list").empty();
-        $("#connectionView .wifi-list").append(html);
+        // $("#connectionView .wifi-list").empty();
+        // $("#connectionView .wifi-list").append(html);
 
-        $("#connectionView .wifi-list li").fastClick(function() {
-           me.connectWifi(this);
-        });
+        // $("#connectionView .wifi-list li").fastClick(function() {
+        //    me.connectWifi(this);
+        // });
 
         var arrKuLianWifi = me.kuLianWifi.wifilist;
         var arrWifiList = data.wifilist;
@@ -590,14 +589,19 @@ var me = {
 
             $("#tab-"+type+" .app-list").append(html);
 
+            var btns = $("#tab-"+type+" .app-list .installBtn[data-installed='YES']");
+            $.each(btns, function(index, el) {
+                me.addToAppManageTab(el);
+            });
+
             $("#tab-"+type+" .app-list li").click(function() {  // don't use fastclick, it will eat 'touchbegin' event
-               return; 
-               me.clickOnApp(this);
+                // me.clickOnApp(this);
+                // me.downloadApp(todo);
             });
 
             $("#tab-"+type+" .app-list .installBtn").click(function(e) {
                 e.stopPropagation();
-                if($(this).hasClass('inactive')) {
+                if ($(this).hasClass('inactive')) {
                     return;
                 }
                 console.log('click on installBtn');
@@ -680,8 +684,10 @@ var me = {
             arrHtml.push("<div class='coin_num' ><span>"+data[i].GiveCoin+"</span> 金币</div>");
 
             arrHtml.push("</div>");
+
+            // isAppInstalled = true;
             if (isAppInstalled) {
-                arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' ><span>已安装</span></div>");
+                arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"><span>已安装</span></div>");
             } else {
                 arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
             }
@@ -845,6 +851,7 @@ var me = {
 
     addToAppManageTab : function(installBtn)
     {
+        var isAppInstalled = ($(installBtn).data("installed") == 'YES');
         var arrHtml = new Array();
         arrHtml.push("<li data-appid='" + $(installBtn).data("appid") + "' \" class=\"index-item list-index\" >");
         arrHtml.push("<div class=\"index-item-main\">");
@@ -859,7 +866,12 @@ var me = {
         arrHtml.push("</dl></div>");
 
         arrHtml.push("<div class='app_down'>");
-        arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-appid="+$(installBtn).data("appid")+"></div>");
+
+        if (isAppInstalled) {
+            arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"><span>已安装</span></div>");
+        } else {
+            arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
+        }
 
         arrHtml.push("</div>");
         arrHtml.push("</div>");
@@ -869,17 +881,21 @@ var me = {
         $("#tab-4 .app-list").append(html);
 
         $("#tab-4 .installBtn[data-appid='" + $(installBtn).data('appid') + "']").addClass("inactive");
-        //创建圆形进度条
-        $("#tab-4 .installBtn[data-appid='" + $(installBtn).data('appid') + "']").radialIndicator({
-            radius: 18,
-            barColor: '#fff',
-            barBgColor: '#48D1CC',
-            barWidth: 3,
-            initValue: 0,
-            roundCorner : true,
-            percentage: true
-        });
+        
+        if (isAppInstalled) {
 
+        } else {
+            //创建圆形进度条
+            $("#tab-4 .installBtn[data-appid='" + $(installBtn).data('appid') + "']").radialIndicator({
+                radius: 18,
+                barColor: '#fff',
+                barBgColor: '#48D1CC',
+                barWidth: 3,
+                initValue: 0,
+                roundCorner : true,
+                percentage: true
+            });
+        }
     },
 
     appDetailTemplate : function(data)
