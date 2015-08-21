@@ -56,13 +56,14 @@ a { text-decoration:none;}
     top: 0;
     right: 0;
     background: url("../images/app_download.png") no-repeat 50% 25%;
-    /*background: transparent;*/
     background-size: 25px;
     border-radius: 0;
     border: 0;
     border-left: 1px solid #ccc;
-    
 }
+
+#tab-1 .app-list .installBtn {background: transparent;}
+
 .app-list .h-installBtn {
     width: 100%;
     height: 100%;
