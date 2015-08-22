@@ -1,12 +1,12 @@
 {
     "adlist":[{
-        "Link": "http://game.91.com/kuwanxishuo/21826117.html",
+        "Link": "http://sina.com",
         "ImageSrc": "http://app.milkpapa.com:8080/static/images/20150508175845980.jpg"
     }, {
-        "Link": "http://wan.91.com/info/150511/21826480.html",
+        "Link": "http://163.com",
         "ImageSrc": "http://app.milkpapa.com:8080/static/images/20150511175658864.jpg"
     }, {
-        "Link": "http://game.91.com/kuwanxishuo/21826117.html",
+        "Link": "http://baidu.com",
         "ImageSrc": "http://www.dspmind.com/upload/images/20150820/baiduweishi.png"
     }],
     "ret_code" : 0,

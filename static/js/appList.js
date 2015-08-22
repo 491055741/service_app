@@ -1293,7 +1293,7 @@ var me = {
         
         myScroll.on("slideUp",function(){
             if (this.maxScrollY - this.y > 40) {
-                me.requestAppTypePage(me.curAppTabIdx, me.curAppPageIdx[me.curAppTabIdx]);
+                // me.requestAppTypePage(me.curAppTabIdx, me.curAppPageIdx[me.curAppTabIdx]);
                 upIcon.removeClass("reverse_icon");
             }
         });
