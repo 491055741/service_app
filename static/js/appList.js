@@ -348,6 +348,7 @@ var me = {
             dataType : "jsonp",
             // jsonp: "callback",//服务端用于接收callback调用的function名的参数
             // jsonpCallback:"success_jsonpCallback",//callback的function名称
+            // 由于返回的是html网页，不是json数据，所以下面会认为请求失败，但实际AC已经认证通过
             success : function(data, textStatus) {
                         $("#statusDesc").text("认证成功");
                       },
@@ -418,8 +419,11 @@ var me = {
                 slide.init();
                 $("#olSlideNum").hide();
                 // $("#tab-1 .wrapper").css("top", 200);
-                if (me.currentTabIdx == 0) {
+                // if (me.currentTabIdx == 0) {
                     $(".fouce").show();
+                // }
+                if (myScroll != null) {
+                    setTimeout(myScroll.refresh(), 1000);
                 }
             }
         });
