@@ -406,9 +406,9 @@ var me = {
     {
         var url;
         if (window.android == undefined) {
-            var url = localServerUrl+"/appad?"+callback;
+            url = milkPapaServerUrl+"/appad?"+callback;
         } else {
-            var url = appServerUrl+"/appad?"+callback;
+            url = appServerUrl+"/appad?"+callback;
         }
 
         console.log("requestAppAds:"+url);
@@ -417,7 +417,7 @@ var me = {
                 me.parseAppAds(data);
                 slide.init();
                 $("#olSlideNum").hide();
-                $("#tab-1 .wrapper").css("top", 200);
+                // $("#tab-1 .wrapper").css("top", 200);
                 if (me.currentTabIdx == 0) {
                     $(".fouce").show();
                 }
