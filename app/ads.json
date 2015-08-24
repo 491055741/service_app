@@ -1,15 +1,23 @@
 {
-    "adlist":[{
-        "Link": "http://sina.com",
-        "ImageSrc": "http://app.milkpapa.com:8080/static/images/20150508175845980.jpg"
-    }, {
-        "Link": "http://163.com",
-        "ImageSrc": "http://app.milkpapa.com:8080/static/images/20150511175658864.jpg"
-    }, {
-        "Link": "http://baidu.com",
-        "ImageSrc": "http://www.dspmind.com/upload/images/20150820/baiduweishi.png"
-    }],
-    "ret_code" : 0,
-    "ret_msg" : "success",
-    "total_count" : 3
+   "adlist" : [
+      {
+         "click_url" : "",
+         "image_url" : "http://www.dspmind.com/upload/images/20150820/ad1.jpg"
+      },
+      {
+         "click_url" : "",
+         "image_url" : "http://www.dspmind.com/upload/images/20150820/ad2.jpg"
+      },
+      {
+         "click_url" : "",
+         "image_url" : "http://www.dspmind.com/upload/images/20150820/ad3.jpg"
+      },
+      {
+         "click_url" : "",
+         "image_url" : "http://www.dspmind.com/upload/images/20150820/ad4.jpg"
+      }
+   ],
+   "ret_code" : 0,
+   "ret_msg" : "success",
+   "total_count" : 0
 }
