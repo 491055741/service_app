@@ -653,6 +653,10 @@ var me = {
             }
 
             $("#tab-"+type+" .app-list").append(html);
+            if (type == 1) {
+                $("img.lazy").lazyload({threshold:300});
+                $(window).trigger("scroll");
+            }
 
             var btns = $("#tab-"+type+" .app-list .installBtn[data-installed='YES']");
             $.each(btns, function(index, el) {
@@ -802,9 +806,7 @@ var me = {
             arrHtml.push("<li data-appid='" + data[i].AppId + "' id=\"myId" + data[i].AppId +"\" class=\"index-item list-index h-list-item\" >");
             arrHtml.push("<div class=\"index-item-w\">");
             arrHtml.push("<div class='app-img'>");
-            // arrHtml.push("<img src=\"" + data[i].AppLargeLogo + "\" />");
-            arrHtml.push("<img data-src='"+data[i].AppLargeLogo+"' src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' onload='lzld(this)'>");
-
+            arrHtml.push("<img class='lazy' data-original='"+data[i].AppLargeLogo+"' />");
             //遮罩层
             arrHtml.push("<div class='canvas-mask'></div>")
             arrHtml.push("</div>");
