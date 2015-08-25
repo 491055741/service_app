@@ -688,6 +688,7 @@ var me = {
                     });
                     $(this).text('下载中');
                 }else {
+                    $(this).siblings('.app_coins').hide();
                     $(this).addClass('app-downloading--t3').radialIndicator({
                         radius: 18,
                         barColor: '#fff',
@@ -756,19 +757,17 @@ var me = {
             arrHtml.push(data[i].BriefSummary == "" ? "暂无介绍" : subString.autoAddEllipsis(data[i].BriefSummary, 25, true));
             arrHtml.push("</div></dd></dl></div>");
 
-
+            arrHtml.push("<div class='app_down'>");
             // isAppInstalled = true;
             if (isAppInstalled) {
                 arrHtml.push("<div class='ui-btn installBtn inactive' data-installed='YES' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"><span>已装</span></div>");
             } else {
-                arrHtml.push("<div class='app_down'>");
                 arrHtml.push("<div class='app_coins'>");
-                arrHtml.push("<div class='coin_num' ><span>"+data[i].GiveCoin+"</span> 金币</div>");
+                arrHtml.push("<div class='coin_num'><span>"+data[i].GiveCoin+"</span> 金币</div>");
                 arrHtml.push("</div>");
 
                 arrHtml.push("<div class='ui-btn installBtn' data-installed='NO' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\"></div>");
             }
-
             arrHtml.push("</div>");
             arrHtml.push("</div>");
             arrHtml.push("</li>");
