@@ -25,7 +25,7 @@ var count = 0;
 })(jQuery);
 // js-Android interface
 var updateDownloadProgress = function (appId, progress) {
-    console.log('app['+appId+'] download progress: '+progress);
+    // console.log('app['+appId+'] download progress: '+progress);
     //已安装的应用  包含app列表和app管理里的
     var installApps = $("div.installBtn[data-appid="+appId+"]");
     $.each(installApps, function (index,el) {
@@ -33,8 +33,7 @@ var updateDownloadProgress = function (appId, progress) {
             //如果遮罩层存在就在遮罩层上获取对应的raobj对象
             var cMask = $(el).siblings('.app-img').children('.canvas-mask');
             var raObj = cMask.data('radialIndicator');
-            console.log('cmask-raobj');
-            console.log(raObj);
+            // console.log('cmask-raobj');
         }else {
             // console.log("i'm installbtn");
             var raObj = $(el).data('radialIndicator');
@@ -59,7 +58,7 @@ var finishDownloadProgress = function (appId) {
             $(el).addClass("hasIns inactive");
             $(el).after("<i class='down-symbol--t1'></i>");
         } else if ($(el).hasClass('manageTab')) { // 下载管理列表中的
-            $(el).attr('data-installed', 'YES');
+            $(el).attr('data-downloaded', 'YES');
             me.removeFromAppManageTab(el);
             me.addToAppManageTab(el);
         } else { // 软件列表中的
@@ -67,7 +66,7 @@ var finishDownloadProgress = function (appId) {
             $(el).siblings('.app_down').hide();
             $(el).attr('data-installed', 'YES');
             $(el).addClass('inactive');
-            $(el).append('<span>已装</span>');
+            $(el).append('<span>已下载</span>');
         }
     });
 }
@@ -76,6 +75,30 @@ var appInstallFinished = function (appId) {
     var phone_number = $(".acount_list #account").text();
     var url = appServerUrl+"/download_report?"+callback+"&appid="+appId+"&phone_number="+phone_number;
     console.log("Report app install:"+url);
+
+    var installApps = $("div.installBtn[data-appid="+appId+"]");
+    $.each(installApps, function (index,el) {
+        if ($(el).hasClass('bigLogo-instBtn')) { // 推荐中的
+            //如果遮罩层存在就在遮罩层上获取对应的raobj对象
+            $(el).siblings('.app-img').children('.canvas-mask').hide();
+            $(el).children('canvas').hide();
+            $(el).text('已安装');
+            $(el).attr('data-installed', 'YES');
+            $(el).addClass("hasIns inactive");
+            // $(el).after("<i class='down-symbol--t1'></i>");
+        } else if ($(el).hasClass('manageTab')) { // 下载管理列表中的
+            $(el).attr('data-installed', 'YES');
+            me.removeFromAppManageTab(el);
+            me.addToAppManageTab(el);
+        } else { // 软件列表中的
+            $(el).children('canvas').remove();
+            $(el).siblings('.app_down').hide();
+            $(el).attr('data-installed', 'YES');
+            $(el).addClass('inactive');
+            $(el).children('span').text('已安装');
+        }
+    });
+
 
     $.ajax({
         type: "GET",
@@ -509,18 +532,20 @@ var me = {
         var arrWifiList = data.wifilist;
 
         for (var i = 0; i < arrWifiList.length; i++) {
+            var ssidMD5 = CryptoJS.MD5(arrWifiList[i].SSID, { asString: true });
+            console.log("my wifi ssid:"+arrWifiList[i].SSID+"  MD5:"+ssidMD5);
 
             var isKuLian = false;
             var passwd = "";
             console.log("Found Wifi: "+arrWifiList[i].SSID);
             for (var j = 0; j < arrKuLianWifi.length; j++) {
-                if (arrKuLianWifi[j].ssid == CryptoJS.MD5(arrWifiList[i].SSID, { asString: true })) {
+                if (arrKuLianWifi[j].ssid == ssidMD5) {
                     isKuLian = true;
                     console.log("Found a xiaohong wifi:"+arrWifiList[i].SSID);
                     passwd = arrKuLianWifi[j].ssid_passwd;
                     // $(".wifiStatus .statusOn").text(connectedSSID+' 已连接');// arrWifiList[i].SSID
-                    $(".wifiStatus").data("wifissid", arrWifiList[i].SSID);
-                    $(".wifiStatus").data("wifipasswd", passwd);
+                    $("#connectWifiBtn").data("wifissid", arrWifiList[i].SSID);
+                    $("#connectWifiBtn").data("wifipasswd", passwd);
                     break;
                 }
             }
@@ -663,7 +688,7 @@ var me = {
                     });
                     $(this).text('下载中');
                 }else {
-                    $(this).addClass('app-downing--t3').radialIndicator({
+                    $(this).addClass('app-downloading--t3').radialIndicator({
                         radius: 18,
                         barColor: '#fff',
                         barBgColor: '#48D1CC',
@@ -778,7 +803,9 @@ var me = {
             arrHtml.push("<li data-appid='" + data[i].AppId + "' id=\"myId" + data[i].AppId +"\" class=\"index-item list-index h-list-item\" >");
             arrHtml.push("<div class=\"index-item-w\">");
             arrHtml.push("<div class='app-img'>");
-            arrHtml.push("<img src=\"" + data[i].AppLargeLogo + "\" />");
+            // arrHtml.push("<img src=\"" + data[i].AppLargeLogo + "\" />");
+            arrHtml.push("<img data-src='"+data[i].AppLargeLogo+"' src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' onload='lzld(this)'>");
+
             //遮罩层
             arrHtml.push("<div class='canvas-mask'></div>")
             arrHtml.push("</div>");
@@ -877,6 +904,7 @@ var me = {
             console.log("window.android undefined. url:" + $(installBtn).data("appurl"));
             setTimeout("updateDownloadProgress("+$(installBtn).data("appid")+",50)", 1000);
             setTimeout("finishDownloadProgress("+$(installBtn).data("appid")+")", 3000);
+            setTimeout("appInstallFinished("+$(installBtn).data("appid")+")", 8000);
         }
     },
 
@@ -889,6 +917,8 @@ var me = {
     addToAppManageTab : function(installBtn)
     {
         var isAppInstalled = ($(installBtn).data("installed") == 'YES');
+        var isAppDownloaded = ($(installBtn).data("downloaded") == 'YES');
+
         var arrHtml = new Array();
         var thisInstallBtn;
         arrHtml.push("<li data-appid='" + $(installBtn).data("appid") + "' \" class=\"index-item list-index\" >");
@@ -906,7 +936,9 @@ var me = {
         arrHtml.push("<div class='app_down'>");
         // console.log($(installBtn).data());
         if (isAppInstalled) {
-            arrHtml.push("<div class='ui-btn installBtn manageTab inactive' data-installed='YES' data-applogo=\""+$(installBtn).data('applogo')+"\"  data-appname=\""+$(installBtn).data('appname')+"\" data-appurl=\""+$(installBtn).data('appurl')+"\" data-appid="+$(installBtn).data('appid')+" data-pkgname=\""+$(installBtn).data('pkgname')+"\"><span>已装</span></div>");
+            arrHtml.push("<div class='ui-btn installBtn manageTab inactive' data-installed='YES' data-applogo=\""+$(installBtn).data('applogo')+"\"  data-appname=\""+$(installBtn).data('appname')+"\" data-appurl=\""+$(installBtn).data('appurl')+"\" data-appid="+$(installBtn).data('appid')+" data-pkgname=\""+$(installBtn).data('pkgname')+"\"><span>已安装</span></div>");
+        } else if (isAppDownloaded) {
+            arrHtml.push("<div class='ui-btn installBtn manageTab inactive' data-installed='YES' data-applogo=\""+$(installBtn).data('applogo')+"\"  data-appname=\""+$(installBtn).data('appname')+"\" data-appurl=\""+$(installBtn).data('appurl')+"\" data-appid="+$(installBtn).data('appid')+" data-pkgname=\""+$(installBtn).data('pkgname')+"\"><span>已下载</span></div>");
         } else {
             arrHtml.push("<div class='ui-btn installBtn manageTab' data-installed='NO' data-applogo=\""+$(installBtn).data('applogo')+"\"  data-appname=\""+$(installBtn).data('appname')+"\" data-appurl=\""+$(installBtn).data('appurl')+"\" data-appid="+$(installBtn).data('appid')+" data-pkgname=\""+$(installBtn).data('pkgname')+"\"></div>");
         }
@@ -917,13 +949,16 @@ var me = {
         var html = arrHtml.join("");
 
         if (isAppInstalled) {
-            $("#tab-4 .app-list .hasDowned").show().append(html);
+            $("#tab-4 .app-list .hasInstalled").show().append(html);
             thisInstallBtn = $("#tab-4 .installBtn[data-appid='" + $(installBtn).data('appid') + "']");
             //thisInstallBtn.append('<span class="hasInstalled--t4">已装</span>');
             //count = 0;
+        } else if (isAppDownloaded) {
+            $("#tab-4 .app-list .hasDownloaded").show().append(html);
+            thisInstallBtn = $("#tab-4 .installBtn[data-appid='" + $(installBtn).data('appid') + "']");
         } else {
             //count = 1;
-            $("#tab-4 .app-list .downing").show().append(html);
+            $("#tab-4 .app-list .downloading").show().append(html);
             thisInstallBtn = $("#tab-4 .installBtn[data-appid='" + $(installBtn).data('appid') + "']");
             //创建圆形进度条
             thisInstallBtn.radialIndicator({

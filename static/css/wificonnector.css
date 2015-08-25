@@ -150,16 +150,12 @@ a { text-decoration:none;}
 }
 #tab-1 .app-list .installBtn {background-image: none;text-shadow:none;}
 #tab-4 .app-list li {overflow: hidden;}
-#tab-4 .app-list .downing h5,
-#tab-4 .app-list .hasDowned h5{
+#tab-4 .app-list .downloading h5, #tab-4 .app-list .hasDownloaded h5, #tab-4 .app-list .hasInstalled h5 {
     background: #f2f2f2;
     padding: 7px 0 5px 10px;
     font-weight: bold;
     color: #000;
-    border-top: 1px;
     border-style:solid;
-}
-#tab-4 .app-list .hasDowned h5 {
     border-top: 1px solid #ccc;
 }
 #tab-4 .app-list .installBtn.inactive span { display: inline-block; padding: 3px 5px 1px 6px;margin-top: 10px;text-shadow:none;}

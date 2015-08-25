@@ -23,6 +23,7 @@
     <script src="js/google.fastbutton.js"></script>
     <script src="js/jquery.google.fastbutton.js"></script>
     <script src="js/crypto-js.js"></script>
+    <script src="js/lazyload.min.js"></script>
     <title>登录</title>
 </head>
 
@@ -189,13 +190,14 @@
                 
                 <div id="tab-4">
                     <div class="app-list">
-                        <div class="downing hide">
-                            <h5>正在下载</h5>
-
+                        <div class="downloading hide">
+                            <h5>下载中</h5>
                         </div>
-                        <div class="hasDowned hide">
+                        <div class="hasDownloaded hide">
+                            <h5>已下载</h5>
+                        </div>
+                        <div class="hasInstalled hide">
                             <h5>已安装</h5>
-
                         </div>
                     </div>
                 </div>
@@ -225,7 +227,7 @@
                 <img class="statusOn" src="images/wifi_state_on.png" style="display:none;">
 
                 <!-- <div class="statusOff">点击连接WiFi</div> -->
-                <div class="statusOn" style="display:none;">WiFi已连接</div>
+                <div class="statusOn" style="display:none;">已连接到数据网络</div>
                 <!-- <div id="statusDesc">调试信息</div> -->
 
                 <div class="statusOff">
