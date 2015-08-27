@@ -699,10 +699,11 @@ var me = {
                 //创建圆形进度条
                 //如果为tab1中的安装按钮则在div.canvas-mask中创建进度条
                 if($(this).hasClass('bigLogo-instBtn')){
-                    var width = parseInt($(this).parent().width()/6);
+                    var width = parseInt($(this).parent().width()/8);
                     console.log(width);
                     $(this).siblings('.app-img').children('.canvas-mask').show().radialIndicator({
                         radius: width,
+                        displayNumber: false,
                         barColor: '#fff',
                         barBgColor: 'rgba(255,255,255,0.4)',
                         barWidth: 8,
@@ -715,6 +716,7 @@ var me = {
                     $(this).siblings('.app_coins').hide();
                     $(this).addClass('app-downloading--t3').radialIndicator({
                         radius: 18,
+                        displayNumber: false,
                         barColor: '#fff',
                         barBgColor: '#48D1CC',
                         barWidth: 4,
@@ -991,6 +993,7 @@ var me = {
             //创建圆形进度条
             thisInstallBtn.radialIndicator({
                 radius: 18,
+                displayNumber: false,
                 barColor: '#fff',
                 barBgColor: '#48D1CC',
                 barWidth: 4,
