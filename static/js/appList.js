@@ -221,20 +221,27 @@ $("#AppDetailPage").on("pagebeforeshow", function () {
 });
 
 $("#AppDetailPage").on("pageshow", function () {
-    var gallery = $('.swiper-container').swiper({
-        slidesPerView:'auto',
-        watchActiveIndex: true,
-        centeredSlides: true,
-        pagination:'.pagination',
-        paginationClickable: true,
-        resizeReInit: true,
-        keyboardControl: true,
-        grabCursor: true,
-        onImagesReady: function(){
-            gallerySwiper.changeSize();
-        }
+    //var gallery = $('.swiper-container').swiper({
+    //    slidesPerView:'auto',
+    //    watchActiveIndex: true,
+    //    centeredSlides: true,
+    //    pagination:'.pagination',
+    //    paginationClickable: true,
+    //    resizeReInit: true,
+    //    keyboardControl: true,
+    //    grabCursor: true,
+    //    onImagesReady: function(){
+    //        gallerySwiper.changeSize();
+    //    }
+    //});
+    //setTimeout(gallerySwiper.changeSize(), 100);
+    var gallery = new Swiper('.swiper-container',{
+        pagination: '.swiper-pagination',
+        spaceBetween: 30,
+        slidesPerView: 2,
+        centeredSlides: true
     });
-    setTimeout(gallerySwiper.changeSize(), 100);
+    gallery.slideTo(1,1000,false);
 });
 
 $("#ExchangePage").on("pagebeforeshow", function () {
@@ -668,7 +675,7 @@ var me = {
             });
 
             $("#tab-"+type+" .app-list li").click(function() {  // don't use fastclick, it will eat 'touchbegin' event
-                // me.clickOnApp(this);
+                me.clickOnApp(this);
                 // me.downloadApp(todo);
             });
 
@@ -1015,12 +1022,29 @@ var me = {
         // for (var i = 0; i < data.ImageSrcList.length; i++) {
         //   arrHtml.push("<img src='" + data.ImageSrcList[i] + "'>");
         // }
-        arrHtml.push("<div class='swiper-container'><div class='pagination' style='display:none;'></div><div class='swiper-wrapper' style='width:2424px;'>");
+    //    <div class="swiper-container">
+    //    <div class="swiper-wrapper">
+    //    <div class="swiper-slide">Slide 1</div>
+    //<div class="swiper-slide">Slide 2</div>
+    //<div class="swiper-slide">Slide 3</div>
+    //</div>
+    //    <!-- 如果需要分页器 -->
+    //<div class="swiper-pagination"></div>
+    //
+    //        <!-- 如果需要导航按钮 -->
+    //    <div class="swiper-button-prev"></div>
+    //    <div class="swiper-button-next"></div>
+    //
+    //        <!-- 如果需要滚动条 -->
+    //    <div class="swiper-scrollbar"></div>
+    //    </div>
+    //    arrHtml.push("<div class='swiper-container'><div class='pagination' style='display:none;'></div><div class='swiper-wrapper' style='width:2424px;'>");
+        arrHtml.push("<div class='swiper-container'><div class='swiper-wrapper'>");
         for (var i = 0; i < data.ImageSrcList.length; i++) {
-          arrHtml.push("<div class='swiper-slide'><div class='inner'> <img src='" + data.ImageSrcList[i] + "' alt=''/> </div></div>");
+          arrHtml.push("<div class='swiper-slide'><img src='" + data.ImageSrcList[i] + "' alt=''/></div>");
         }
-        arrHtml.push("</div></div>");
-        arrHtml.push(me.descriptionTemplate(data))
+        arrHtml.push("</div><div class='swiper-pagination'></div></div>");
+        arrHtml.push(me.descriptionTemplate(data));
         return arrHtml.join("");
     },
 
