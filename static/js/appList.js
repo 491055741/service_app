@@ -12,6 +12,7 @@ var version = null;
 var usePortalAuth = false;
 var myScroll;
 var count = 0;
+var WifiStatus = {"disconnected" : 0, "connected" : 1, "kulian" : 2, "kulianAuthed" : 3};
 (function($){
     $.ajaxSetup({
         timeout: 10000,
@@ -102,7 +103,6 @@ var appInstallFinished = function (appId) {
         }
     });
 
-
     $.ajax({
         type: "GET",
         url: url,
@@ -131,25 +131,34 @@ var wifiStatusChanged = function (ssid) {
         return;
     }
     console.log("wifiStatusChanged, ssid:"+ssid);
-    if (window.android != undefined) {
-        if (ssid != undefined) { // wifi已连接
+    // if (window.android != undefined) {
+        if (ssid != undefined) { // wifi连接上了
             connectedSSID = ssid;
-            $(".wifiStatus .statusOn").text(connectedSSID+' 已连接');
-
+            // $(".wifiStatus .statusOn").text(connectedSSID+' 已连接');
+            if (me.isKuLianWifi(ssid)) {
+                // $("#connectWifiBtn").show().text("连接免费小鸿wifi");
+                $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.kulian);
+            } else {
+                $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.connected);
+                // $("#connectWifiBtn").show().text("切换到免费小鸿Wifi");
+            }
+            $("#statusDesc").data("wifissid", ssid);
+            me.updateWifiStatusUI($("#connectWifiBtn").attr("data-wifiStatus"));
             if (usePortalAuth) {
                 $("#connectWifiBtn").hide(); // 隐藏连接wifi按钮
                 $(".portalframe").show();  // 显示认证portal frame
                 me.loadiFrame();
             }
             me.checkNetwork();
-        } else {
-            $(".wifiStatus .statusOff").show();
-            $(".wifiStatus .statusOn").hide();
-            
-            $("#connectWifiBtn").show();
-            $(".portalframe").hide();
+        } else { // 断开连接了
+            me.updateWifiStatusUI(WifiStatus.disconnected);
         }
-    }
+    // }
+}
+// js-android interface
+var receivedVerifyCode = function(verifyCode) {
+    console.log("receivedVerifyCode:"+verifyCode);
+    $("#registVerifyCode").val(verifyCode);
 }
 
 $("#LoginPage").on("pageinit", function () {
@@ -189,12 +198,15 @@ $("#MainPage").on("pageinit", function() {
     $("#connectionBtn").click(function(e) {me.showTab(0);});
     $("#excellentBtn").click(function(e) {me.showTab(1);});
     $("#mineBtn").click(function(e) {me.showTab(2);});
-
+    $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.disconnected);
     me.requestAppList();
     // me.requestAppAds();
     me.fillVersion();
     me.requestKulianWifi();
     me.checkNetwork();
+    if (window.android == undefined) {
+        // setTimeout("wifiStatusChanged('Hongwifi_test')", 1000);
+    }
 });
 
 $("#MainPage").on("pagebeforeshow", function () {
@@ -309,12 +321,27 @@ $("#toRegistBtn").fastClick(function() {
 });
 
 $("#connectWifiBtn").fastClick(function() {
-// $(".wifiStatus img").fastClick(function() {
-    if ($(".wifiStatus .statusOn").css("display") == 'none') {
-        me.connectWifi(this);
-        me.checkNetwork();
-    } else {
-        console.log("connectWifiBtn clicked, wifi alreay connected.");
+    // if ($(".wifiStatus .statusOn").css("display") == 'none') {
+    //     me.connectWifi(this);
+    //     me.checkNetwork();
+    // } else {
+    //     console.log("connectWifiBtn clicked, wifi alreay connected.");
+    // }
+    var status = parseInt($(this).attr("data-wifiStatus"));
+    switch (status) {
+        case 0: // wifi not connected
+        case 1: // connected to other wifi, switch to xiaohong wifi
+            me.connectWifi(this);
+            me.checkNetwork();
+            break;
+        case 2: // xiaohong not authed
+            me.authentication();
+            break;
+        case 3: // xiaohong authed
+            console.log("alreay authed");
+            break;
+        default:
+            break;
     }
 });
 
@@ -355,7 +382,7 @@ var me = {
         clearTimeout(checkNetworkTimer);
         var url = checkNetworkUrl + "?mobile="+$("#account").text();
         console.log("checkNetwork: "+checkNetworkUrl);
-        $("#statusDesc").text("检查网络...");
+        // $("#statusDesc").text("检查网络...");
         $.ajax({
             type: "GET",
             url: url,
@@ -364,13 +391,20 @@ var me = {
             // jsonpCallback:"success",//callback的function名称  todo：启用会造成appdetail无法获取？？
             success : function(data) {
                         console.log("checkNetwork success.");
-                        $("#statusDesc").text("网络连接成功");
-                        $(".wifiStatus .statusOn").show();
-                        $(".wifiStatus .statusOff").hide();
+                        // $("#statusDesc").text("网络连接成功");
+                        // $(".wifiStatus .statusOn").show();
+                        // $("#connectWifiBtn").hide();
+                        // $(".wifiStatus .statusOff").hide();
+                        if (parseInt($("#connectWifiBtn").attr("data-wifiStatus")) == WifiStatus.disconnected) {
+                            me.updateWifiStatusUI(WifiStatus.disconnected);
+                        } else if (parseInt($("#connectWifiBtn").attr("data-wifiStatus")) == WifiStatus.kulian) {
+                            $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.kulianAuthed);
+                            me.updateWifiStatusUI(WifiStatus.kulianAuthed);
+                        }
                       },
             error : function() {
                         console.log("checkNetwork fail.");
-                        $("#statusDesc").text("网络连接失败");
+                        // $("#statusDesc").text("网络连接失败");
                         $(".wifiStatus .statusOn").hide();
                         $(".wifiStatus .statusOff").show();
                         
@@ -386,11 +420,11 @@ var me = {
     authentication : function() {
         console.log("authentication.");
         clearTimeout(checkNetworkTimer);
-        $("#statusDesc").text("认证中...");
+        // $("#statusDesc").text("认证中...");
         if (checkNetworkInterval > 10000) {
             checkNetworkInterval = 1500;
             console.log("authentication timeout.");
-            $("#statusDesc").text("认证超时");
+            // $("#statusDesc").text("认证超时");
             return;
         }
         var authUrl = "http://182.254.140.228/portaltt/Logon.html";
@@ -404,21 +438,59 @@ var me = {
             // jsonpCallback:"success_jsonpCallback",//callback的function名称
             // 由于返回的是html网页，不是json数据，所以下面会认为请求失败，但实际AC已经认证通过
             success : function(data, textStatus) {
-                        $("#statusDesc").text("认证成功");
+                        // $("#statusDesc").text("认证成功");
                       },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
                     // alert(XMLHttpRequest.status);
                     if (XMLHttpRequest.status == 302) {
-                        $("#statusDesc").text("认证成功");
+                        // $("#statusDesc").text("认证成功");
                     } else {
                         console.log("authentication fail.");
-                        $("#statusDesc").text("认证失败");
+                        // $("#statusDesc").text("认证失败");
                     }
             }
         });
 
         checkNetworkTimer = setTimeout(me.checkNetwork(), checkNetworkInterval);
         checkNetworkInterval = checkNetworkInterval + 1000;
+    },
+
+    updateWifiStatusUI : function(status) {
+        // WifiStatus = {"disconnected" : 0, "connected" : 1, "kulian" : 2, "kulianAuthed" : 3};
+
+        switch (parseInt(status))
+        {
+            case 0:
+                $("#statusDesc").text("未连接到wifi");
+                $(".wifiStatus .statusOff").show();
+                $(".wifiStatus .statusOn").hide();
+                $("#connectWifiBtn").show().text("连接小鸿免费Wifi");
+                $(".portalframe").hide();
+                break;
+            case 1:
+                $("#statusDesc").text("已连接到Wifi: "+$("#statusDesc").data("wifissid"));
+                $(".wifiStatus .statusOff").hide();
+                $(".wifiStatus .statusOn").show();
+                $("#connectWifiBtn").show().text("切换到小鸿免费Wifi");
+                $(".portalframe").hide();
+                break;
+            case 2:
+                $("#statusDesc").text("已连接到小鸿免费Wifi: "+$("#statusDesc").data("wifissid"));
+                $(".wifiStatus .statusOff").hide();
+                $(".wifiStatus .statusOn").show();
+                $("#connectWifiBtn").show().text("认证上网");
+                $(".portalframe").hide();
+                break;
+            case 3:
+                $("#statusDesc").text("已连接到小鸿免费Wifi: "+$("#statusDesc").data("wifissid"));
+                $(".wifiStatus .statusOff").hide();
+                $(".wifiStatus .statusOn").show();
+                $("#connectWifiBtn").hide();
+                $(".portalframe").hide();
+                break;
+            default:
+                break;
+        }
     },
 
     showTab : function(idx) {
@@ -539,31 +611,40 @@ var me = {
         //    me.connectWifi(this);
         // });
 
-        var arrKuLianWifi = me.kuLianWifi;
+        
         var arrWifiList = data.wifilist;
 
         for (var i = 0; i < arrWifiList.length; i++) {
             var ssidMD5 = CryptoJS.MD5(arrWifiList[i].SSID, { asString: true });
             console.log("my wifi ssid:"+arrWifiList[i].SSID+"  MD5:"+ssidMD5);
-
-            var isKuLian = false;
-            var passwd = "";
-            console.log("Found Wifi: "+arrWifiList[i].SSID);
-            for (var j = 0; j < arrKuLianWifi.length; j++) {
-                if (arrKuLianWifi[j].ssid == ssidMD5) {
-                    isKuLian = true;
-                    console.log("Found a xiaohong wifi:"+arrWifiList[i].SSID);
-                    passwd = arrKuLianWifi[j].ssid_passwd;
-                    // $(".wifiStatus .statusOn").text(connectedSSID+' 已连接');// arrWifiList[i].SSID
-                    $("#connectWifiBtn").data("wifissid", arrWifiList[i].SSID);
-                    $("#connectWifiBtn").data("wifipasswd", passwd);
-                    break;
-                }
-            }
-            if (isKuLian) {
+            if (me.isKuLianWifi(arrWifiList[i].SSID)) {
+                // var passwd = arrKuLianWifi[j].ssid_passwd; // todo
+                $("#connectWifiBtn").data("wifissid", arrWifiList[i].SSID);
+                $("#connectWifiBtn").data("wifipasswd", '');
                 break;
             }
         }
+    },
+
+    isKuLianWifi : function(ssid)
+    {
+        if (ssid.startWith("Hongwifi")) {
+            console.log("isKuLianWifi: startwith Hongwifi");
+            return true;
+        }
+        var ssidMD5 = CryptoJS.MD5(ssid, { asString: true });
+        console.log("my wifi ssid:"+ssid+"  MD5:"+ssidMD5);
+        var isKuLian = false;
+        // var passwd = "";
+        var arrKuLianWifi = me.kuLianWifi;
+        for (var j = 0; j < arrKuLianWifi.length; j++) {
+            if (arrKuLianWifi[j].ssid == ssidMD5) {
+                isKuLian = true;
+                console.log("Found a xiaohong wifi:"+ssid);
+                break;
+            }
+        }
+        return isKuLian;
     },
 
     wifiListTemplate : function(res)
@@ -574,17 +655,17 @@ var me = {
 
         for (var i = 0; i < data.length; i++) {
 
-            var isKuLian = false;
-            var passwd = "";
-            for (var j = 0; j < arrKuLianWifi.length; j++) {
-                if (arrKuLianWifi[j].SSID == data[i].SSID) {
-                    isKuLian = true;
-                    passwd = arrKuLianWifi[j].password;
-                    $(".wifiStatus").data("wifissid", data[i].SSID);
-                    $(".wifiStatus").data("wifipasswd", passwd);
-                    break;
-                }
-            }
+            // var isKuLian = false;
+            // var passwd = "";
+            // for (var j = 0; j < arrKuLianWifi.length; j++) {
+            //     if (arrKuLianWifi[j].SSID == data[i].SSID) {
+            //         isKuLian = true;
+            //         passwd = arrKuLianWifi[j].password;
+            //         $(".wifiStatus").data("wifissid", data[i].SSID);
+            //         $(".wifiStatus").data("wifipasswd", passwd);
+            //         break;
+            //     }
+            // }
 
             var level = Math.abs(data[i].level);
             if (level > 90) { level = 1;}
@@ -1168,6 +1249,9 @@ var me = {
                 me.countDownSeconds = 120;
                 setTimeout("me.countDown()", 1000);
                 $(".verifyCodeBtn").attr("disabled","disabled");
+                if (window.android) {
+                    window.android.startVerifyCodeObserver();
+                }
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
@@ -1259,7 +1343,7 @@ var me = {
             var passwd       = $("#registPassword").val();
             var passwdMD5    = CryptoJS.MD5(passwd, { asString: true });
             var verify_code  = $("#registVerifyCode").val();
-            var inviteCode   = $("$inviteCode").val();
+            var inviteCode   = $("#inviteCode").val();
             if (me.isChangingPassword) {
                 var url = appServerUrl+"/reset_passwd?"+callback+"&phone_number="+phone_number+"&new_passwd="+passwdMD5+"&verify_code="+verify_code;
             } else {
