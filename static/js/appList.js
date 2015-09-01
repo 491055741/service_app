@@ -160,7 +160,7 @@ var receivedVerifyCode = function(verifyCode) {
     console.log("receivedVerifyCode:"+verifyCode);
     $("#registVerifyCode").val(verifyCode);
 }
-
+/*
 $("#LoginPage").on("pageinit", function () {
     console.log("login page init");
 
@@ -177,19 +177,32 @@ $("#LoginPage").on("pagebeforeshow", function () {
         me.login();
     }
 });
+*/
 
 $("#RegisterPage").on("pagebeforeshow", function () {
     console.log("register page show");
+
     me.showBackBtn(true);
     if (me.isChangingPassword) {
         setTitle("修改密码");
+        $("#passwordFields").show();
     } else {
-        setTitle("注册");
+        setTitle("验证");
+        $("#passwordFields").hide();
     }
 
     $("#registPassword").val('');
     $("#registVerifyCode").val('');
     $("#repeatPassword").val('');
+});
+
+$("#RegisterPage").on("pageshow", function () {
+    var userName = getItem("userName");
+    var password = getItem("passWord");
+    if (userName && userName.length > 0 && password && password.length > 0) {
+        changePage("#MainPage");
+        return;
+    }
 });
 
 $("#MainPage").on("pageinit", function() {
@@ -272,8 +285,8 @@ $("#coin").fastClick( function() {
     changePage("#ExchangePage");
 });
 
-$("input").bind("focus", function() { 
-    if ($(this).attr("value")=='手机号' || $(this).attr("value")=='选填') {
+$("input").bind("focus", function() {
+    if ($(this).attr("value")=='请填写您的手机号' || $(this).attr("value")=='选填') {
         $(this).attr("value","");
     }
 });
@@ -1283,31 +1296,35 @@ var me = {
             setTimeout("hideLoader()", 2000);
             return false;
         }
-        if ($("#registPassword").val()=='') {
-            showLoader("请填写密码");
-            setTimeout("hideLoader()", 2000);
-            return false;
-        }
-        if ($("#registPassword").val().length>16) {
-            showLoader("密码长度不能超过16位");
-            setTimeout("hideLoader()", 2000);
-            return false;
-        }
-        if ($("#inviteCode").val().length > 5) {
-            showLoader("邀请码无效");
-            setTimeout("hideLoader()", 2000);
-            return false;
-        }
-        var filter=/[`~!@#$^&*()\-\+=|\\\[\]\{\}:;'\,.<>/?]/;
-        if (filter.test($("#registPassword").val())) {
-            showLoader("密码只能包含字母、数字和下划线");
-            setTimeout("hideLoader()", 2000);
-            return false;
-        }
-        if ($("#repeatPassword").val()!=$("#registPassword").val()) {
-            showLoader("两次输入的密码不一致");
-            setTimeout("hideLoader()", 2000);
-            return false;
+
+        if (me.isChangingPassword) {
+            if ($("#registPassword").val()=='') {
+                showLoader("请填写密码");
+                setTimeout("hideLoader()", 2000);
+                return false;
+            }
+            if ($("#registPassword").val().length>16) {
+                showLoader("密码长度不能超过16位");
+                setTimeout("hideLoader()", 2000);
+                return false;
+            }
+            var filter=/[`~!@#$^&*()\-\+=|\\\[\]\{\}:;'\,.<>/?]/;
+            if (filter.test($("#registPassword").val())) {
+                showLoader("密码只能包含字母、数字和下划线");
+                setTimeout("hideLoader()", 2000);
+                return false;
+            }
+            if ($("#repeatPassword").val()!=$("#registPassword").val()) {
+                showLoader("两次输入的密码不一致");
+                setTimeout("hideLoader()", 2000);
+                return false;
+            }
+        } else {
+            if ($("#inviteCode").val().length > 5) {
+                showLoader("邀请码无效");
+                setTimeout("hideLoader()", 2000);
+                return false;
+            }            
         }
         return true;
     },
@@ -1316,14 +1333,19 @@ var me = {
     {
         if (me.validRegist()) {
             var phone_number = $("#registPhoneNumber").val();
-            var passwd       = $("#registPassword").val();
-            var passwdMD5    = CryptoJS.MD5(passwd, { asString: true });
             var verify_code  = $("#registVerifyCode").val();
             var inviteCode   = $("#inviteCode").val();
             if (me.isChangingPassword) {
+                var passwd       = $("#registPassword").val();
+                var passwdMD5    = CryptoJS.MD5(passwd, { asString: true });
                 var url = appServerUrl+"/reset_passwd?"+callback+"&phone_number="+phone_number+"&new_passwd="+passwdMD5+"&verify_code="+verify_code;
             } else {
+                var passwd    = phone_number.substr(5, 6); // get phone number last 5 digit
+                var passwdMD5 = CryptoJS.MD5(passwd, { asString: true });
                 var url = appServerUrl+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwdMD5+"&verify_code="+verify_code;
+                if (inviteCode && inviteCode.length > 0 && inviteCode != "选填") {
+                    url = url + "&invite_code=" + inviteCode;
+                }
             }
 
             console.log(url);
@@ -1333,7 +1355,11 @@ var me = {
                 if (data.ret_code == 0) {
                     if (me.isChangingPassword == false) {
                         me.saveToken(data.token);
-                        showLoader("注册成功");
+                        showLoader("验证成功");
+
+                        saveItem("rmbUser", "true");
+                        saveItem("userName", phone_number);
+                        saveItem("passWord", passwd);
                     } else {
                         showLoader("密码修改成功");
                     }
