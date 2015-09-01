@@ -2,7 +2,7 @@ var appServerUrl = "http://livew.mobdsp.com/cb";
 var callback = "callback=?";
 var localServerUrl = "http://127.0.0.1:5000";
 var milkPapaServerUrl = "http://app.milkpapa.com:5000";
-var isAutoLogin = true;
+var isLogin = false;
 var checkNetworkInterval = 1500; // ms
 var checkNetworkUrl = "http://115.159.3.16/cb/app_test";
 var countDownTimer = null;
@@ -51,8 +51,8 @@ var finishDownloadProgress = function (appId) {
     var installApps = $("div.installBtn[data-appid="+appId+"]");
     $.each(installApps, function (index,el) {
         
-        $(el).removeClass("downloading");
         
+        $(el).removeClass("downloading");
         if ($(el).hasClass('bigLogo-instBtn')) { // 推荐中的
             //如果遮罩层存在就在遮罩层上获取对应的raobj对象
             $(el).siblings('.app-img').children('.canvas-mask').hide();
@@ -179,6 +179,18 @@ $("#LoginPage").on("pagebeforeshow", function () {
 });
 */
 
+$("#WelcomPage").on("pageshow", function () {
+    console.log("welcome page show");
+    var userName = "18683523851";//getItem("userName");
+    var password = "1";//getItem("passWord");
+    if (userName && userName.length > 0 && password && password.length > 0) {
+        setTimeout("changePage('#MainPage')",1000);
+        return;
+    } else {
+        changePage("#RegisterPage");
+    }
+});
+
 $("#RegisterPage").on("pagebeforeshow", function () {
     console.log("register page show");
 
@@ -197,12 +209,7 @@ $("#RegisterPage").on("pagebeforeshow", function () {
 });
 
 $("#RegisterPage").on("pageshow", function () {
-    var userName = getItem("userName");
-    var password = getItem("passWord");
-    if (userName && userName.length > 0 && password && password.length > 0) {
-        changePage("#MainPage");
-        return;
-    }
+
 });
 
 $("#MainPage").on("pageinit", function() {
@@ -213,6 +220,7 @@ $("#MainPage").on("pageinit", function() {
     $("#mineBtn").click(function(e) {me.showTab(2);});
     $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.disconnected);
     me.requestAppList();
+    // me.requestMessage();
     // me.requestAppAds();
     me.fillVersion();
     me.requestKulianWifi();
@@ -275,8 +283,9 @@ $("#ExchangePage").on("pagebeforeshow", function () {
 });
 
 $("#logoutBtn").fastClick(function() {
-    isAutoLogin = false;
-    changePage("#LoginPage");
+    isLogin = false;
+    // changePage("#LoginPage");
+    changePage("#RegisterPage");
 });
 
 $("#registBtn").fastClick(function() {
@@ -285,7 +294,7 @@ $("#registBtn").fastClick(function() {
 
 $("#loginBtn").fastClick( function() {
     me.login();
-    isAutoLogin = true;
+    // isAutoLogin = true;
 });
 
 $("#coin").fastClick( function() {
@@ -413,6 +422,9 @@ var me = {
                         } else if (parseInt($("#connectWifiBtn").attr("data-wifiStatus")) == WifiStatus.kulian) {
                             $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.kulianAuthed);
                             me.updateWifiStatusUI(WifiStatus.kulianAuthed);
+                        }
+                        if (!isLogin) {
+                            me.autoLogin();
                         }
                       },
             error : function() {
@@ -546,15 +558,21 @@ var me = {
         });
     },
 
+    requestMessage : function()
+    {
+        var url = appServerUrl+"/appmessage?"+callback;
+        console.log("requestAppMessage:"+url);
+        $.getJSON(url, function(data) {
+            if (data.message_list != undefined && data.message_list.length > 0) {
+                me.parseMessages(data);
+                me.showMessage();
+            }
+        });        
+    },
+
     requestAppAds : function()
     {
-        var url;
-        // if (window.android == undefined) {
-        //     url = milkPapaServerUrl+"/appad?"+callback;
-        // } else {
-            url = appServerUrl+"/appad?"+callback;
-        // }
-
+        var url = appServerUrl+"/appad?"+callback;
         console.log("requestAppAds:"+url);
         $.getJSON(url, function(data) {
             if (data.adlist != undefined && data.adlist.length > 0) {
@@ -1222,21 +1240,44 @@ var me = {
         return objURL;
     },
 
+    parseMessages : function (res)
+    {
+        var data = res.applist;
+        if (data == null || data == undefined) {
+            return;
+        }
+
+        var arrHtml = new Array();
+
+        if (data.length > 0) {
+            $(".message_grid").show();
+        }
+
+        for (var i = 0; i < data.length; i++) {
+            arrHtml.push("<li><p>"+data[i].content+"</p></li>");
+        }
+        var html = arrHtml.join('');
+        $("#twitter").append(html);
+    },
+
     showMessage : function ()
     {
-        $("#twitter li:not(:first)").css("display","none");
-        var B = $("#twitter li:last");
-        var C = $("#twitter li:first");
-        setInterval(function() {
-            if (B.is(":visible")) {
-                C.fadeIn(500).addClass("in");
-                B.hide()
-            } else {
-                $("#twitter li:visible").addClass("in");
-                $("#twitter li.in").next().fadeIn(500);
-                $("li.in").hide().removeClass("in");
-            }
-        },3000); //每3秒切换一条
+        
+        if ($("#twitter li").length > 1) {
+            $("#twitter li:not(:first)").css("display","none");
+            var B = $("#twitter li:last");
+            var C = $("#twitter li:first");
+            setInterval(function() {
+                if (B.is(":visible")) {
+                    C.fadeIn(500).addClass("in");
+                    B.hide()
+                } else {
+                    $("#twitter li:visible").addClass("in");
+                    $("#twitter li.in").next().fadeIn(500);
+                    $("li.in").hide().removeClass("in");
+                }
+            },5000); // 切换间隔        
+        }
     },
 
     requestVerifyCode : function()
@@ -1247,7 +1288,7 @@ var me = {
         }
 
         var phone_number = $("#registPhoneNumber").val();
-        if (phone_number == '' || phone_number == '手机号' || !isPhoneNumber(phone_number)) {
+        if (phone_number == '' || phone_number == '请填写您的手机号' || !isPhoneNumber(phone_number)) {
             showLoader("请填写手机号");
             setTimeout("hideLoader()", 2000);
             return;
@@ -1295,7 +1336,7 @@ var me = {
 
     validLogin : function()
     {
-        if ($("#loginUsername").val()=='' || $("#loginUsername").val()=='手机号' || !isPhoneNumber($("#loginUsername").val())) {
+        if ($("#loginUsername").val()=='' || $("#loginUsername").val()=='请填写您的手机号' || !isPhoneNumber($("#loginUsername").val())) {
             showLoader("请填写手机号");
             setTimeout("hideLoader()", 2000);
             return false;
@@ -1310,7 +1351,7 @@ var me = {
 
     validRegist : function()
     {
-        if ($("#registPhoneNumber").val()=='' || $("#registPhoneNumber").val()=='手机号' || !isPhoneNumber($("#registPhoneNumber").val())) {
+        if ($("#registPhoneNumber").val()=='' || $("#registPhoneNumber").val()=='请填写您的手机号' || !isPhoneNumber($("#registPhoneNumber").val())) {
             showLoader("请填写手机号");
             setTimeout("hideLoader()", 2000);
             return false;
@@ -1417,6 +1458,7 @@ var me = {
             $.getJSON(url, function(data) {
                 hideLoader();
                 if (data.ret_code == 0) {
+                    isLogin = true;
                     me.saveToken(data.token);
                     changePage("#MainPage");
                     console.log("login success, coin num:" + data.coin_num);
@@ -1425,7 +1467,7 @@ var me = {
                     }
 
                     $("#account").text(phone_number);
-                    $("#myInviteCode").text(data.inviteCode);
+                    $("#myInviteCode").text(data.invite_code);
                     $("#coin").text(data.coin_num);
 
                     if ($("#checkbox-1").prop("checked") == true) { 
@@ -1444,6 +1486,43 @@ var me = {
                 }
             });
         }
+    },
+
+    autoLogin : function()
+    {
+        var phone_number = getItem("userName");
+        var passwd       = getItem("passWord");
+        if (phone_number == undefined || phone_number == null || phone_number.length == 0) {
+            changePage("#RegisterPage");
+            return;
+        }
+        var passwdMD5    = CryptoJS.MD5(passwd, { asString: true });
+        var url = appServerUrl+"/applogin?"+callback+"&phone_number="+phone_number+"&passwd="+passwdMD5;
+        console.log(url);
+
+        $.getJSON(url, function(data) {
+            hideLoader();
+            if (data.ret_code == 0) {
+                isLogin = true;
+                me.saveToken(data.token);
+                // changePage("#MainPage");
+                console.log("login success, coin num:" + data.coin_num);
+                if (data.coin_num == undefined) {
+                    data.coin_num = 0;
+                }
+
+                $("#account").text(phone_number);
+                $("#myInviteCode").text(data.invite_code);
+                $("#coin").text(data.coin_num);
+
+                me.reportConnection(phone_number);
+            } else {
+                // showLoader(data.ret_msg);
+                // setTimeout("hideLoader()", 3000);
+                changePage("#RegisterPage");
+            }
+        });
+
     },
 
     reportConnection : function(phone_number)

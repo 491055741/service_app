@@ -32,10 +32,17 @@
 
 <body>
 
+<div data-role="page" id="WelcomPage">
+    <center>请稍侯</center>
+</div>
+
 <div data-role="page" id="RegisterPage">
     <div role="main" class="ui-content account-wrapper">
         <br>
-        <p style="backg"><font color="#2EB1E8" >用户名</font></p>
+        <br>
+        <p><font color="gray">验证手机号码和使用Wifi完全免费</font></p>
+        <br>
+        <p style="backg"><font color="#2EB1E8" >手机号</font></p>
         <input type="tel" id="registPhoneNumber" value="请填写您的手机号"/>
         <br>
         <div class="ui-grid-a">
@@ -58,17 +65,19 @@
 
         <p style="backg"><font color="#2EB1E8" >邀请码</font></p>
         <input type="text" id="inviteCode" value="选填"/>
-
+        <p><font color="gray">首次验证时输入邀请码，邀请和被邀请人都会获得奖励</font></p>
         <br>
         <div>
             <center>
                 <a class="ui-btn" id="registBtn">提   交</a>
                 <br />
+                <br />
+                <br />
                 <div class="licenseLink">
                     <p>点击上面按钮“提交”即表示您同意<a href="license.html">《用户协议》</a></p>
+                    <!-- <p>小鸿Wifi不收取任何费用，完全免费</p> -->
+                    <p>如果遇到任何问题，请加QQ群227306629获得帮助</p>
                 </div>
-                <p>小鸿Wifi不收取任何费用，完全免费</p>
-                <p>如果遇到任何问题，请加QQ群227306629获得帮助</p>
             </center>
         </div>
     </div>
@@ -78,7 +87,7 @@
     <div role="main" class="ui-content account-wrapper">
         <br>
         <p style="backg"><font color="#2EB1E8" >用户名</font></p>
-         <input type="text" name="username" id="loginUsername" value="手机号"/>
+         <input type="text" name="username" id="loginUsername" value="请填写您的手机号"/>
         <br>
         <p style="backg"><font color="#2EB1E8" >密码</font></p>
         <input type="password" name="password" id="loginPassword" value=""/>
@@ -110,6 +119,8 @@
                 </div>
                 <div class="ui-grid-b" style="width:90%">
                     <ul id="twitter">
+                        <li>1.这是第一条测试消息，它有很长很长，看看能不能显示的下</li>
+                        <!-- <li>2.这是第二条测试消息，它有很长很长，看看能不能显示的下</li> -->
                     </ul>
                 </div>
             </div>

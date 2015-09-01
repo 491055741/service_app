@@ -20,6 +20,7 @@ a { text-decoration:none;}
 .licenseWrapper h2 {font-size:16px; margin: 30px 0 20px; font-weight:100;}
 .licenseWrapper p {color:#2e2e2e;}
 
+#connectionView .message_grid {margin-top: 50px; color: gray; }
 #connectionView .message_grid img {width: 18px; height: 18px; margin-left: 10px; }
 #connectWifiBtn {background-color: #4BA6F2; color: white; text-align: center; border-radius: 6px; width: 80%; height: 25px; line-height: 25px; font-size: 14px; border: 0; text-shadow:0 0 0;}
 .connection_bg {height: 230px; background: url(../images/night.png) no-repeat; background-size: contain;}
