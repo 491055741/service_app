@@ -131,29 +131,27 @@ var wifiStatusChanged = function (ssid) {
         return;
     }
     console.log("wifiStatusChanged, ssid:"+ssid);
-    // if (window.android != undefined) {
-        if (ssid != undefined) { // wifi连接上了
-            connectedSSID = ssid;
-            // $(".wifiStatus .statusOn").text(connectedSSID+' 已连接');
-            if (me.isKuLianWifi(ssid)) {
-                // $("#connectWifiBtn").show().text("连接免费小鸿wifi");
-                $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.kulian);
-            } else {
-                $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.connected);
-                // $("#connectWifiBtn").show().text("切换到免费小鸿Wifi");
-            }
-            $("#statusDesc").data("wifissid", ssid);
-            me.updateWifiStatusUI($("#connectWifiBtn").attr("data-wifiStatus"));
-            if (usePortalAuth) {
-                $("#connectWifiBtn").hide(); // 隐藏连接wifi按钮
-                $(".portalframe").show();  // 显示认证portal frame
-                me.loadiFrame();
-            }
-            me.checkNetwork();
-        } else { // 断开连接了
-            me.updateWifiStatusUI(WifiStatus.disconnected);
+    if (ssid != undefined) { // wifi连接上了
+        ssid = ssid.replace(/\"/g, ""); // 去掉双引号
+        connectedSSID = ssid;
+        if (me.isKuLianWifi(ssid)) {
+            console.log("wifiStatusChanged: is kulian wifi.");
+            $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.kulian);
+        } else {
+            console.log("wifiStatusChanged: not kulian wifi.");
+            $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.connected);
         }
-    // }
+        $("#statusDesc").data("wifissid", ssid);
+        me.updateWifiStatusUI($("#connectWifiBtn").attr("data-wifiStatus"));
+        if (usePortalAuth) {
+            $("#connectWifiBtn").hide(); // 隐藏连接wifi按钮
+            $(".portalframe").show();  // 显示认证portal frame
+            me.loadiFrame();
+        }
+        me.checkNetwork();
+    } else { // 断开连接了
+        me.updateWifiStatusUI(WifiStatus.disconnected);
+    }
 }
 // js-android interface
 var receivedVerifyCode = function(verifyCode) {
@@ -181,13 +179,14 @@ $("#LoginPage").on("pagebeforeshow", function () {
 
 $("#WelcomPage").on("pageshow", function () {
     console.log("welcome page show");
-    var userName = "18683523851";//getItem("userName");
-    var password = "1";//getItem("passWord");
+    var userName = getItem("userName");
+    var password = getItem("passWord");
     if (userName && userName.length > 0 && password && password.length > 0) {
         setTimeout("changePage('#MainPage')",1000);
         return;
     } else {
-        changePage("#RegisterPage");
+        console.log("WelcomPage show : no saved account info");
+        setTimeout("changePage('#RegisterPage')",1000);
     }
 });
 
@@ -226,7 +225,7 @@ $("#MainPage").on("pageinit", function() {
     me.requestKulianWifi();
     me.checkNetwork();
     if (window.android == undefined) {
-        // setTimeout("wifiStatusChanged('Hongwifi_test')", 1000);
+        setTimeout("wifiStatusChanged('Hongwifi_xx')", 1000);
     }
 });
 
@@ -343,13 +342,8 @@ $("#toRegistBtn").fastClick(function() {
 });
 
 $("#connectWifiBtn").fastClick(function() {
-    // if ($(".wifiStatus .statusOn").css("display") == 'none') {
-    //     me.connectWifi(this);
-    //     me.checkNetwork();
-    // } else {
-    //     console.log("connectWifiBtn clicked, wifi alreay connected.");
-    // }
     var status = parseInt($(this).attr("data-wifiStatus"));
+    console.log("connectWifiBtn clicked, status code:"+status);
     switch (status) {
         case 0: // wifi not connected
         case 1: // connected to other wifi, switch to xiaohong wifi
@@ -379,7 +373,7 @@ var me = {
     countDownSeconds : 0, 
     isChangingPassword : false,
     currentTabIdx : 0, // bottom tab
-    curAppTabIdx : 1, // app top tab
+    curAppTabIdx : 1,  // app top tab
     curAppPageIdx : [1,1,1], // current page of each app tab
     kuLianWifi : null,
     appList : null,
@@ -423,6 +417,7 @@ var me = {
                             $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.kulianAuthed);
                             me.updateWifiStatusUI(WifiStatus.kulianAuthed);
                         }
+                        console.log("connectWifiBtn wifiStatus:"+$("#connectWifiBtn").attr("data-wifiStatus"));
                         if (!isLogin) {
                             me.autoLogin();
                         }
@@ -482,7 +477,7 @@ var me = {
 
     updateWifiStatusUI : function(status) {
         // WifiStatus = {"disconnected" : 0, "connected" : 1, "kulian" : 2, "kulianAuthed" : 3};
-
+        console.log("updateWifiStatusUI:"+status);
         switch (parseInt(status))
         {
             case 0:
@@ -731,6 +726,7 @@ var me = {
             if (ssid == undefined) {
                 showLoader("没有搜索到小鸿Wifi");
                 setTimeout("hideLoader()", 2000);
+                me.requestWifiList();
                 return;
             }
             console.log("connectWifi " + ssid);
@@ -1401,18 +1397,19 @@ var me = {
             var verify_code  = $("#registVerifyCode").val();
             var inviteCode   = $("#inviteCode").val();
             if (me.isChangingPassword) {
-                var passwd       = $("#registPassword").val();
-                var passwdMD5    = CryptoJS.MD5(passwd, { asString: true });
+                var passwd    = $("#registPassword").val();
+                var passwdMD5 = CryptoJS.MD5(passwd, { asString: true });
                 var url = appServerUrl+"/reset_passwd?"+callback+"&phone_number="+phone_number+"&new_passwd="+passwdMD5+"&verify_code="+verify_code;
             } else {
-                var passwd    = phone_number.substr(5, 6); // get phone number last 5 digit
+                var passwd    = phone_number.substr(5, 6); // get phone number last 6 digit
                 var passwdMD5 = CryptoJS.MD5(passwd, { asString: true });
                 var url = appServerUrl+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwdMD5+"&verify_code="+verify_code;
                 if (inviteCode && inviteCode.length > 0 && inviteCode != "选填") {
                     url = url + "&invite_code=" + inviteCode;
                 }
             }
-
+            saveItem("userName", phone_number);
+            saveItem("passWord", passwd);
             console.log(url);
 
             $.getJSON(url, function(data) {
@@ -1421,10 +1418,6 @@ var me = {
                     if (me.isChangingPassword == false) {
                         me.saveToken(data.token);
                         showLoader("验证成功");
-
-                        saveItem("rmbUser", "true");
-                        saveItem("userName", phone_number);
-                        saveItem("passWord", passwd);
                     } else {
                         showLoader("密码修改成功");
                     }
@@ -1519,6 +1512,7 @@ var me = {
             } else {
                 // showLoader(data.ret_msg);
                 // setTimeout("hideLoader()", 3000);
+                console.log("auto login:"+data.ret_msg);
                 changePage("#RegisterPage");
             }
         });

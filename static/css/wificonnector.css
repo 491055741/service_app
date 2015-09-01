@@ -8,6 +8,7 @@ a { text-decoration:none;}
 .account-wrapper { padding:15px; padding-top: 0;}
 
 #loginBtn {width: 35%; float:right; margin-top:10px; background-color: #FF8800; color: white; text-shadow:0 0 0;}
+#registBtn {background-color: #FF8800; color: white; text-shadow:0 0 0; border-radius: 6px; }
 #toRegistBtn {width: 35%; float:left; margin-top:10px; }
 .verifyCodeBtn {width: 70%; float: right; margin-top: 20px; }
 #LoginPage .changePwdBtn {float: right; padding-top: 20px; }

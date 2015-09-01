@@ -99,10 +99,13 @@ function isAndroid()
 
 function saveItem(key, value)
 {
-    if (window.localStorage) {
-        localStorage.setItem(key, value);
-    } else if (window.android) {
+    console.log("saveItem:["+key+","+value+"]");
+    if (window.android) {
+    //     console.log("window.android.saveItem");
         window.android.saveItem(key, value);
+    } else if (window.localStorage) {
+    //     console.log("window.localStorage");
+        localStorage.setItem(key, value);
     } else {
         console.log("error: unsupport localStorage nor native storage!");
     }
@@ -110,10 +113,11 @@ function saveItem(key, value)
 
 function getItem(key)
 {
-    if (window.localStorage) {
-        return localStorage.getItem(key);
-    } else if (window.android) {
+    console.log("getItem:["+key+"]");
+    if (window.android) {
         return window.android.getItem(key);
+    } else if (window.localStorage) {
+        return localStorage.getItem(key);
     } else {
         console.log("error: unsupport localStorage nor native storage!");
     }
