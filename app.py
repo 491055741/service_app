@@ -73,5 +73,9 @@ def ads():
 def books():
     return response("app/books.json")
 
+@app.route('/broadcast')
+def broadcast():
+    return response("app/broadcast.json")
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug = True)

@@ -150,6 +150,7 @@ var wifiStatusChanged = function (ssid) {
         }
         me.checkNetwork();
     } else { // 断开连接了
+        $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.disconnected);
         me.updateWifiStatusUI(WifiStatus.disconnected);
     }
 }
@@ -219,13 +220,13 @@ $("#MainPage").on("pageinit", function() {
     $("#mineBtn").click(function(e) {me.showTab(2);});
     $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.disconnected);
     me.requestAppList();
-    // me.requestMessage();
+    me.requestMessage();
     // me.requestAppAds();
     me.fillVersion();
     me.requestKulianWifi();
     me.checkNetwork();
     if (window.android == undefined) {
-        setTimeout("wifiStatusChanged('Hongwifi_xx')", 1000);
+        setTimeout("wifiStatusChanged('@小鸿科技')", 1000);
     }
 });
 
@@ -253,20 +254,6 @@ $("#AppDetailPage").on("pagebeforeshow", function () {
 });
 
 $("#AppDetailPage").on("pageshow", function () {
-    //var gallery = $('.swiper-container').swiper({
-    //    slidesPerView:'auto',
-    //    watchActiveIndex: true,
-    //    centeredSlides: true,
-    //    pagination:'.pagination',
-    //    paginationClickable: true,
-    //    resizeReInit: true,
-    //    keyboardControl: true,
-    //    grabCursor: true,
-    //    onImagesReady: function(){
-    //        gallerySwiper.changeSize();
-    //    }
-    //});
-    //setTimeout(gallerySwiper.changeSize(), 100);
     var gallery = new Swiper('.swiper-container',{
         pagination: '.swiper-pagination',
         spaceBetween: 30,
@@ -283,7 +270,6 @@ $("#ExchangePage").on("pagebeforeshow", function () {
 
 $("#logoutBtn").fastClick(function() {
     isLogin = false;
-    // changePage("#LoginPage");
     changePage("#RegisterPage");
 });
 
@@ -293,7 +279,6 @@ $("#registBtn").fastClick(function() {
 
 $("#loginBtn").fastClick( function() {
     me.login();
-    // isAutoLogin = true;
 });
 
 $("#coin").fastClick( function() {
@@ -555,10 +540,10 @@ var me = {
 
     requestMessage : function()
     {
-        var url = appServerUrl+"/appmessage?"+callback;
+        var url = appServerUrl+"/app_broadcast?"+callback;
         console.log("requestAppMessage:"+url);
         $.getJSON(url, function(data) {
-            if (data.message_list != undefined && data.message_list.length > 0) {
+            if (data.broadcastlist != undefined && data.broadcastlist.length > 0) {
                 me.parseMessages(data);
                 me.showMessage();
             }
@@ -637,7 +622,6 @@ var me = {
         //    me.connectWifi(this);
         // });
 
-        
         var arrWifiList = data.wifilist;
 
         for (var i = 0; i < arrWifiList.length; i++) {
@@ -654,8 +638,8 @@ var me = {
 
     isKuLianWifi : function(ssid)
     {
-        if (ssid.startWith("Hongwifi")) {
-            console.log("isKuLianWifi: startwith Hongwifi");
+        if (ssid.startWith("Hongwifi") || ssid.indexOf("小鸿")!=-1) { // ssid.startWith("SuperMary") || 
+            console.log("isKuLianWifi match pattern: "+ssid);
             return true;
         }
         var ssidMD5 = CryptoJS.MD5(ssid, { asString: true });
@@ -731,7 +715,7 @@ var me = {
             }
             console.log("connectWifi " + ssid);
             showLoader("正在连接Wifi，请稍候");
-            setTimeout("hideLoader()", 3000);
+            setTimeout("hideLoader()", 8000);
 
             window.android.connectWifi(ssid, pwd);
         } else {
@@ -783,7 +767,7 @@ var me = {
             });
 
             $("#tab-"+type+" .app-list li").click(function() {  // don't use fastclick, it will eat 'touchbegin' event
-                me.clickOnApp(this);
+                // me.clickOnApp(this);
                 // me.downloadApp(todo);
             });
 
@@ -812,7 +796,7 @@ var me = {
                 me.downloadApp(this);
                 $(this).addClass("inactive");
                 //创建圆形进度条
-                //如果为tab1中的安装按钮则在div.canvas-mask中创建进度条
+                //如果为tab1(精选)中的安装按钮则在div.canvas-mask中创建进度条
                 if($(this).hasClass('bigLogo-instBtn')){
                     var width = parseInt($(this).parent().width()/8);
                     console.log(width);
@@ -821,7 +805,7 @@ var me = {
                         displayNumber: false,
                         barColor: '#fff',
                         barBgColor: 'rgba(255,255,255,0.4)',
-                        barWidth: 8,
+                        barWidth: 6,
                         initValue: 0,
                         roundCorner : false,
                         percentage: true
@@ -830,14 +814,14 @@ var me = {
                 }else {
                     $(this).siblings('.app_coins').hide();
                     $(this).addClass('app-downloading--t3').radialIndicator({
-                        radius: 18,
+                        radius: 15,
                         displayNumber: false,
-                        barColor: '#fff',
-                        barBgColor: '#48D1CC',
-                        barWidth: 4,
+                        barColor: '#48D1CC',
+                        barBgColor: '#eee',
+                        barWidth: 2,
                         initValue: 0,
                         roundCorner : false,
-                        percentage: true
+                        percentage: false
                     })
                 }
 
@@ -961,7 +945,7 @@ var me = {
             } else {
                 arrHtml.push("<div class='ui-btn installBtn bigLogo-instBtn' data-installed='NO' data-applogo=\""+data[i].AppLogo+"\"  data-appname=\""+data[i].AppName+"\" data-appurl=\""+data[i].AppSource+"\" data-appid="+data[i].AppId+" data-pkgname=\""+data[i].PackageName+"\">下 载</div>");
             }
-            arrHtml.push("<div class='app-down-des'>下载并安装<span class='reward'>+"+data[i].GiveCoin+"</span></div>");
+            arrHtml.push("<div class='app-down-des'>安装<span class='reward'>+"+data[i].GiveCoin+"</span></div>");
             arrHtml.push("</div>");
             arrHtml.push("</li>");
         }
@@ -1107,14 +1091,14 @@ var me = {
             thisInstallBtn = $("#tab-4 .installBtn[data-appid='" + $(installBtn).data('appid') + "']");
             //创建圆形进度条
             thisInstallBtn.radialIndicator({
-                radius: 18,
+                radius: 15,
                 displayNumber: false,
-                barColor: '#fff',
-                barBgColor: '#48D1CC',
-                barWidth: 4,
+                barColor: '#48D1CC',
+                barBgColor: '#eee',
+                barWidth: 2,
                 initValue: 0,
                 roundCorner : false,
-                percentage: true
+                percentage: false
             });
         }
 
@@ -1238,7 +1222,7 @@ var me = {
 
     parseMessages : function (res)
     {
-        var data = res.applist;
+        var data = res.broadcastlist;
         if (data == null || data == undefined) {
             return;
         }
@@ -1250,7 +1234,7 @@ var me = {
         }
 
         for (var i = 0; i < data.length; i++) {
-            arrHtml.push("<li><p>"+data[i].content+"</p></li>");
+            arrHtml.push("<li><p>"+data[i].broadcast_item+"</p></li>");
         }
         var html = arrHtml.join('');
         $("#twitter").append(html);
@@ -1381,7 +1365,7 @@ var me = {
                 return false;
             }
         } else {
-            if ($("#inviteCode").val().length > 5) {
+            if ($("#inviteCode").val().length > 6) {
                 showLoader("邀请码无效");
                 setTimeout("hideLoader()", 2000);
                 return false;
@@ -1407,9 +1391,9 @@ var me = {
                 if (inviteCode && inviteCode.length > 0 && inviteCode != "选填") {
                     url = url + "&invite_code=" + inviteCode;
                 }
+                saveItem("userName", phone_number);
+                saveItem("passWord", passwd);
             }
-            saveItem("userName", phone_number);
-            saveItem("passWord", passwd);
             console.log(url);
 
             $.getJSON(url, function(data) {
@@ -1445,6 +1429,12 @@ var me = {
             var passwd       = $("#loginPassword").val();
             var passwdMD5    = CryptoJS.MD5(passwd, { asString: true });
             var url = appServerUrl+"/applogin?"+callback+"&phone_number="+phone_number+"&passwd="+passwdMD5;
+
+            if (window.android) {
+                var imei = window.android.getIMEI();
+                url = url + "&m3=" + imei;
+            }
+
             console.log(url);
             showLoader("登录中，请稍候");
 

@@ -1,0 +1,10 @@
+{
+    "broadcastlist": [{
+        "broadcast_item": "近期我们的免费WIFI网络正在安装调试优化中,可能出现不稳定情况,敬请谅解\n"
+    }, {
+        "broadcast_item": "如有问题,请加入QQ群227306629或在APP内反馈\n"
+    }],
+    "ret_code": 0,
+    "ret_msg": "success",
+    "total_count": 2
+}
