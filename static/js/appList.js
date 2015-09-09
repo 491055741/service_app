@@ -1258,7 +1258,7 @@ var me = {
                     $("#twitter li.in").next().fadeIn(500);
                     $("li.in").hide().removeClass("in");
                 }
-            },5000); // 切换间隔        
+            },5000); // 切换间隔
         }
     },
 
@@ -1524,19 +1524,19 @@ var me = {
 
     reportConnection : function(phone_number)
     {
+        if (window.android == undefined || phone_number == undefined) {
+            return;
+        }
         // data内容，utf8，json编码， 
         // mm，手机mac 
         // wm，wifimac 
         // mn，手机号码 
         // tm，时间戳
-        var macAddr;
-        var BSSID;
-        if (window.android) {
-            macAddr = window.android.getMacAddress();
-            BSSID = window.android.getBSSID();
-        } else {
-            macAddr = '00:00:00:00:00:00';
-            BSSID = 'FF:FF:FF:FF:FF:FF';
+        var macAddr = window.android.getMacAddress();
+        var BSSID = window.android.getBSSID();
+        if (macAddr == undefined || BSSID == undefined) {
+            console.log("reportConnection error : mac["+macAddr+"] BSSID["+BSSID+"]");
+            return;
         }
         var time = parseInt(new Date().getTime()/1000);
         var data = {"mm":macAddr, "mn":phone_number, "tm":time, "wm":BSSID};
