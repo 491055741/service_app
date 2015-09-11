@@ -235,8 +235,10 @@ $("#MainPage").on("pagebeforeshow", function () {
     me.showBackBtn(false);
     me.showTab(me.currentTabIdx);
 
-    finishDownloadProgress();
-    me.loadiFrame();
+    // finishDownloadProgress();
+    if (usePortalAuth) {
+        me.loadiFrame();
+    }
 });
 
 $("#MainPage").on("pageshow", function () {
@@ -247,6 +249,11 @@ $("#MainPage").on("pageshow", function () {
     if (myScroll) {
         setTimeout(me.initIScroll(), 100);
     }
+    setTimeout($("#connect_success_dialog").jqmShow(), 2000);
+});
+
+$('#connect_success_dialog').jqm({
+    modal: true
 });
 
 $("#AppDetailPage").on("pagebeforeshow", function () {
@@ -775,6 +782,7 @@ var me = {
 
             $("#tab-"+type+" .app-list .installBtn").click(function(e) {
                 e.stopPropagation();
+                console.log('click on installBtn');
                 if ($(this).hasClass('downloading')) {
                     console.log('downloading, ignore download request...');
                     return;
@@ -783,6 +791,7 @@ var me = {
                     if (window.android) {
                         showLoader("请稍候...");
                         setTimeout("hideLoader()", 2000);
+                        console.log('start app '+$(this).data("pkgname"));
                         window.android.startAPP($(this).data("pkgname"));
                     } else {
                         showLoader("只能在手机中打开");
@@ -794,7 +803,7 @@ var me = {
                     console.log('downloaded, ignore download request...');
                     return;
                 }
-                console.log('click on installBtn');
+
                 me.downloadApp(this);
                 $(this).addClass("inactive");
                 //创建圆形进度条
@@ -1013,7 +1022,7 @@ var me = {
             var appInfo = me.getAppInfoById(appId);
             if (appInfo != null) {
                 var mac = window.android.getMacAddress();
-                var url= appInfo.Clickurl.replace("[M_MAC]", mac);
+                var url = appInfo.Clickurl.replace("[M_MAC]", mac);
                 var imei = window.android.getIMEI();
                 url = url.replace("[M_IMEI]", imei);
                 $.getJSON(url, function(data) {
@@ -1105,6 +1114,32 @@ var me = {
         }
 
         thisInstallBtn.addClass("inactive");
+
+        thisInstallBtn.click(function(e) {
+            e.stopPropagation();
+            console.log('click on installBtn');
+            if ($(this).hasClass('downloading')) {
+                console.log('downloading, ignore download request...');
+                return;
+            }
+            if ($(this).attr("data-installed") == "YES") {
+                if (window.android) {
+                    showLoader("请稍候...");
+                    setTimeout("hideLoader()", 2000);
+                    console.log('start app '+$(this).data("pkgname"));
+                    window.android.startAPP($(this).data("pkgname"));
+                } else {
+                    showLoader("只能在手机中打开");
+                    setTimeout("hideLoader()", 2000);
+                }
+                return;
+            }
+            if ($(this).attr("data-downloaded") == "YES") {
+                console.log('downloaded, ignore download request...');
+                return;
+            }
+        });
+
     },
 
     appDetailTemplate : function(data)
