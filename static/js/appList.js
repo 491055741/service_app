@@ -1,7 +1,3 @@
-// 扣金币前查询接口：http://livew.mobdsp.com/cb/query_coin?phone_number=13418680969
-// 扣金币接口：http://livew.mobdsp.com/cb/dec_coin?phone_number=13418680969
-// 签到接口：http://livew.mobdsp.com/cb/user_sign?phone_number=13418680969
-
 var appServerUrl = "http://livew.mobdsp.com/cb";
 var callback = "callback=?";
 var localServerUrl = "http://127.0.0.1:5000";
@@ -232,8 +228,8 @@ $("#MainPage").on("pageinit", function() {
     me.checkNetwork();
     // for debug on browser
     if (window.android == undefined) {
-        setTimeout("wifiStatusChanged('@小鸿科技')", 10000);
-        setTimeout("me.autoLogin()", 1000);
+        setTimeout("wifiStatusChanged('@小鸿科技')", 1000);
+        setTimeout("me.autoLogin()", 10000);
     }
 });
 
@@ -253,7 +249,7 @@ $("#MainPage").on("pageshow", function () {
     }
 });
 
-$('#connect_success_dialog').jqm({
+$('#dialog').jqm({
     modal: true
 });
 
@@ -286,11 +282,11 @@ $("#registBtn").fastClick(function() {
     me.register();
 });
 
-$("#loginBtn").fastClick( function() {
+$("#loginBtn").fastClick(function() {
     me.login();
 });
 
-$("#coin").fastClick( function() {
+$("#coin").fastClick(function() {
     changePage("#ExchangePage");
 });
 
@@ -298,6 +294,10 @@ $("input").bind("focus", function() {
     if ($(this).attr("value")=='请填写您的手机号' || $(this).attr("value")=='选填') {
         $(this).attr("value","");
     }
+});
+
+$(".user_signin").fastClick(function() {
+    me.signIn();
 });
 
 $(".verifyCodeBtn").fastClick(function() {
@@ -408,7 +408,9 @@ var me = {
                         } else if (parseInt($("#connectWifiBtn").attr("data-wifiStatus")) == WifiStatus.kulian) {
                             $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.kulianAuthed);
                             me.updateWifiStatusUI(WifiStatus.kulianAuthed);
-                            me.reportAuthenSuccess();
+                            if (me.isLogin) {
+                                me.reportAuthenSuccess();
+                            }
                         }
                         console.log("connectWifiBtn wifiStatus:"+$("#connectWifiBtn").attr("data-wifiStatus"));
                         if (!me.isLogin) {
@@ -437,7 +439,7 @@ var me = {
         var url = appServerUrl+"/query_coin?phone_number="+phone_number;
         $.getJSON(url, function(data) {
 
-            if (data.ret_code == 0) {
+            if (data.ret_code == 0 || data.ret_code == 3001) {
                 me.sendAuthenticationRequest();
             } else {
                 showLoader(data.ret_msg);
@@ -480,14 +482,41 @@ var me = {
 
     reportAuthenSuccess : function() {
         console.log("reportAuthenSuccess.");
+        if (!me.isLogin) {
+            console.log("error! not login yet!");
+            return;
+        }
         var phone_number = $(".acount_list #account").text();
         var url = appServerUrl+"/dec_coin?phone_number="+phone_number;
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                $("#connect_success_dialog").jqmShow();
+                $("#dialog_message").clear();
+                var html = "<p>联网成功</p><p>消费金币100个，剩余金币900个</p>";
+                $("#dialog_message").append(html);
+                $("#dialog").jqmShow();
+            } else if (data.ret_code != 3001) {
+                showLoader(data.ret_msg);
+                setTimeout("hideLoader()", 2000);
+            }
+        });
+    },
+
+    signIn : function() {
+        console.log("sign in.");
+        var phone_number = $(".acount_list #account").text();
+        var url = appServerUrl+"/user_sign?phone_number="+phone_number;
+        $.getJSON(url, function(data) {
+            if (data.ret_code == 0) {
+                $("#dialog_message").clear();
+                var html = "<p>联网成功</p><p>消费金币100个，剩余金币900个</p>";
+                $("#dialog_message").append(html);
+                $("#dialog").jqmShow();
+            } else if (data.ret_code == 3002) {
+                showLoader("今天已经领取过了，明天再来哟！");
+                setTimeout("hideLoader()", 3000);
             } else {
-                // showLoader(data.ret_msg);
-                // setTimeout("hideLoader()", 2000);
+                showLoader(data.ret_msg);
+                setTimeout("hideLoader()", 3000);
             }
         });
     },
@@ -1696,7 +1725,7 @@ var me = {
         var upIcon = $("#tab-"+me.curAppTabIdx+" .up-icon");
             // var downIcon = $("#tab-"+me.curAppTabIdx+" .down-icon");
 
-        if(myScroll!=null){
+        if (myScroll!=null) {
             myScroll.destroy();
         }
         myScroll = new IScroll("#tab-"+me.curAppTabIdx+" .wrapper", 
@@ -1717,17 +1746,17 @@ var me = {
             //     return "";
             // }
             
-            if(maxY >= 40){
+            if (maxY >= 40) {
                 !upHasClass && upIcon.addClass("reverse_icon");
                 return "";
-            }else if(maxY < 40 && maxY >=0){
+            } else if (maxY < 40 && maxY >=0) {
                 upHasClass && upIcon.removeClass("reverse_icon");
                 return "";
             }
         });
         
         myScroll.on("slideDown",function(){
-            if(this.y > 40){
+            if (this.y > 40) {
                 // alert("slideDown");
                 upIcon.removeClass("reverse_icon")
             }
