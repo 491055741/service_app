@@ -491,7 +491,7 @@ var me = {
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
                 $("#dialog_message").clear();
-                var html = "<p>联网成功</p><p>消费金币100个，剩余金币900个</p>";
+                var html = "<p>联网成功</p><p>消费金币"+data.dec_coin_num+"个，剩余金币"+data.coin_num+"个</p>";
                 $("#dialog_message").append(html);
                 $("#dialog").jqmShow();
             } else if (data.ret_code != 3001) {
@@ -503,12 +503,15 @@ var me = {
 
     signIn : function() {
         console.log("sign in.");
+        if (!me.isLogin) {
+            return;
+        }
         var phone_number = $(".acount_list #account").text();
         var url = appServerUrl+"/user_sign?phone_number="+phone_number;
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                $("#dialog_message").clear();
-                var html = "<p>联网成功</p><p>消费金币100个，剩余金币900个</p>";
+                $("#dialog_message").empty();
+                var html = "<p>签到成功</p><p>领取金币"+data.add_coin_num+"个，您一共有"+data.coin_num+"个金币了</p>";
                 $("#dialog_message").append(html);
                 $("#dialog").jqmShow();
             } else if (data.ret_code == 3002) {
@@ -771,7 +774,7 @@ var me = {
             // arrHtml.push("</dd></dl></div>");
             // arrHtml.push("</li>");
         }
-        $("span .freeWifi_title").text(wifiCount+"个免费WiFi");
+        $(".freeWifi_title").text(wifiCount+"个免费WiFi");
         return arrHtml.join("");
     },
 
