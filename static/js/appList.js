@@ -728,8 +728,8 @@ var me = {
     {
         var data = res.wifilist;
         var arrHtml = new Array();
-        var arrKuLianWifi = me.kuLianWifi.wifilist;
-
+        // var arrKuLianWifi = me.kuLianWifi.wifilist;
+        var wifiCount = 0;
         for (var i = 0; i < data.length; i++) {
 
             // var isKuLian = false;
@@ -753,8 +753,8 @@ var me = {
             else if (level > 50) { level = 3; }
             else { level = 4; }
             
-            arrHtml.push("<li><img src=\"images/wifi_signal_"+ level +".png\"><a>"+subString.autoAddEllipsis(data[i].SSID, 22, true)+"</a></li>");
-
+            arrHtml.push("<li data-wifissid='"+data[i].SSID+"' data-wifiencrypt='"+data[i].encrypt+"'><img src=\"images/wifi_signal_"+ level +".png\"><a>"+subString.autoAddEllipsis(data[i].SSID, 22, true)+"</a></li>");
+            wifiCount++;
             // arrHtml.push("<li data-wifissid='"+data[i].SSID+"' data-wifipasswd='"+passwd+"' class=\"index-item list-index\" >"); // style=\"display:none;\"
             // arrHtml.push("<div class=\"index-item-main\">");
             // arrHtml.push("<dl class=\"clearfix\">");
@@ -771,7 +771,7 @@ var me = {
             // arrHtml.push("</dd></dl></div>");
             // arrHtml.push("</li>");
         }
-
+        $("span .freeWifi_title").text(wifiCount+"个免费WiFi");
         return arrHtml.join("");
     },
 
@@ -779,21 +779,10 @@ var me = {
     {
         var data = res.wifilist;
         var arrHtml = new Array();
-        var arrKuLianWifi = me.kuLianWifi.wifilist;
+        // var arrKuLianWifi = me.kuLianWifi.wifilist;
 
         for (var i = 0; i < data.length; i++) {
 
-            // var isKuLian = false;
-            // var passwd = "";
-            // for (var j = 0; j < arrKuLianWifi.length; j++) {
-            //     if (arrKuLianWifi[j].SSID == data[i].SSID) {
-            //         isKuLian = true;
-            //         passwd = arrKuLianWifi[j].password;
-            //         $(".wifiStatus").data("wifissid", data[i].SSID);
-            //         $(".wifiStatus").data("wifipasswd", passwd);
-            //         break;
-            //     }
-            // }
             if (data[i].encrypt == "") {
                 continue;
             }
@@ -805,7 +794,7 @@ var me = {
             else { level = 4; }
             
             // todo : add a lock icon at the right of the item
-            arrHtml.push("<li><img src=\"images/wifi_signal_"+ level +".png\"><a>"+subString.autoAddEllipsis(data[i].SSID, 22, true)+"</a></li>");
+            arrHtml.push("<li data-wifissid='"+data[i].SSID+"' data-wifiencrypt='"+data[i].encrypt+"' ><img src=\"images/wifi_signal_"+ level +".png\"><a>"+subString.autoAddEllipsis(data[i].SSID, 22, true)+"</a></li>");
         }
 
         return arrHtml.join("");
@@ -813,20 +802,23 @@ var me = {
 
     connectWifi : function (obj)
     {
-        if (window.android != undefined) {
-            var ssid    = $(obj).data("wifissid");
-            var pwd     = $(obj).data("wifipasswd");
-            var encrypt = $(obj).data("wifiencrypt");
-            if (ssid == undefined) {
-                showLoader("没有搜索到小鸿Wifi");
-                setTimeout("hideLoader()", 2000);
-                me.requestWifiList();
-                return;
-            }
-            console.log("connectWifi: "+ssid+"  pwd: "+pwd+"  encrypt: "+encrypt);
-            showLoader("正在连接Wifi，请稍候");
-            setTimeout("hideLoader()", 8000);
+        var ssid    = $(obj).data("wifissid");
+        var encrypt = $(obj).data("wifiencrypt");
+        var pwd     = "";
+        if (ssid == undefined) {
+            showLoader("没有搜索到小鸿Wifi");
+            setTimeout("hideLoader()", 2000);
+            me.requestWifiList();
+            return;
+        }
+        if (encrypt != "") {
+            pwd = prompt("请输入"+ssid+"的密码:", '');
+        }
+        console.log("connectWifi: "+ssid+"  pwd: "+pwd+"  encrypt: "+encrypt);
+        showLoader("正在连接Wifi，请稍候");
+        setTimeout("hideLoader()", 8000);
 
+        if (window.android != undefined) {
             window.android.connectWifi(ssid, pwd, encrypt);
         } else {
             console.log("try to connect wifi but window.android is undefined");
