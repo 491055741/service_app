@@ -674,24 +674,30 @@ var me = {
 
     parseWifiList : function(data)
     {
-        // var html = me.wifiListTemplate(data);
+        var html = me.freeWifiListTemplate(data);
+        $("#connectionView .freeWifi_box").empty();
+        $("#connectionView .freeWifi_box").append(html);
+        $("#connectionView .freeWifi_box li").fastClick(function() {
+            me.connectWifi(this);
+        });
 
-        // $("#connectionView .wifi-list").empty();
-        // $("#connectionView .wifi-list").append(html);
-
-        // $("#connectionView .wifi-list li").fastClick(function() {
-        //    me.connectWifi(this);
-        // });
+        var html = me.encryptWifiListTemplate(data);
+        $("#connectionView .annexWifi_box").empty();
+        $("#connectionView .annexWifi_box").append(html);
+        $("#connectionView .annexWifi_box li").fastClick(function() {
+            me.connectWifi(this);
+        });
 
         var arrWifiList = data.wifilist;
 
         for (var i = 0; i < arrWifiList.length; i++) {
             var ssidMD5 = CryptoJS.MD5(arrWifiList[i].SSID, { asString: true });
-            console.log("my wifi ssid:"+arrWifiList[i].SSID+"  MD5:"+ssidMD5);
+            console.log("my wifi ssid:"+arrWifiList[i].SSID+"  MD5:"+ssidMD5+"  encrypt:"+arrWifiList[i].encrypt);
             if (me.isKuLianWifi(arrWifiList[i].SSID)) {
                 // var passwd = arrKuLianWifi[j].ssid_passwd; // todo
                 $("#connectWifiBtn").data("wifissid", arrWifiList[i].SSID);
                 $("#connectWifiBtn").data("wifipasswd", '');
+                $("#connectWifiBtn").data("wifiencrypt", arrWifiList[i].encrypt);
                 break;
             }
         }
@@ -718,7 +724,7 @@ var me = {
         return isKuLian;
     },
 
-    wifiListTemplate : function(res)
+    freeWifiListTemplate : function(res)
     {
         var data = res.wifilist;
         var arrHtml = new Array();
@@ -737,27 +743,69 @@ var me = {
             //         break;
             //     }
             // }
+            if (data[i].encrypt != "") {
+                continue;
+            }
 
             var level = Math.abs(data[i].level);
             if (level > 90) { level = 1;}
             else if (level > 70) { level = 2; }
             else if (level > 50) { level = 3; }
             else { level = 4; }
-            arrHtml.push("<li data-wifissid='"+data[i].SSID+"' data-wifipasswd='"+passwd+"' class=\"index-item list-index\" >"); // style=\"display:none;\"
-            arrHtml.push("<div class=\"index-item-main\">");
-            arrHtml.push("<dl class=\"clearfix\">");
-            arrHtml.push("<dt class=\"item-icon\">");
-            arrHtml.push("<img src=\"images/wifi_signal_"+ level +".png\" />");
-            arrHtml.push("</dt>");
-            arrHtml.push("<dd class=\"item-title\">");
-            arrHtml.push("<span class=\"wifi-SSID\">");
-            arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true));
-            arrHtml.push("</span>");
-            if (isKuLian) {
-                arrHtml.push("<span class=\"wifi-desc\">首选免费连接</span>");
+            
+            arrHtml.push("<li><img src=\"images/wifi_signal_"+ level +".png\"><a>"+subString.autoAddEllipsis(data[i].SSID, 22, true)+"</a></li>");
+
+            // arrHtml.push("<li data-wifissid='"+data[i].SSID+"' data-wifipasswd='"+passwd+"' class=\"index-item list-index\" >"); // style=\"display:none;\"
+            // arrHtml.push("<div class=\"index-item-main\">");
+            // arrHtml.push("<dl class=\"clearfix\">");
+            // arrHtml.push("<dt class=\"item-icon\">");
+            // arrHtml.push("<img src=\"images/wifi_signal_"+ level +".png\" />");
+            // arrHtml.push("</dt>");
+            // arrHtml.push("<dd class=\"item-title\">");
+            // arrHtml.push("<span class=\"wifi-SSID\">");
+            // arrHtml.push(subString.autoAddEllipsis(data[i].SSID, 22, true));
+            // arrHtml.push("</span>");
+            // if (isKuLian) {
+            //     arrHtml.push("<span class=\"wifi-desc\">首选免费连接</span>");
+            // }
+            // arrHtml.push("</dd></dl></div>");
+            // arrHtml.push("</li>");
+        }
+
+        return arrHtml.join("");
+    },
+
+    encryptWifiListTemplate : function(res)
+    {
+        var data = res.wifilist;
+        var arrHtml = new Array();
+        var arrKuLianWifi = me.kuLianWifi.wifilist;
+
+        for (var i = 0; i < data.length; i++) {
+
+            // var isKuLian = false;
+            // var passwd = "";
+            // for (var j = 0; j < arrKuLianWifi.length; j++) {
+            //     if (arrKuLianWifi[j].SSID == data[i].SSID) {
+            //         isKuLian = true;
+            //         passwd = arrKuLianWifi[j].password;
+            //         $(".wifiStatus").data("wifissid", data[i].SSID);
+            //         $(".wifiStatus").data("wifipasswd", passwd);
+            //         break;
+            //     }
+            // }
+            if (data[i].encrypt == "") {
+                continue;
             }
-            arrHtml.push("</dd></dl></div>");
-            arrHtml.push("</li>");
+
+            var level = Math.abs(data[i].level);
+            if (level > 90) { level = 1;}
+            else if (level > 70) { level = 2; }
+            else if (level > 50) { level = 3; }
+            else { level = 4; }
+            
+            // todo : add a lock icon at the right of the item
+            arrHtml.push("<li><img src=\"images/wifi_signal_"+ level +".png\"><a>"+subString.autoAddEllipsis(data[i].SSID, 22, true)+"</a></li>");
         }
 
         return arrHtml.join("");
@@ -766,19 +814,20 @@ var me = {
     connectWifi : function (obj)
     {
         if (window.android != undefined) {
-            var ssid = $(obj).data("wifissid");
-            var pwd = $(obj).data("wifipasswd");
+            var ssid    = $(obj).data("wifissid");
+            var pwd     = $(obj).data("wifipasswd");
+            var encrypt = $(obj).data("wifiencrypt");
             if (ssid == undefined) {
                 showLoader("没有搜索到小鸿Wifi");
                 setTimeout("hideLoader()", 2000);
                 me.requestWifiList();
                 return;
             }
-            console.log("connectWifi " + ssid);
+            console.log("connectWifi: "+ssid+"  pwd: "+pwd+"  encrypt: "+encrypt);
             showLoader("正在连接Wifi，请稍候");
             setTimeout("hideLoader()", 8000);
 
-            window.android.connectWifi(ssid, pwd);
+            window.android.connectWifi(ssid, pwd, encrypt);
         } else {
             console.log("try to connect wifi but window.android is undefined");
         }

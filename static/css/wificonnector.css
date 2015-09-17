@@ -21,7 +21,7 @@ a { text-decoration:none;}
 .licenseWrapper h2 {font-size:16px; margin: 30px 0 20px; font-weight:100;}
 .licenseWrapper p {color:#2e2e2e;}
 
-#connectionView .user_signin {padding-top: 5px; padding-left: 5px; color: #38c; }
+#connectionView .user_signin {padding-top: 5px; padding-left: 5px; color: #0A94D7; }
 #connectionView .message_grid {padding-top: 30px; color: gray; min-height: 50px; }
 #connectionView .message_grid img {width: 18px; height: 18px; margin-left: 10px; }
 #connectWifiBtn {background-color: #4BA6F2; color: white; text-align: center; border-radius: 6px; width: 80%; height: 25px; line-height: 25px; font-size: 14px; border: 0; text-shadow:0 0 0;}
@@ -90,7 +90,8 @@ a { text-decoration:none;}
     top: auto;
     bottom: -5px;
     border-radius: 3px;
-    background: rgb(3,90,133);
+    /*background: rgb(3,90,133);*/
+    background: #0A94D7;
     font: 300 12px/24px 'STHeiti';
     color:#fff;
     text-align: center;

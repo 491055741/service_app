@@ -164,24 +164,14 @@
    
 
 <!-- 连接页面改版 author:Bella -->
-<ul class="setWifi hide">
-    <li>
-        <img src="images/tab_mine.png"><a>wifi地图</a>
-    </li>
-      <li>
-        <img src="images/tab_mine.png"><a>二维码</a>
-    </li>
-      <li>
-        <img src="images/tab_mine.png"><a>wifi设置</a>
-    </li>
-   <li>
-        <img src="images/tab_mine.png"><a>退出应用</a>
-    </li>
-</ul>
 <div class="recomWifi">
     <img class="recomWifi_img" src="images/tab_wifi_active.png">
+<!--     <img class="statusOff" src="images/wifi_state_off.png">
+    <img class="statusOn" src="images/wifi_state_on.png" style="display:none;">
+ -->
     <div class="recomWifi_txt">
-        <h2>"工厂名——WiFi"</h2>
+        <!-- <h2>"工厂名——WiFi"</h2> -->
+        <div id="statusDesc">未连接到Wifi</div>
         <span class="recomWifi_txtspan">推荐</span>
     </div>
 
@@ -189,28 +179,27 @@
            <!--<option value="false">关</option>-->
            <!--<option value="true">开</option>-->
         <!--</select>-->
-    <div class="wifiSlider">
+<!--     <div class="wifiSlider">
         <select name="flip-11" id="flip-11" data-role="slider" data-mini="true">
             <option value="off">关</option>
             <option value="on">开</option>
         </select>
     </div>
-        <div style="clear:both;"></div>
+ --> 
+    <div id="connectWifiBtn" class="ui-btn">连接</div>
+    <div style="clear:both;"></div>
 </div>
 
 <div class="freeWifi">
     <span class="freeWifi_title">3个免费WiFi</span>
-     <ul class="freeWifi_box"><li><img src="images/tab_wifi.png"><a>hua_111</a></li>
-     <li><img src="images/tab_wifi.png"><a>hua_111</a></li>
-     <li><img src="images/tab_wifi.png"><a>hua_111</a></li></ul>
-
+    <ul class="freeWifi_box">
+    </ul>
 </div>
+
 <div class="annexWifi">
     <span class="annexWifi_title">附近的WiFi</span>
-     <ul class="annexWifi_box"><li><img src="images/tab_wifi.png"><a>hua_111</a></li>
-     <li><img src="images/tab_wifi.png"><a>hua_111</a></li>
-     <li><img src="images/tab_wifi.png"><a>hua_111</a></li></ul>
-
+     <ul class="annexWifi_box">
+    </ul>
 </div>
 <!-- 连接页面改版 author:Bella  end-->
         </div>

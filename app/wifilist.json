@@ -1,18 +1,23 @@
 {
     "wifilist":[{
         "SSID": "SuperMary",
-        "level": "100"
+        "level": "100",
+        "encrypt": "WPA"
     }, {
         "SSID": "@小鸿科技",
-        "level": "20"
+        "level": "20",
+        "encrypt": ""
     }, {
         "SSID": "TP-Link",
-        "level": "90"
+        "level": "90",
+        "encrypt": "WEP"
     }, {
         "SSID": "Netgear",
-        "level": "60"
+        "level": "60",
+        "encrypt": "WPA"
     }, {
         "SSID": "D-Link",
-        "level": "80"
+        "level": "80",
+        "encrypt": "WPA"
     }]
 }
