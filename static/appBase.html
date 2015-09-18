@@ -124,7 +124,7 @@
             <div class="jqmWindow" id="dialog" style="display:none;">
                 <hr />
                 <div id="dialog_message"></div>
-                <center><a href="" class="jqmClose" class="ui-btn">确定</a></center>
+                <div id="close_dialog_btn" class="jqmClose ui-btn">确定</div>
             </div>
 
             <div class="ui-grid-a message_grid">
@@ -190,17 +190,21 @@
     <div style="clear:both;"></div>
 </div>
 
-<div class="freeWifi">
-    <span class="freeWifi_title">0个免费WiFi</span>
-    <ul class="freeWifi_box">
-    </ul>
+<div class="wifiList">
+    <div class="freeWifi">
+        <span class="freeWifi_title">0个免费WiFi</span>
+        <ul class="freeWifi_box">
+        </ul>
+    </div>
+
+    <div class="annexWifi">
+        <span class="annexWifi_title">附近的WiFi</span>
+         <ul class="annexWifi_box">
+        </ul>
+    </div>
 </div>
 
-<div class="annexWifi">
-    <span class="annexWifi_title">附近的WiFi</span>
-     <ul class="annexWifi_box">
-    </ul>
-</div>
+<a href="" id="shenmaBtn" class="ui-btn">神码验证</a>
 <!-- 连接页面改版 author:Bella  end-->
         </div>
 

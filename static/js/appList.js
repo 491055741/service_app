@@ -141,9 +141,11 @@ var wifiStatusChanged = function (ssid) {
         $("#statusDesc").data("wifissid", ssid);
         me.updateWifiStatusUI($("#connectWifiBtn").attr("data-wifiStatus"));
         me.checkNetwork();
+        me.removeFromWifiList(ssid);
     } else { // 断开连接了
         $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.disconnected);
         me.updateWifiStatusUI(WifiStatus.disconnected);
+        me.requestWifiList();
     }
 }
 // js-android interface
@@ -228,7 +230,7 @@ $("#MainPage").on("pageinit", function() {
     me.checkNetwork();
     // for debug on browser
     if (window.android == undefined) {
-        setTimeout("wifiStatusChanged('@小鸿科技')", 1000);
+        setTimeout("wifiStatusChanged('Hongwifi-SuperMarySuperMario')", 1000);
         setTimeout("me.autoLogin()", 10000);
     }
 });
@@ -294,6 +296,14 @@ $("input").bind("focus", function() {
     if ($(this).attr("value")=='请填写您的手机号' || $(this).attr("value")=='选填') {
         $(this).attr("value","");
     }
+});
+
+$("#shenmaBtn").fastClick(function () {
+    if (window.android != undefined) {
+        window.android.shenZhouShuMaAuth();
+    }
+    showLoader("发送认证请求");
+    setTimeout("hideLoader()", 2000);
 });
 
 $(".user_signin").fastClick(function() {
@@ -491,7 +501,10 @@ var me = {
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
                 $("#dialog_message").clear();
-                var html = "<p>联网成功</p><p>消费金币"+data.dec_coin_num+"个，剩余金币"+data.coin_num+"个</p>";
+                var html = "<div class='modalViewTitle'>恭喜您已连接到免费小鸿WiFi</div>";
+                html += "<div class='modalViewText'>今日消耗金币</div>";
+                html += "<div class='modalViewBigText'>"+data.dec_coin_num+"</div>"
+                html += "<div class='modalViewText'>您还有"+data.coin_num+"金币</div>";
                 $("#dialog_message").append(html);
                 $("#dialog").jqmShow();
             } else if (data.ret_code != 3001) {
@@ -511,7 +524,9 @@ var me = {
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
                 $("#dialog_message").empty();
-                var html = "<p>签到成功</p><p>领取金币"+data.add_coin_num+"个，您一共有"+data.coin_num+"个金币了</p>";
+                var html = "<div class='modalViewTitle'>恭喜您已签到成功</div>";
+                html += "<div class='modalViewText'>今日赢取金币</div>";
+                html += "<div class='modalViewBigText'>"+data.add_coin_num+"</div>"
                 $("#dialog_message").append(html);
                 $("#dialog").jqmShow();
             } else if (data.ret_code == 3002) {
@@ -1135,6 +1150,12 @@ var me = {
             setTimeout("finishDownloadProgress("+$(installBtn).data("appid")+")", 3000);
             setTimeout("appInstallFinished("+$(installBtn).data("appid")+")", 8000);
         }
+    },
+
+    removeFromWifiList : function(SSID)
+    {
+        var li = $(".wifiList li[data-wifissid='"+SSID+"']");
+        li.remove();
     },
 
     removeFromAppManageTab : function(installBtn)
