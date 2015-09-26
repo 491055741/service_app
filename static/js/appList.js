@@ -251,13 +251,14 @@ $("#AppDetailPage").on("pagebeforeshow", function () {
 });
 
 $("#AppDetailPage").on("pageshow", function () {
-    var gallery = new Swiper('.swiper-container',{
+    gallery = new Swiper('.swiper-container',{
+        initialSlide: 1,
         pagination: '.swiper-pagination',
         spaceBetween: 30,
         slidesPerView: 2,
         centeredSlides: true
     });
-    gallery.slideTo(1,1000,false);
+    //gallery.slideTo(1,1000,false);
 });
 
 $("#ExchangePage").on("pagebeforeshow", function () {
@@ -1108,8 +1109,8 @@ var me = {
         var html = me.appDetailTemplate(data.detail_info);
         $(".appDetail").append(html);
 
+        //[2015-9-26] TODO
         $(".DownloadBtn").fastClick(function() {
-            //[2015-9-26] TODO
             //去掉安装'文案'，并创建圆形进度条
             $(this)
                 .addClass('inactive installBtn')
@@ -1125,6 +1126,22 @@ var me = {
                     percentage: false
                 });
             me.downloadApp(this);
+        });
+
+        //轮播图点击放大
+        $('.swiper-container').on('click','.swiper-slide',function(){
+            var $parent = $('.swiper-container'),
+                index = $(this).index();
+            //alert(index);
+            if (!$parent.hasClass('larger')){
+                $parent.addClass('larger');
+                gallery.params.slidesPerView = 1;
+                gallery.update({initialSlide:index});
+            }else {
+                $parent.removeClass('larger');
+                gallery.params.slidesPerView = 2;
+                gallery.update({initialSlide:index});
+            }
         });
 
         changePage("#AppDetailPage");
