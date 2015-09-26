@@ -27,7 +27,7 @@ var WifiStatus = {"disconnected" : 0, "connected" : 1, "kulian" : 2, "kulianAuth
 var updateDownloadProgress = function (appId, progress) {
     // console.log('app['+appId+'] download progress: '+progress);
     //已安装的应用  包含app列表和app管理里的
-    var installApps = $("div.installBtn[data-appid="+appId+"]");
+    var installApps = $(".installBtn[data-appid="+appId+"]");
     $.each(installApps, function (index,el) {
         if ($(el).hasClass('bigLogo-instBtn')) {
             //如果遮罩层存在就在遮罩层上获取对应的raobj对象
@@ -39,7 +39,10 @@ var updateDownloadProgress = function (appId, progress) {
             var raObj = $(el).data('radialIndicator');
             // console.log(raObj);
         }
-        raObj.animate(progress);
+        if (raObj) {
+            raObj.animate(progress);
+        }
+
     });
 };
 // js-Android interface
@@ -47,7 +50,7 @@ var finishDownloadProgress = function (appId) {
     console.log('app['+appId+'] download finished.');
 
     // 已安装的应用  包含app列表和app管理里的
-    var installApps = $("div.installBtn[data-appid="+appId+"]");
+    var installApps = $(".installBtn[data-appid="+appId+"]");
     $.each(installApps, function (index,el) {
 
         $(el).removeClass("downloading");
@@ -71,14 +74,14 @@ var finishDownloadProgress = function (appId) {
             $(el).append('<span>已下载</span>');
         }
     });
-}
+};
 // js-Android interface
 var appInstallFinished = function (appId) {
     var phone_number = $(".acount_list #account").text();
     var url = appServerUrl+"/download_report?"+callback+"&appid="+appId+"&phone_number="+phone_number;
     console.log("Report app install:"+url);
 
-    var installApps = $("div.installBtn[data-appid="+appId+"]");
+    var installApps = $(".installBtn[data-appid="+appId+"]");
     $.each(installApps, function (index,el) {
 
         if ($(el).hasClass('bigLogo-instBtn')) { // 推荐中的
@@ -881,7 +884,8 @@ var me = {
             });
 
             $("#tab-"+type+" .app-list li").click(function() {  // don't use fastclick, it will eat 'touchbegin' event
-                // me.clickOnApp(this);
+                //[2015-9-24]
+                 me.clickOnApp(this);
                 // me.downloadApp(todo);
             });
 
@@ -1105,7 +1109,22 @@ var me = {
         $(".appDetail").append(html);
 
         $(".DownloadBtn").fastClick(function() {
-           me.downloadApp(this);
+            //[2015-9-26] TODO
+            //去掉安装'文案'，并创建圆形进度条
+            $(this)
+                .addClass('inactive installBtn')
+                .text('')
+                .radialIndicator({
+                    radius: 12,
+                    displayNumber: false,
+                    barColor: '#48D1CC',
+                    barBgColor: '#eee',
+                    barWidth: 2,
+                    initValue: 0,
+                    roundCorner : false,
+                    percentage: false
+                });
+            me.downloadApp(this);
         });
 
         changePage("#AppDetailPage");
