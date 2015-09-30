@@ -10,7 +10,6 @@ var autoLoginTimer = null;
 var requestKulianWifiTimer = null;
 var connectedSSID = null;
 var version = null;
-var myScroll;
 var count = 0;
 var WifiStatus = {"disconnected" : 0, "connected" : 1, "kulian" : 2, "kulianAuthed" : 3};
 (function($){
@@ -238,10 +237,6 @@ $("#MainPage").on("pageshow", function () {
         setTimeout("wifiStatusChanged('SuperMary')", 1000);
         setTimeout("me.autoLogin()", 10000);
     }
-
-    if (myScroll) {
-        setTimeout(me.initIScroll(), 100);
-    }
 });
 
 $('#dialog').jqm({
@@ -374,6 +369,7 @@ var me = {
     currentTabIdx : 0, // bottom tab
     curAppTabIdx : 1,  // app top tab
     curAppPageIdx : [1,1,1], // current page of each app tab
+    myScroll : null,
     kuLianWifi : null,
     appList : null,
     isLogin : false,
@@ -594,7 +590,7 @@ var me = {
             slide.hide();
         }
         if (idx == 1) {
-            me.initIScroll();
+            me.refreshScroll();
         }
 
         var titles = new Array("连接", "精选", "我的");
@@ -651,8 +647,8 @@ var me = {
                 // if (me.currentTabIdx == 0) {
                     $(".fouce").show();
                 // }
-                if (myScroll != null) {
-                    setTimeout(myScroll.refresh(), 1000);
+                if (me.myScroll[1] != null) {
+                    setTimeout(me.myScroll[1].refresh(), 1000);
                 }
             }
         });
@@ -711,6 +707,9 @@ var me = {
         $("#connectionView .annexWifi_box").empty();
         $("#connectionView .annexWifi_box").append(html);
 
+        $(".wifiList img.lazy").lazyload({threshold:300, placeholder:null });
+        $(window).trigger("scroll");
+
         $("#connectionView .wifiList li").fastClick(function() {
             me.connectWifi(this);
         });
@@ -766,7 +765,7 @@ var me = {
             else { level = 4; }
             
             var li = "<li data-wifissid='"+data[i].SSID+"' data-wifiencrypt='"+data[i].encrypt+"'>";
-            li += "<img class='wifi-icon' src='images/wifi_signal_"+ level +".png' />";
+            li += "<img class='wifi-icon lazy' data-original='images/wifi_signal_"+ level +".png' />";
             li += "<a>"+subString.autoAddEllipsis(data[i].SSID, 22, true)+"</a>";
             if (me.isKuLianWifi(data[i].SSID)) {
                 li += "<span class='recomWifi_txtspan'>推荐</span>";
@@ -799,9 +798,9 @@ var me = {
             else if (level > 70) { level = 2; }
             else if (level > 50) { level = 3; }
             else { level = 4; }
-            
+
             var li = "<li data-wifissid='"+data[i].SSID+"' data-wifiencrypt='"+data[i].encrypt+"' >";
-            li += "<img class='wifi-icon' src=\"images/wifi_signal_"+ level +".png\"><a>"+subString.autoAddEllipsis(data[i].SSID, 22, true)+"</a>";
+            li += "<img class='wifi-icon lazy' data-original=\"images/wifi_signal_"+ level +".png\"><a>"+subString.autoAddEllipsis(data[i].SSID, 22, true)+"</a>";
             li += "<img class='lock-icon' src='images/lock.png' />";
             li += "</li>";
             arrHtml.push(li);
@@ -920,7 +919,7 @@ var me = {
                 $(this).addClass("inactive");
                 //创建圆形进度条
                 //如果为tab1(精选)中的安装按钮则在div.canvas-mask中创建进度条
-                if($(this).hasClass('bigLogo-instBtn')){
+                if ($(this).hasClass('bigLogo-instBtn')){
                     var width = parseInt($(this).parent().width()/8);
                     console.log(width);
                     $(this).siblings('.app-img').children('.canvas-mask').show().radialIndicator({
@@ -934,7 +933,7 @@ var me = {
                         percentage: true
                     });
                     $(this).text('下载中');
-                }else {
+                } else {
                     $(this).siblings('.app_coins').hide();
                     $(this).addClass('app-downloading--t3').radialIndicator({
                         radius: 15,
@@ -947,11 +946,13 @@ var me = {
                         percentage: false
                     })
                 }
-
             });
 
-            if (myScroll != null) {
-                setTimeout(myScroll.refresh(), 2000);
+            // me.initIScroll(type);
+            setTimeout(me.initIScroll(type), 2000);
+            // setTimeout(me.refreshScroll(type), 2000);
+            if (me.myScroll[4] == null) {
+                me.initIScroll(4);
             }
         });
     },
@@ -1777,20 +1778,32 @@ var me = {
         me.curAppTabIdx = tabIdx;
     },
 
-    initIScroll : function () {
-
+    refreshScroll : function (idx) {
+        if (idx == undefined) {
+            idx = me.curAppTabIdx;
+        }
+        if (me.myScroll[idx]) {
+            me.myScroll[idx].refresh();
+        }
+    },
+    
+    initIScroll : function (idx) {
         console.log("initIScroll");
-        var upIcon = $("#tab-"+me.curAppTabIdx+" .up-icon");
+        if (me.myScroll == null) {
+            me.myScroll = new Array(5);
+        }
+
+        var upIcon = $("#tab-"+idx+" .up-icon");
             // var downIcon = $("#tab-"+me.curAppTabIdx+" .down-icon");
 
-        if (myScroll!=null) {
-            myScroll.destroy();
+        if (me.myScroll[idx] != null) {
+            me.myScroll[idx].destroy();
         }
-        myScroll = new IScroll("#tab-"+me.curAppTabIdx+" .wrapper", 
+        me.myScroll[idx] = new IScroll("#tab-"+idx+" .wrapper", 
                                 {click:true, probeType: 3, mouseWheel: true, fadeScrollbars: true }
                                 );
 
-        myScroll.on("scroll",function() {
+        me.myScroll[idx].on("scroll",function() {
             var y = this.y,
                 maxY = this.maxScrollY - y,
                 // downHasClass = downIcon.hasClass("reverse_icon"),
@@ -1813,19 +1826,19 @@ var me = {
             }
         });
         
-        myScroll.on("slideDown",function(){
+        me.myScroll[idx].on("slideDown",function(){
             if (this.y > 40) {
                 // alert("slideDown");
                 upIcon.removeClass("reverse_icon")
             }
         });
         
-        myScroll.on("slideUp",function(){
+        me.myScroll[idx].on("slideUp",function(){
             if (this.maxScrollY - this.y > 40) {
                 // me.requestAppTypePage(me.curAppTabIdx, me.curAppPageIdx[me.curAppTabIdx]);
                 upIcon.removeClass("reverse_icon");
             }
         });
-        setTimeout(myScroll.refresh(), 200);
+        setTimeout(me.myScroll[idx].refresh(), 300);
     }
 }; // end of var me
