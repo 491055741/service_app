@@ -169,6 +169,7 @@ var checkLogin = function() {
 
 $("#WelcomPage").on("pageshow", function () {
     console.log("welcome page show");
+
     var userName = getItem("userName");
     var password = getItem("passWord");
     if (userName && userName.length > 0 && password && password.length > 0) {
@@ -224,6 +225,7 @@ $("#MainPage").on("pagebeforeshow", function () {
 });
 
 $("#MainPage").on("pageshow", function () {
+
     console.log("main page show");
     me.requestKulianWifi();
     me.requestWifiList();
@@ -875,7 +877,7 @@ var me = {
 
             $("#tab-"+type+" .app-list").append(html);
             if (type == 1) {
-                $("img.lazy").lazyload({threshold:300});
+                $("img.lazy").lazyload({threshold:300, effect:"fadeIn", placeholder:null });
                 $(window).trigger("scroll");
             }
 
@@ -949,7 +951,7 @@ var me = {
             });
 
             if (myScroll != null) {
-                setTimeout(myScroll.refresh(), 1000);
+                setTimeout(myScroll.refresh(), 2000);
             }
         });
     },
@@ -1050,7 +1052,8 @@ var me = {
             arrHtml.push("<div class='app-img'>");
             arrHtml.push("<img class='lazy' data-original='"+data[i].AppLargeLogo+"' />");
             //遮罩层
-            arrHtml.push("<div class='canvas-mask'></div>")
+            arrHtml.push("<div class='canvas-mask'></div>");
+            arrHtml.push("<div class='dummy'></div>");
             arrHtml.push("</div>");
 
             arrHtml.push("<div class=\"h baiying-name\">");
@@ -1093,7 +1096,7 @@ var me = {
 
     requestAppDetail : function (appId)
     {
-        var url = appServerUrl+"/appdetail?"+callback+"&apptype=1&appid="+appId;
+        var url = appServerUrl+"/appdetail?"+callback+"&apptype="+me.curAppTabIdx+"&appid="+appId;
         console.log(url);
         showLoader();
         $.getJSON(url, function(data) {
