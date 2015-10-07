@@ -33,7 +33,7 @@ var updateDownloadProgress = function (appId, progress) {
             var cMask = $(el).siblings('.app-img').children('.canvas-mask');
             var raObj = cMask.data('radialIndicator');
             // console.log('cmask-raobj');
-        }else {
+        } else {
             // console.log("i'm installbtn");
             var raObj = $(el).data('radialIndicator');
             // console.log(raObj);
@@ -68,6 +68,7 @@ var finishDownloadProgress = function (appId) {
         } else { // 软件列表中的
             $(el).children('canvas').remove();
             $(el).siblings('.app_down').hide();
+            $(el).siblings('.app_coins').hide();
             $(el).attr('data-downloaded', 'YES');
             $(el).addClass('inactive');
             $(el).append('<span>已下载</span>');
@@ -685,7 +686,7 @@ var me = {
         console.log("requestWifiList");
         if (window.android == undefined) {
             var url = localServerUrl + "/wifilist?"+callback;
-            console.log("requestWifiList:" + url);
+            // console.log("requestWifiList:" + url);
             $.getJSON(url, function(data) {
                 me.parseWifiList(data);
             });
@@ -1115,8 +1116,25 @@ var me = {
         var html = me.appDetailTemplate(data.detail_info);
         $(".appDetail").append(html);
 
-        //[2015-9-26] TODO
         $(".DownloadBtn").fastClick(function() {
+
+            if ($(this).data("installed") == "YES") {
+                if (window.android) {
+                    showLoader("请稍候...");
+                    setTimeout("hideLoader()", 2000);
+                    console.log('start app '+$(this).data("pkgname"));
+                    window.android.startAPP($(this).data("pkgname"));
+                } else {
+                    showLoader("只能在手机中打开");
+                    setTimeout("hideLoader()", 2000);
+                }
+                return;
+            }
+            if ($(this).data("downloaded") == "YES") {
+                console.log('downloaded, ignore download request...');
+                return;
+            }
+
             //去掉安装'文案'，并创建圆形进度条
             $(this)
                 .addClass('inactive installBtn')
@@ -1310,27 +1328,6 @@ var me = {
         var arrHtml  = new Array();
         arrHtml.push(me.appIntroTemplate(data));
 
-        // arrHtml.push("<div class='snapshot'>");
-        // for (var i = 0; i < data.ImageSrcList.length; i++) {
-        //   arrHtml.push("<img src='" + data.ImageSrcList[i] + "'>");
-        // }
-    //    <div class="swiper-container">
-    //    <div class="swiper-wrapper">
-    //    <div class="swiper-slide">Slide 1</div>
-    //<div class="swiper-slide">Slide 2</div>
-    //<div class="swiper-slide">Slide 3</div>
-    //</div>
-    //    <!-- 如果需要分页器 -->
-    //<div class="swiper-pagination"></div>
-    //
-    //        <!-- 如果需要导航按钮 -->
-    //    <div class="swiper-button-prev"></div>
-    //    <div class="swiper-button-next"></div>
-    //
-    //        <!-- 如果需要滚动条 -->
-    //    <div class="swiper-scrollbar"></div>
-    //    </div>
-    //    arrHtml.push("<div class='swiper-container'><div class='pagination' style='display:none;'></div><div class='swiper-wrapper' style='width:2424px;'>");
         arrHtml.push("<div class='swiper-container'><div class='swiper-wrapper'>");
         for (var i = 0; i < data.ImageSrcList.length; i++) {
           arrHtml.push("<div class='swiper-slide'><img src='" + data.ImageSrcList[i] + "' alt=''/></div>");
@@ -1374,7 +1371,7 @@ var me = {
 
         arrHtml.push("<div id=\"divdownarea\" class=\"down-area\">");
         arrHtml.push("<div class=\"content-btn-con\">");
-        arrHtml.push("<a class=\"DownloadBtn\" data-appurl=\""+data.AppSource+"\" data-appname=\""+data.AppName+"\" data-appid=\""+data.AppId+"\" data-pkgname=\""+data.PackageName+"\" ");
+        arrHtml.push("<a class=\"DownloadBtn\" data-appurl=\""+data.AppSource+"\" data-appname=\""+data.AppName+"\" data-appid=\""+data.AppId+"\" data-pkgname=\""+data.PackageName+"\" data-applogo=\""+data.AppLogo+"\" ");
         if (isAppInstalled) {
             arrHtml.push("data-installed='YES' >已安装</a>");
         } else {
