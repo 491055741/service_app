@@ -360,7 +360,7 @@ $(".exchange_item").fastClick(function() {
 });
 
 $(".refresh-app-list").fastClick(function() {
-    me.requestAppList();
+    me.requestAppTypePage(me.curAppTabIdx, 1);
 });
 
 var me = {
@@ -845,7 +845,6 @@ var me = {
     requestAppList : function()
     {
         showLoader();
-        $(".refresh-app-list").show();
         for (var type = 1; type <= 3; type++) {
             $("#tab-"+type+" .app-list").empty();
             me.requestAppTypePage(type, 1);
@@ -857,103 +856,114 @@ var me = {
     {
         var url = appServerUrl+"/applist_page?apptype="+type+"&page="+page+"&"+callback;
         console.log("requestAppList:" + url);
-        $.getJSON(url, function(data) {
-            hideLoader();
 
-            if (data.applist_count == 0) {  // last page
-                $("#tab-"+type+" .scroller-pullUp").hide();
-                return;
-            }
+        $("#tab-"+type+" .refresh-app-list").hide();
 
-            me.curAppPageIdx[type] = page + 1;
-            me.appList = data;
-            var html;
-            if (type == 1) {
-                html = me.appBigLogoListTemplate(data);
-            } else {
-                html = me.appListTemplate(data);
-            }
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType : "jsonp",
+            jsonp: "callback",//"callname",//服务端用于接收callback调用的function名的参数
+            // jsonpCallback:"success",//callback的function名称
+            success : function(data) {
+                        hideLoader();
+                        if (data.applist_count == 0) {  // last page
+                            $("#tab-"+type+" .scroller-pullUp").hide();
+                            return;
+                        }
+                        $("#tab-"+type+" .wrapper").show();
 
-            $("#tab-"+type+" .app-list").append(html);
-            if (type == 1) {
-                $("img.lazy").lazyload({threshold:300, effect:"fadeIn", placeholder:null });
-                $(window).trigger("scroll");
-            }
+                        me.curAppPageIdx[type] = page + 1;
+                        me.appList = data;
+                        var html;
+                        if (type == 1) {
+                            html = me.appBigLogoListTemplate(data);
+                        } else {
+                            html = me.appListTemplate(data);
+                        }
 
-            var btns = $("#tab-"+type+" .app-list .installBtn[data-installed='YES']");
-            $.each(btns, function(index, el) {
-                me.addToAppManageTab(el);
-            });
+                        $("#tab-"+type+" .app-list").append(html);
+                        if (type == 1) {
+                            $("img.lazy").lazyload({threshold:300, effect:"fadeIn", placeholder:null });
+                            $(window).trigger("scroll");
+                        }
 
-            $("#tab-"+type+" .app-list li").click(function() {  // don't use fastclick, it will eat 'touchbegin' event
-                //[2015-9-24]
-                 me.clickOnApp(this);
-                // me.downloadApp(todo);
-            });
+                        var btns = $("#tab-"+type+" .app-list .installBtn[data-installed='YES']");
+                        $.each(btns, function(index, el) {
+                            me.addToAppManageTab(el);
+                        });
 
-            $("#tab-"+type+" .app-list .installBtn").click(function(e) {
-                e.stopPropagation();
-                console.log('click on installBtn');
-                if ($(this).hasClass('downloading')) {
-                    console.log('downloading, ignore download request...');
-                    return;
-                }
-                if ($(this).attr("data-installed") == "YES") {
-                    if (window.android) {
-                        showLoader("请稍候...");
-                        setTimeout("hideLoader()", 2000);
-                        console.log('start app '+$(this).data("pkgname"));
-                        window.android.startAPP($(this).data("pkgname"));
-                    } else {
-                        showLoader("只能在手机中打开");
-                        setTimeout("hideLoader()", 2000);
+                        $("#tab-"+type+" .app-list li").click(function() {  // don't use fastclick, it will eat 'touchbegin' event
+                            //[2015-9-24]
+                             me.clickOnApp(this);
+                            // me.downloadApp(todo);
+                        });
+
+                        $("#tab-"+type+" .app-list .installBtn").click(function(e) {
+                            e.stopPropagation();
+                            console.log('click on installBtn');
+                            if ($(this).hasClass('downloading')) {
+                                console.log('downloading, ignore download request...');
+                                return;
+                            }
+                            if ($(this).attr("data-installed") == "YES") {
+                                if (window.android) {
+                                    showLoader("请稍候...");
+                                    setTimeout("hideLoader()", 2000);
+                                    console.log('start app '+$(this).data("pkgname"));
+                                    window.android.startAPP($(this).data("pkgname"));
+                                } else {
+                                    showLoader("只能在手机中打开");
+                                    setTimeout("hideLoader()", 2000);
+                                }
+                                return;
+                            }
+                            if ($(this).attr("data-downloaded") == "YES") {
+                                console.log('downloaded, ignore download request...');
+                                return;
+                            }
+
+                            me.downloadApp(this);
+                            $(this).addClass("inactive");
+                            //创建圆形进度条
+                            //如果为tab1(精选)中的安装按钮则在div.canvas-mask中创建进度条
+                            if ($(this).hasClass('bigLogo-instBtn')){
+                                var width = parseInt($(this).parent().width()/8);
+                                console.log(width);
+                                $(this).siblings('.app-img').children('.canvas-mask').show().radialIndicator({
+                                    radius: width,
+                                    displayNumber: false,
+                                    barColor: '#fff',
+                                    barBgColor: 'rgba(255,255,255,0.4)',
+                                    barWidth: 6,
+                                    initValue: 0,
+                                    roundCorner : false,
+                                    percentage: true
+                                });
+                                $(this).text('下载中');
+                            } else {
+                                $(this).siblings('.app_coins').hide();
+                                $(this).addClass('app-downloading--t3').radialIndicator({
+                                    radius: 15,
+                                    displayNumber: false,
+                                    barColor: '#48D1CC',
+                                    barBgColor: '#eee',
+                                    barWidth: 2,
+                                    initValue: 0,
+                                    roundCorner : false,
+                                    percentage: false
+                                })
+                            }
+                        });
+                        setTimeout(me.initIScroll(type), 2000);
+                        if (me.myScroll[4] == null) {
+                            me.initIScroll(4);
+                        }
+                    },
+            error : function() {
+                        $("#tab-"+type+" .refresh-app-list").show();
+                        $("#tab-"+type+" .wrapper").hide();
                     }
-                    return;
-                }
-                if ($(this).attr("data-downloaded") == "YES") {
-                    console.log('downloaded, ignore download request...');
-                    return;
-                }
-
-                me.downloadApp(this);
-                $(this).addClass("inactive");
-                //创建圆形进度条
-                //如果为tab1(精选)中的安装按钮则在div.canvas-mask中创建进度条
-                if ($(this).hasClass('bigLogo-instBtn')){
-                    var width = parseInt($(this).parent().width()/8);
-                    console.log(width);
-                    $(this).siblings('.app-img').children('.canvas-mask').show().radialIndicator({
-                        radius: width,
-                        displayNumber: false,
-                        barColor: '#fff',
-                        barBgColor: 'rgba(255,255,255,0.4)',
-                        barWidth: 6,
-                        initValue: 0,
-                        roundCorner : false,
-                        percentage: true
-                    });
-                    $(this).text('下载中');
-                } else {
-                    $(this).siblings('.app_coins').hide();
-                    $(this).addClass('app-downloading--t3').radialIndicator({
-                        radius: 15,
-                        displayNumber: false,
-                        barColor: '#48D1CC',
-                        barBgColor: '#eee',
-                        barWidth: 2,
-                        initValue: 0,
-                        roundCorner : false,
-                        percentage: false
-                    })
-                }
-            });
-
-            // me.initIScroll(type);
-            setTimeout(me.initIScroll(type), 2000);
-            // setTimeout(me.refreshScroll(type), 2000);
-            if (me.myScroll[4] == null) {
-                me.initIScroll(4);
-            }
         });
     },
 
@@ -965,10 +975,6 @@ var me = {
         }
 
         var arrHtml = new Array();
-
-        if (data.length > 0) {
-            $(".refresh-app-list").hide();
-        }
 
         for (var i = 0; i < data.length; i++) {
 
@@ -1033,10 +1039,6 @@ var me = {
         }
 
         var arrHtml = new Array();
-
-        if (data.length > 0) {
-            $(".refresh-app-list").hide();
-        }
 
         for (var i = 0; i < data.length; i++) {
 
@@ -1782,7 +1784,7 @@ var me = {
         if (idx == undefined) {
             idx = me.curAppTabIdx;
         }
-        if (me.myScroll[idx]) {
+        if (me.myScroll && me.myScroll[idx]) {
             me.myScroll[idx].refresh();
         }
     },
