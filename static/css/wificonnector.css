@@ -167,7 +167,7 @@ body{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-khtml-
 .app-list .installBtn.app-downing--t3 {
     background: #fff;
 }
-#tab-1 .app-list .installBtn {background-image: none;text-shadow:none;}
+#tab-1 .app-list .installBtn {background-image: none; text-shadow:none; border: none; }
 #tab-4 .app-list li {overflow: hidden;}
 #tab-4 .app-list .downloading h5, #tab-4 .app-list .hasDownloaded h5, #tab-4 .app-list .hasInstalled h5 {
     background: #f2f2f2;
