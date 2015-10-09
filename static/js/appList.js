@@ -215,6 +215,15 @@ $("#MainPage").on("pageinit", function() {
     me.requestMessage();
     // me.requestAppAds();
     me.fillVersion();
+    me.requestKulianWifi();
+    me.requestWifiList();
+    me.checkNetwork();
+    if (window.android != undefined) {
+        window.android.requestCheckConnection();
+    } else { // for debug on browser
+        setTimeout("wifiStatusChanged('SuperMary')", 1000);
+        setTimeout("me.autoLogin()", 10000);
+    }
 });
 
 $("#MainPage").on("pagebeforeshow", function () {
@@ -224,19 +233,8 @@ $("#MainPage").on("pagebeforeshow", function () {
 });
 
 $("#MainPage").on("pageshow", function () {
-
     console.log("main page show");
-    me.requestKulianWifi();
-    me.requestWifiList();
-    me.checkNetwork();
-    if (window.android != undefined) {
-        window.android.requestCheckConnection();
-    }
-    // for debug on browser
-    if (window.android == undefined) {
-        setTimeout("wifiStatusChanged('SuperMary')", 1000);
-        setTimeout("me.autoLogin()", 10000);
-    }
+    me.refreshScroll();
 });
 
 $('#dialog').jqm({
@@ -255,7 +253,6 @@ $("#AppDetailPage").on("pageshow", function () {
         slidesPerView: 2,
         centeredSlides: true
     });
-    //gallery.slideTo(1,1000,false);
 });
 
 $("#ExchangePage").on("pagebeforeshow", function () {
