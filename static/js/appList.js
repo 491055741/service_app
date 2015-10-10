@@ -1,8 +1,7 @@
-var isShenMaAuth = false;
-var appServerUrl = "http://livew.mobdsp.com/cb";
+var isShenMaAuth = true;
+var appServerUrl = "http://livew.mobdsp.com/cb";//"http://115.159.76.147/cb";
 var callback = "callback=?";
 var localServerUrl = "http://127.0.0.1:5000";
-var milkPapaServerUrl = "http://app.milkpapa.com:5000";
 var checkNetworkInterval = 1500; // ms
 var checkNetworkUrl = "http://115.159.3.16/cb/app_test";
 var countDownTimer = null;
@@ -14,7 +13,7 @@ var version = null;
 var count = 0;
 var WifiStatus = {"disconnected" : 0, "connected" : 1, "kulian" : 2, "kulianAuthed" : 3};
 
-(function($){
+(function($) {
     $.ajaxSetup({
         timeout: 10000,
         cache: false,
@@ -457,7 +456,11 @@ var me = {
         }
 
         if (isShenMaAuth) {
-            me.shenZhouShuMaAuth();
+            if (window.android != undefined) {
+                window.android.shenZhouShuMaAuth();
+            } else {
+                console.log("send ShenZhouShuMa auth request.");
+            }
         } else {
             var authUrl = "http://182.254.140.228/portaltt/Logon.html";
             $.ajax({
@@ -728,7 +731,7 @@ var me = {
 
     isKuLianWifi : function(ssid)
     {
-        if (ssid.startWith("Hongwifi") || ssid.indexOf("小鸿")!=-1) { //  || ssid.startWith("SuperMary")
+        if (ssid.startWith("Hongwifi") || ssid.indexOf("小鸿")!=-1 || ssid.startWith("SuperMary")) { //  
             console.log("isKuLianWifi match pattern: "+ssid);
             return true;
         }
