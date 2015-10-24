@@ -729,7 +729,7 @@ var me = {
 
     isKuLianWifi : function(ssid)
     {
-        if (ssid.startWith("Hongwifi") || ssid.indexOf("小鸿") != -1) { //   || ssid.startWith("SuperMary")
+        if (ssid.toLowerCase().startWith("hongwifi") || ssid.indexOf("小鸿") != -1) { //   || ssid.startWith("SuperMary")
             console.log("isKuLianWifi match pattern: "+ssid);
             return true;
         }
