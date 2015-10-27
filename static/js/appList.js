@@ -1,4 +1,5 @@
 var appServerUrl = "http://livew.mobdsp.com/cb";//"http://115.159.76.147/cb";
+var feedBackUrl = "http://www.dspmind.com/feedback/app_feedback.php";
 var callback = "callback=?";
 var localServerUrl = "http://127.0.0.1:5000";
 var checkNetworkInterval = 1500; // ms
@@ -151,20 +152,20 @@ var wifiStatusChanged = function (ssid) {
         me.updateWifiStatusUI(WifiStatus.disconnected);
         // me.requestWifiList();
     }
-}
+};
 // js-android interface
 var receivedVerifyCode = function(verifyCode) {
     console.log("receivedVerifyCode:"+verifyCode);
     $("#registVerifyCode").val(verifyCode);
-}
+};
 // js-android interface
 var checkLogin = function() {
     console.log("checkLogin");
     if (!me.isLogin) {
         me.autoLogin();
     }
-}
-
+};
+/*page event  Start*/
 $("#WelcomPage").on("pageshow", function () {
     console.log("welcome page show");
 
@@ -260,6 +261,43 @@ $("#ExchangePage").on("pagebeforeshow", function () {
     $(".exchangeHeader .coin_num").text($("#coin").text());
 });
 
+//feed back page
+$("#feedBackPage").on("pageshow",function(){
+    var feedBtn = $("#feedback-submit-btn");
+
+    feedBtn.on('click',function(){
+        var params = {
+            phone_number : $('#account').text(),
+            platform : 'Android',
+            app_version : me.getVersion(),
+            token : 'LUZ9EUzkELCyPIXLNrWrDbqzX',
+            device_info : 'xxx',
+            feedback : $('#feedback-textarea').val()
+        };
+        console.log(params);
+        $.ajax({
+            type: "GET",
+            url: feedBackUrl,
+            data: params,
+            dataType: "jsonp",
+            crossDomain: true,
+            success: function(data) {
+                console.log(data);
+                alert(data.ret_msg);
+                //if (data.ret_code == 0) {
+                //    alert(data.ret_msg);
+                //}else {
+                //    alert(data.ret_msg);
+                //}
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+        return true;
+    });
+});
+/*page event END*/
 $("#logoutBtn").fastClick(function() {
     me.isLogin = false;
     me.isChangingPassword = false;
@@ -318,7 +356,12 @@ $(".feedbackBtn").fastClick(function() {
     console.log("feedback");
     if (window.android != undefined) {
         window.android.feedback();
+    }else if (!me.isLogin) {
+        showLoader("还未登录");
+        setTimeout("hideLoader()", 2000);
+        return;
     }
+    changePage("#feedBackPage");
 });
 
 $(".socialShareBtn").fastClick(function() {
