@@ -77,7 +77,12 @@ var finishDownloadProgress = function (appId) {
 // js-Android interface
 var appInstallFinished = function (appId) {
     var phone_number = $(".acount_list #account").text();
-    var url = appServerUrl+"/download_report?"+callback+"&appid="+appId+"&phone_number="+phone_number;
+    if (window.android) {
+        var imei = window.android.getIMEI();
+    } else {
+        var imei = 'none';
+    }
+    var url = appServerUrl+"/download_report?"+callback+"&appid="+appId+"&phone_number="+phone_number+"&imei="+imei;
     console.log("Report app install:"+url);
 
     var installApps = $(".installBtn[data-appid="+appId+"]");
@@ -262,9 +267,9 @@ $("#ExchangePage").on("pagebeforeshow", function () {
 });
 
 //feed back page
-$("#feedBackPage").on("pageshow",function(){
+$("#feedBackPage").on("pageshow",function() {
+    me.showBackBtn(true);
     var feedBtn = $("#feedback-submit-btn");
-
     feedBtn.on('click',function(){
         var params = {
             phone_number : $('#account').text(),
@@ -354,9 +359,10 @@ $(".qqBtn").fastClick(function() {
 
 $(".feedbackBtn").fastClick(function() {
     console.log("feedback");
-    if (window.android != undefined) {
-        window.android.feedback();
-    }else if (!me.isLogin) {
+    // if (window.android != undefined) {
+    //     window.android.feedback();
+    // }else 
+    if (!me.isLogin) {
         showLoader("还未登录");
         setTimeout("hideLoader()", 2000);
         return;
@@ -478,7 +484,7 @@ var me = {
         var url = appServerUrl+"/query_coin?phone_number="+phone_number;
         $.getJSON(url, function(data) {
 
-            if (data.ret_code == 0 || data.ret_code == 3001) {
+            if (data.ret_code == 0 || data.ret_code == 3001) {  // 3001 means already deduction coin today
                 me.sendAuthenticationRequest();
             } else {
                 showLoader(data.ret_msg);
@@ -544,7 +550,7 @@ var me = {
                 me.showTab(0);
                 $("#dialog").jqmShow();
                 $("#coin").text(data.coin_num);
-            } else if (data.ret_code != 3001) { // 3001 means already  coin
+            } else if (data.ret_code != 3001) { // 3001 means already deduction coin today
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 2000);
             }
