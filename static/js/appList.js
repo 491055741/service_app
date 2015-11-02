@@ -269,17 +269,34 @@ $("#ExchangePage").on("pagebeforeshow", function () {
 //feed back page
 $("#feedBackPage").on("pageshow",function() {
     me.showBackBtn(true);
-    var feedBtn = $("#feedback-submit-btn");
-    feedBtn.on('click',function(){
+    var $feedBtn = $("#feedback-submit-btn"),
+        $feedArea = $('#feedback-textarea'),
+        //引入弹窗组件 by HC
+        Dialog = H.Dialog;
+    //每次进入清空反馈表单
+    $feedArea
+        .val('')
+        .on('focus', function(event) {
+            hideLoader();
+        });
+
+    $feedBtn.on('click',function(){
+        showLoader('请稍候');
+        var $feedContent = $feedArea.val();
+
+        if ($feedContent.length > 150) {
+            showLoader('字数不能超过150字。');
+            return;
+        }
+        
         var params = {
-            phone_number : $('#account').text(),
-            platform : 'Android',
-            app_version : me.getVersion(),
-            token : 'LUZ9EUzkELCyPIXLNrWrDbqzX',
-            device_info : 'xxx',
-            feedback : $('#feedback-textarea').val()
-        };
-        console.log(params);
+                phone_number : $('#account').text(),
+                platform : 'Android',
+                app_version : me.getVersion(),
+                token : 'LUZ9EUzkELCyPIXLNrWrDbqzX',
+                device_info : 'xxx',
+                feedback : $('#feedback-textarea').val()
+            };
         $.ajax({
             type: "GET",
             url: feedBackUrl,
@@ -287,16 +304,22 @@ $("#feedBackPage").on("pageshow",function() {
             dataType: "jsonp",
             crossDomain: true,
             success: function(data) {
-                console.log(data);
-                alert(data.ret_msg);
-                //if (data.ret_code == 0) {
-                //    alert(data.ret_msg);
-                //}else {
-                //    alert(data.ret_msg);
-                //}
+                hideLoader();
+                if (data.ret_code == 0) {
+                    Dialog({
+                        content:'谢谢您的反馈。',
+                        okCallback: function(){
+                            history.go(-1);
+                        }
+                    }); 
+                }else {
+                    Dialog({
+                        content: data.ret_msg
+                    });
+                }
             },
             error: function (data) {
-                console.log(data);
+                Dialog({ content: data.ret_msg }); 
             }
         });
         return true;
