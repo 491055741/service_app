@@ -51,12 +51,13 @@
 		D.method('createDom',function(settings){
 			var mask = '<div class="dialog-mask" style="position: fixed;width: 100%;height: 100%;top: 0; left: 0;z-index: 1000;background: rgba(0,0,0,0.4);"></div>',
 				dialogDom = '<div id="dialog-body" class="dialog-body" style="position: fixed;width: 0;height: 0;top: 50%;left: 50%;overflow: hidden;background: #fff;z-index: 1001;border-radius: 8px;transition: all 0.4s;">'+
-						'<h2 class="dialog-title" style="text-align: '+settings.titlePostion+';padding: 5px 0;background: #ccc;">'+settings.title+'</h2>'+
+						'<h2 class="dialog-title" style="text-align: '+settings.titlePostion+';padding: 5px 0;background: #ccc;color:#666;">'+settings.title+'</h2>'+
 						'<div class="dialog-content" style="width: 96%; height: '+(settings.height-75)+'px;;padding: 2%;color: #666;overflow: auto;word-break: break-all;">'+settings.content+'</div>'+
 						'<div class="dialog-btn-group" style="text-align: center;padding: 5px;">'+
-							'<button id="dialog-ok" class="dialog-ok" style="display: '+(settings.ok?'inline-block':'none')+'">确定</button>'+
-						'</div>'+
+							'<button id="dialog-ok" class="dialog-ok" style="display: '+(settings.ok?'inline-block':'none')+';border: 0; padding: 3px 10px;color:#666;">确定</button>'+
+						'</div>'+0
 					'</div>';
+			//append到页面
 			$('body')
 				.append(mask)
 				.append(dialogDom);

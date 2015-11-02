@@ -281,12 +281,19 @@ $("#feedBackPage").on("pageshow",function() {
             hideLoader();
         });
 
-    $feedBtn.on('click',function(){
+    $feedBtn.off().on('click',function(){
         showLoader('请稍候');
         var $feedContent = $feedArea.val();
 
-        if ($feedContent.length > 150) {
-            showLoader('字数不能超过150字。');
+        if ($feedContent.length == 0) {
+            Dialog({content:'请先填写您的问题或者建议再进行提交。'});
+        }else if ($feedContent.length > 150) {
+            Dialog({
+                content:'字数不能超过150字',
+                okCallback: function(){
+                   $feedArea.val('');
+                }
+            });
             return;
         }
         
@@ -298,6 +305,7 @@ $("#feedBackPage").on("pageshow",function() {
                 device_info : 'xxx',
                 feedback : $('#feedback-textarea').val()
             };
+
         $.ajax({
             type: "GET",
             url: feedBackUrl,
@@ -310,20 +318,17 @@ $("#feedBackPage").on("pageshow",function() {
                     Dialog({
                         content:'谢谢您的反馈。',
                         okCallback: function(){
-                            history.go(-1);
+                            changePageAndHideLoader("#MainPage");
                         }
                     }); 
                 }else {
-                    Dialog({
-                        content: data.ret_msg
-                    });
+                    Dialog({ content: data.ret_msg }); 
                 }
             },
             error: function (data) {
                 Dialog({ content: data.ret_msg }); 
             }
         });
-        return true;
     });
 });
 /*page event END*/
