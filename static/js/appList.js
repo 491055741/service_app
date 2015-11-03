@@ -1,4 +1,4 @@
-var appServerUrl = "http://livew.mobdsp.com/cb";//"http://115.159.76.147/cb";
+var appServerUrl = "http://livew.mobdsp.com/cb";
 var feedBackUrl = "http://www.dspmind.com/feedback/app_feedback.php";
 var callback = "callback=?";
 var localServerUrl = "http://127.0.0.1:5000";
@@ -12,7 +12,6 @@ var connectedSSID = null;
 var version = null;
 var count = 0;
 var WifiStatus = {"disconnected" : 0, "connected" : 1, "kulian" : 2, "kulianAuthed" : 3};
-
 
 (function($) {
     $.ajaxSetup({
@@ -77,14 +76,6 @@ var finishDownloadProgress = function (appId) {
 };
 // js-Android interface
 var appInstallFinished = function (appId) {
-    var phone_number = $(".acount_list #account").text();
-    if (window.android) {
-        var imei = window.android.getIMEI();
-    } else {
-        var imei = 'none';
-    }
-    var url = appServerUrl+"/download_report?"+callback+"&appid="+appId+"&phone_number="+phone_number+"&imei="+imei;
-    console.log("Report app install:"+url);
 
     var installApps = $(".installBtn[data-appid="+appId+"]");
     $.each(installApps, function (index,el) {
@@ -109,17 +100,23 @@ var appInstallFinished = function (appId) {
             $(el).children('span').text('打  开');
         }
     });
+};
+// js-Android interface
+var appFirstLanched = function (pkgName) {
+    var lanchedApps = $(".installBtn[data-pkgname='"+pkgName+"']");
+    $.each(lanchedApps, function (index,el) {
 
-    $.ajax({
-        type: "GET",
-        url: url,
-        data: '',
-        dataType: "jsonp",
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true,
-        success: function (data, textStatus) {
+        var appId = $(el).data('appid');
+        var phone_number = $(".acount_list #account").text();
+        if (window.android) {
+            var imei = window.android.getIMEI();
+        } else {
+            var imei = 'none';
+        }
+        var url = appServerUrl+"/download_report?"+callback+"&appid="+appId+"&phone_number="+phone_number+"&imei="+imei;
+        console.log("Report app first lanched:"+url);
+
+        $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
                 showLoader('您现在有 '+data.coin_num+' 个金币了');
                 setTimeout("hideLoader()", 3000);
@@ -128,9 +125,10 @@ var appInstallFinished = function (appId) {
                 showLoader(data.ret_msg);
             }
             setTimeout("hideLoader()", 3000);
-        },
+        });
+        return false;
     });
-}
+};
 // js-Android interface
 var wifiStatusChanged = function (ssid) {
     if ($(".acount_list #account").text() == '') {
@@ -275,28 +273,22 @@ $("#feedBackPage").on("pageshow",function() {
         //引入弹窗组件 by HC
         Dialog = H.Dialog;
     //每次进入清空反馈表单
-    $feedArea
-        .val('')
-        .on('focus', function(event) {
-            hideLoader();
-        });
+    $feedArea.val('');
 
-    $feedBtn.off().on('click',function(){
-        showLoader('请稍候');
+    $feedBtn.on('click',function() {
+
         var $feedContent = $feedArea.val();
 
         if ($feedContent.length == 0) {
-            Dialog({content:'请先填写您的问题或者建议再进行提交。'});
-        }else if ($feedContent.length > 150) {
-            Dialog({
-                content:'字数不能超过150字',
-                okCallback: function(){
-                   $feedArea.val('');
-                }
-            });
+            showLoader('请填写反馈内容');
+            setTimeout("hideLoader()", 2000);
+            return;            
+        } else if ($feedContent.length > 150) {
+            showLoader('反馈内容请不要超过150字');
+            setTimeout("hideLoader()", 2000);
             return;
         }
-        
+
         var params = {
                 phone_number : $('#account').text(),
                 platform : 'Android',
@@ -305,6 +297,7 @@ $("#feedBackPage").on("pageshow",function() {
                 device_info : 'xxx',
                 feedback : $('#feedback-textarea').val()
             };
+        showLoader('请稍候');
 
         $.ajax({
             type: "GET",
@@ -316,22 +309,21 @@ $("#feedBackPage").on("pageshow",function() {
                 hideLoader();
                 if (data.ret_code == 0) {
                     Dialog({
-                        content:'谢谢您的反馈。',
+                        content:'谢谢您的反馈',
                         okCallback: function(){
                             changePageAndHideLoader("#MainPage");
                         }
                     }); 
-                }else {
-                    Dialog({ content: data.ret_msg }); 
+                } else {
+                    showLoader(data.ret_msg);
+                    setTimeout("hideLoader()", 2000);
                 }
-            },
-            error: function (data) {
-                Dialog({ content: data.ret_msg }); 
             }
         });
     });
 });
 /*page event END*/
+
 $("#logoutBtn").fastClick(function() {
     me.isLogin = false;
     me.isChangingPassword = false;
@@ -979,6 +971,10 @@ var me = {
 
                         $("#tab-"+type+" .app-list .installBtn").click(function(e) {
                             e.stopPropagation();
+
+                            // com.pplive.androidphone
+                            appFirstLanched($(this).attr("data-pkgname"));
+                            return;
                             console.log('click on installBtn');
                             if ($(this).hasClass('downloading')) {
                                 console.log('downloading, ignore download request...');
