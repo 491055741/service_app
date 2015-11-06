@@ -147,12 +147,13 @@ var appLanched = function (pkgName) {
             showLoader('您获得了 '+data.added_coin+' 个金币'); // 现在有 '+data.coin_num+' 个金币了
             setTimeout("hideLoader()", 3000);
             $("#coin").text(data.coin_num);
+        } else if (data.ret_code == 3001) {  // not first time lanch
+            // do nothing
         } else {
             showLoader(data.ret_msg);
         }
         setTimeout("hideLoader()", 3000);
     });
-
 };
 // js-Android interface
 var wifiStatusChanged = function (ssid) {
@@ -597,6 +598,7 @@ var me = {
                 html += "<div class='modalViewText'>今日消耗金币</div>";
                 html += "<div class='modalViewBigText'>"+data.dec_coin_num+"</div>"
                 html += "<div class='modalViewText'>您还有"+data.coin_num+"金币</div>";
+                html += "<div class='modalViewText'>可以通过签到、下载并运行APP来获得金币</div>";
                 $("#dialog_message").append(html);
                 me.showTab(0);
                 $("#dialog").jqmShow();
@@ -609,6 +611,7 @@ var me = {
     },
 
     signIn : function() {
+
         console.log("sign in.");
         if (!me.isLogin) {
             return;
@@ -1002,9 +1005,6 @@ var me = {
                         $("#tab-"+type+" .app-list .installBtn").click(function(e) {
                             e.stopPropagation();
 
-                            // for test lanch report
-                            // appLanched($(this).attr("data-pkgname")+".a");
-                            // return;
                             console.log('click on installBtn');
                             if ($(this).hasClass('downloading')) {
                                 console.log('downloading, ignore download request...');
@@ -1265,6 +1265,7 @@ var me = {
                     setTimeout("hideLoader()", 2000);
                     console.log('start app '+$(this).data("pkgname"));
                     window.android.startAPP($(this).data("pkgname"));
+                    appLanched($(this).data("pkgname"));
                 } else {
                     showLoader("只能在手机中打开");
                     setTimeout("hideLoader()", 2000);
