@@ -77,7 +77,6 @@ var finishDownloadProgress = function (appId) {
 // js-Android interface
 var appInstallFinished = function (appId) {
     // report
-    var appId = $(el).data('appid');
     var phone_number = $(".acount_list #account").text();
     if (window.android) {
         var imei = window.android.getIMEI();
@@ -292,16 +291,13 @@ $("#ExchangePage").on("pagebeforeshow", function () {
 });
 
 //feed back page
-$("#feedBackPage").on("pageshow",function() {
-    me.showBackBtn(true);
+$("#feedBackPage").on("pageinit",function() {
     var $feedBtn = $("#feedback-submit-btn"),
         $feedArea = $('#feedback-textarea'),
         //引入弹窗组件 by HC
         Dialog = H.Dialog;
-    //每次进入清空反馈表单
-    $feedArea.val('');
 
-    $feedBtn.on('click',function() {
+    $feedBtn.fastClick(function() {
 
         var $feedContent = $feedArea.val();
 
@@ -329,7 +325,7 @@ $("#feedBackPage").on("pageshow",function() {
                 feedback : $('#feedback-textarea').val()
             };
         showLoader('请稍候');
-
+        console.log("feedback:"+feedBackUrl);
         $.ajax({
             type: "GET",
             url: feedBackUrl,
@@ -352,6 +348,11 @@ $("#feedBackPage").on("pageshow",function() {
             }
         });
     });
+});
+
+$("#feedBackPage").on("pageshow",function() {
+    me.showBackBtn(true);
+    $('#feedback-textarea').val('');
 });
 /*page event END*/
 
@@ -410,10 +411,6 @@ $(".qqBtn").fastClick(function() {
 });
 
 $(".feedbackBtn").fastClick(function() {
-    console.log("feedback");
-    // if (window.android != undefined) {
-    //     window.android.feedback();
-    // }else 
     if (!me.isLogin) {
         showLoader("还未登录");
         setTimeout("hideLoader()", 2000);
@@ -958,7 +955,12 @@ var me = {
     // type : 1 ~ 3
     requestAppTypePage : function(type, page)
     {
-        var url = appServerUrl+"/applist_page?apptype="+type+"&page="+page+"&"+callback;
+        if (me.isLogin) {
+            var phone_number = $(".acount_list #account").text();
+        } else {
+            var phone_number = getItem('userName');
+        }
+        var url = appServerUrl+"/applist_page?apptype="+type+"&page="+page+"&phone_number="+phone_number+"&"+callback;
         console.log("requestAppList:" + url);
 
         $("#tab-"+type+" .refresh-app-list").hide();
