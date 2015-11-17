@@ -393,6 +393,18 @@ $(".verifyCodeBtn").fastClick(function() {
     me.requestVerifyCode();
 });
 
+/*[2015-11-17] get more coin link*/
+$('#getMoreCoin').fastClick(function(){
+    $('#connectionBtn').trigger('click');
+    //创建mask，传入图片提示图片的地址,提示文字可传可不传
+    H.GuideMask({
+        signImgSrc:"images/tl.png",
+        signText:"每日签到赚取金币",
+        downloadImgSrc:"images/dc.png",
+        downloadText:"下载App获取更多金币"
+    });
+});
+
 $(".changePwdBtn").fastClick(function() {
     if (!me.isLogin) {
         showLoader("还未登录");
