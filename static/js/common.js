@@ -99,10 +99,8 @@
 			var dom = '<div id="guideMask" class="mask-c" style="position: fixed;width: 100%;height: 100%; background-color: rgba(0,0,0,0.55);z-index: 9999;">' +
 						'<div class="tl-h">' +
 							'<img src="' + ( settings.signImgSrc || '' ) + '">' +
-							'<p>' + ( settings.signText || '每日签到赚取金币' ) + '</p>' +
 						'</div>' +
 						'<div class="dc-h">' +
-							'<p>' + ( settings.downloadText || '下载App获取更多金币' ) + '</p>' +
 							'<img src="' + ( settings.downloadImgSrc || '' ) + '">' +
 						'</div>' + 
 					'</div>';

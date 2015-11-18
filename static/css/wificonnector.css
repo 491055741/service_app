@@ -194,17 +194,18 @@ li { list-style: none; }
 /* [2015-11-17] */
 #mineView dd a.moreCoinLink {
     position: relative;
-    float: left;
-    padding: 3px 0 10px 0;
+    /*padding: 3px 0 10px 0;*/
+    display: inline-block;
     color: #999999;
     font-size: 14px;
-    text-decoration: underline;
+    border-bottom: 1px solid #ccc;
 }
-.moreCoinLink:before {
+/* .moreCoinLink:after {
     content: "";
     position: absolute;
-    top: 0;
+    bottom: 0;
+    left: 0;
     width: 100%;
     height: 0;
     border-top: 1px solid #ccc;
-}
+} */

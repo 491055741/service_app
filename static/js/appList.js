@@ -430,6 +430,10 @@ $(".feedbackBtn").fastClick(function() {
     }
     changePage("#feedBackPage");
 });
+/*[2015-11-18]*/
+$(".FAQ").fastClick(function(){
+    changePage("#FAQPage");
+});
 
 $(".socialShareBtn").fastClick(function() {
     console.log("social share");
