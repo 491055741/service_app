@@ -9,7 +9,7 @@ body{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-khtml-
 .ui-page-theme-a .ui-btn {background-color: #f0f0f0; color: #555; }
 .ui-page-theme-a .ui-btn.ui-btn-active {background-color: #f0f0f0; color: #38E; text-shadow:none; }
 
-
+#twitter p {font-size: 16px;}
 .account-wrapper { padding:15px; padding-top: 0;}
 
 #loginBtn {width: 35%; float:right; margin-top:10px; background-color: #FF8800; color: white; text-shadow:0 0 0;}
