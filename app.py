@@ -73,7 +73,7 @@ def ads():
 def books():
     return response("app/books.json")
 
-@app.route('/broadcast')
+@app.route('/app_broadcast')
 def broadcast():
     return response("app/broadcast.json")
 
