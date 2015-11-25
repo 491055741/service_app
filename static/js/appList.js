@@ -88,8 +88,10 @@ var appInstallFinished = function (appId) {
 
     $.getJSON(url, function(data) {
         if (data.ret_code == 0) {
-            showLoader('您获得了 '+data.added_coin+' 个金币');
-            setTimeout("hideLoader()", 3000);
+            if (data.added_coin > 0) {
+                showLoader('您获得了 '+data.added_coin+' 个金币');
+                setTimeout("hideLoader()", 3000);
+            }
             $("#coin").text(data.coin_num);
         } else {
             showLoader(data.ret_msg);
@@ -143,8 +145,10 @@ var appLanched = function (pkgName) {
 
     $.getJSON(url, function(data) {
         if (data.ret_code == 0) {
-            showLoader('您获得了 '+data.added_coin+' 个金币'); // 现在有 '+data.coin_num+' 个金币了
-            setTimeout("hideLoader()", 3000);
+            if (data.added_coin > 0) {
+                showLoader('您获得了 '+data.added_coin+' 个金币');
+                setTimeout("hideLoader()", 3000);
+            }
             $("#coin").text(data.coin_num);
         } else if (data.ret_code == 3001) {  // not first time lanch
             // do nothing
@@ -546,17 +550,21 @@ var me = {
             return;
         }
         console.log("authentication.");
-        var phone_number = $(".acount_list #account").text();
-        var url = appServerUrl+"/query_coin?phone_number="+phone_number;
-        $.getJSON(url, function(data) {
-
-            if (data.ret_code == 0 || data.ret_code == 3001) {  // 3001 means already deduction coin today
-                me.sendAuthenticationRequest();
-            } else {
-                showLoader(data.ret_msg);
-                setTimeout("hideLoader()", 2000);
-            }
-        });
+        // check coin only when connected to HongWifi
+        if (me.isKuLianWifi(connectedSSID)) {
+            var phone_number = $(".acount_list #account").text();
+            var url = appServerUrl+"/query_coin?phone_number="+phone_number;
+            $.getJSON(url, function(data) {
+                if (data.ret_code == 0 || data.ret_code == 3001) {  // 3001 means already deduction coin today
+                    me.sendAuthenticationRequest();
+                } else {
+                    showLoader(data.ret_msg);
+                    setTimeout("hideLoader()", 2000);
+                }
+            });
+        } else {
+            me.sendAuthenticationRequest();
+        }
     },
 
     sendAuthenticationRequest : function() {
@@ -862,7 +870,7 @@ var me = {
 
     isKuLianWifi : function(ssid)
     {
-        if (ssid.toLowerCase().startWith("hongwifi") || ssid.indexOf("小鸿") != -1) { //   || ssid.startWith("SuperMary")
+        if (ssid.toLowerCase().startWith("hongwifi") || ssid.toLowerCase().endWith("hongwifi") || ssid.indexOf("小鸿") != -1) { //   || ssid.startWith("SuperMary")
             console.log("isKuLianWifi match pattern: "+ssid);
             return true;
         }
@@ -1051,6 +1059,7 @@ var me = {
                                     setTimeout("hideLoader()", 2000);
                                     console.log('start app '+$(this).data("pkgname"));
                                     window.android.startAPP($(this).data("pkgname"));
+                                    appLanched($(this).data("pkgname"));
                                 } else {
                                     showLoader("只能在手机中打开");
                                     setTimeout("hideLoader()", 2000);
@@ -1483,6 +1492,7 @@ var me = {
                     setTimeout("hideLoader()", 2000);
                     console.log('start app '+$(this).data("pkgname"));
                     window.android.startAPP($(this).data("pkgname"));
+                    appLanched($(this).data("pkgname"));
                 } else {
                     showLoader("只能在手机中打开");
                     setTimeout("hideLoader()", 2000);
