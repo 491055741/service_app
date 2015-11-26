@@ -2060,7 +2060,7 @@ var me = {
         
         me.myScroll[idx].on("slideUp",function(){
             if (this.maxScrollY - this.y > 40) {
-                // me.requestAppTypePage(me.curAppTabIdx, me.curAppPageIdx[me.curAppTabIdx]);
+                me.requestAppTypePage(me.curAppTabIdx, me.curAppPageIdx[me.curAppTabIdx]);
                 upIcon.removeClass("reverse_icon");
             }
         });
@@ -2069,7 +2069,7 @@ var me = {
 
     showGuide : function() {
         $('#connectionBtn').trigger('click');
-      //创建mask，传入图片提示图片的地址,提示文字可传可不传
+        //创建mask，传入图片提示图片的地址,提示文字可传可不传
         H.GuideMask({
             signImgSrc:"images/tl.png",
             signText:"每日签到赚取金币",
