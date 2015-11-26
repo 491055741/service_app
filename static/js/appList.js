@@ -712,6 +712,13 @@ var me = {
         me.currentTabIdx = idx;
         if (idx == 1 && slide.isInited == true) { // app tab
             slide.show();
+
+            me.curAppTabIdx = tabIdx;
+            var headerHeight = $("#appListHeader").height();
+            var footerHeight = $("#mainFooter").height();
+            console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+document.body.clientHeight);
+            $("#tab-1 .wrapper").css('height', (document.body.clientHeight-headerHeight-footerHeight)+'px');// screenHeight - topNavbarHeight-bottomNavbarHeight
+
         } else {
             slide.hide();
         }
@@ -1019,7 +1026,6 @@ var me = {
                             return;
                         }
                         $("#tab-"+type+" .wrapper").show();
-
                         me.curAppPageIdx[type] = page + 1;
                         me.appList = data;
                         var html;
@@ -2001,6 +2007,10 @@ var me = {
 
     showAppTab : function (tabIdx) {
         me.curAppTabIdx = tabIdx;
+        var headerHeight = $("#appListHeader").height();
+        var footerHeight = $("#mainFooter").height();
+        console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+document.body.clientHeight);
+        $("#tab-"+tabIdx+" .wrapper").css('height', (document.body.clientHeight-headerHeight-footerHeight)+'px');// screenHeight - topNavbarHeight-bottomNavbarHeight
     },
 
     refreshScroll : function (idx) {
