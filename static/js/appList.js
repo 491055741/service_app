@@ -843,7 +843,9 @@ var me = {
             var obj = eval("(" + jsonStr +")");
             me.parseWifiList(obj);
         }
-        setTimeout("me.requestWifiList()", 15000);
+        if (window.android) {
+            setTimeout("me.requestWifiList()", 15000);
+        }
     },
 
     parseWifiList : function(data)
