@@ -247,25 +247,25 @@ $("#MainPage").on("pageinit", function() {
     $("#contentBtn").click(function(e) {me.showTab(2);});
     $("#mineBtn").click(function(e) {me.showTab(3);});
     $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.disconnected);
-    me.requestAppList();
-    me.requestMessage();
+
     // me.requestAppAds();
     me.fillVersion();
-    me.requestKulianWifi();
-    me.requestWifiList();
-    me.checkNetwork();
+    setTimeout("me.requestKulianWifi()", 100);
+    setTimeout("me.requestMessage()",    500);
+    setTimeout("me.requestAppList()",    800);
+    setTimeout("me.requestWifiList()",  1000);
+    setTimeout("me.checkNetwork()",     1500);
+
     me.initExchangePage();
     if (window.android != undefined) {
-        window.android.requestCheckConnection();
+        setTimeout("window.android.requestCheckConnection()", 500);
+        if (window.android.getIsFirstTimeRun()) {
+            setTimeout("me.showGuide()", 1000);
+        }
     } else { // for debug on browser
         setTimeout("wifiStatusChanged('SuperMary')", 1000);
         setTimeout("me.autoLogin()", 10000);
     }
-
-    if (window.android && window.android.getIsFirstTimeRun()) {
-        setTimeout("me.showGuide()", 1000);
-    }
-
 });
 
 $("#MainPage").on("pagebeforeshow", function () {
@@ -726,7 +726,7 @@ var me = {
         } else if (idx == 2) {// iframe page
             $("#contentIFrame").css('height', $(document).height());
         }
-        var titles = new Array("连接", "精选", "幽默搞笑", "我的");
+        var titles = new Array("连Wifi", "赚金币", "幽默搞笑", "我的");
         setTitle(titles[idx]);
     },
 
@@ -839,7 +839,7 @@ var me = {
                 me.parseWifiList(data);
             });
         } else {
-            var jsonStr= window.android.wifiListJsonString();
+            var jsonStr = window.android.wifiListJsonString();
             var obj = eval("(" + jsonStr +")");
             me.parseWifiList(obj);
         }
@@ -1039,7 +1039,7 @@ var me = {
 
                         $("#tab-"+type+" .app-list").append(html);
                         if (type == 1) {
-                            $("img.lazy").lazyload({threshold:300, effect:"fadeIn", placeholder:null });
+                            $(".app-list img.lazy").lazyload({threshold:300, effect:"fadeIn", placeholder:null });
                             $(window).trigger("scroll");
                         }
 
