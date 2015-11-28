@@ -247,8 +247,6 @@ $("#MainPage").on("pageinit", function() {
     $("#contentBtn").click(function(e) {me.showTab(2);});
     $("#mineBtn").click(function(e) {me.showTab(3);});
     $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.disconnected);
-
-    // me.requestAppAds();
     me.fillVersion();
     setTimeout("me.requestKulianWifi()", 100);
     setTimeout("me.requestMessage()",    500);
@@ -339,11 +337,9 @@ $("#feedBackPage").on("pageinit",function() {
         showLoader('请稍候');
         console.log("feedback:"+feedBackUrl);
         $.ajax({
-            type: "GET",
             url: feedBackUrl,
             data: params,
             dataType: "jsonp",
-            crossDomain: true,
             success: function(data) {
                 hideLoader();
                 if (data.ret_code == 0) {
@@ -511,7 +507,6 @@ var me = {
         console.log("checkNetwork: "+checkNetworkUrl);
         // $("#statusDesc").text("检查网络...");
         $.ajax({
-            type: "GET",
             url: url,
             dataType : "jsonp",
             jsonp: "callback",//"callname",//服务端用于接收callback调用的function名的参数
@@ -587,7 +582,6 @@ var me = {
 
         var authUrl = "http://182.254.140.228/portaltt/Logon.html";
         $.ajax({
-            type: "GET",
             crossDomain: true,
             url: authUrl,
             data: '',
@@ -737,7 +731,6 @@ var me = {
         me.kuLianWifi = {"ssidlist": [ {"ssid":"@小鸿科技","ssid_passwd":""},{"ssid":"test","ssid_passwd":""}]};
 
         $.ajax({
-            type: "GET",
             url: url,
             dataType : "jsonp",
             jsonp: "callback",
@@ -781,52 +774,6 @@ var me = {
                 me.showMessage();
             }
         });        
-    },
-
-    requestAppAds : function()
-    {
-        var url = appServerUrl+"/appad?"+callback;
-        console.log("requestAppAds:"+url);
-        $.getJSON(url, function(data) {
-            if (data.adlist != undefined && data.adlist.length > 0) {
-                me.parseAppAds(data);
-                slide.init();
-                $("#olSlideNum").hide();
-                // $("#tab-1 .wrapper").css("top", 200);
-                // if (me.currentTabIdx == 0) {
-                    $(".fouce").show();
-                // }
-                if (me.myScroll[1] != null) {
-                    setTimeout(me.myScroll[1].refresh(), 1000);
-                }
-            }
-        });
-    },
-
-    parseAppAds : function(data)
-    {
-        var html = me.appAdsTemplate(data);
-        $("#adlist").empty();
-        $("#adlist").append(html);
-    },
-
-    appAdsTemplate : function(data)
-    {
-        var ads = data.adlist;
-        var arrHtml = new Array();
-
-        for (var i = 0; i < ads.length; i++) {
-            arrHtml.push("<li>");
-            var url = ads[i].click_url;
-            if (url.length == 0) {
-                url = "#";
-            }
-            arrHtml.push("<a href=\"" + url + "\">");
-            arrHtml.push("<img src=\"" + ads[i].image_url + "\" />");
-            arrHtml.push("</a>");
-            arrHtml.push("</li>");
-        }
-        return arrHtml.join("");
     },
 
     requestWifiList : function()
@@ -1016,7 +963,6 @@ var me = {
         $("#tab-"+type+" .refresh-app-list").hide();
 
         $.ajax({
-            type: "GET",
             url: url,
             dataType : "jsonp",
             jsonp: "callback",//"callname",//服务端用于接收callback调用的function名的参数
@@ -1870,7 +1816,6 @@ var me = {
         console.log(url);
 
         $.ajax({
-            type: "GET",
             url: url,
             dataType : "jsonp",
             jsonp: "callback",//"callname",//服务端用于接收callback调用的function名的参数
@@ -1954,8 +1899,11 @@ var me = {
         };
         var url = "http://115.159.89.152:1220/?name=appmm&opt=put&data="+jsonToString(data)+"&auth=hongkulian&"+callback;
         console.log(url);
-        $.getJSON(url, function(data) {
-            console.log("report connection response:"+data);
+        $.ajax({
+            url: url,
+            dataType : "text",
+            success : function(data) {},
+            error : function() {}
         });
     },
 
