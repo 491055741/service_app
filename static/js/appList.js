@@ -198,7 +198,19 @@ var checkLogin = function() {
         me.autoLogin();
     }
 };
-
+// js-android interface
+var wifiListChanged = function(wifiList) {
+    console.log("wifiListChanged");
+    if (typeof wifiList == "string") {
+        var obj = eval("(" + jsonString +")");
+        me.parseWifiList(obj);
+    } else if (typeof wifiList == "object") {
+        me.parseWifiList(wifiList);
+    } else {
+        console.log("unknown wifilist type:"+wifiList);
+    }
+    
+}
 /*page event  Start*/
 $("#WelcomPage").on("pageshow", function () {
     console.log("welcome page show");
@@ -249,11 +261,10 @@ $("#MainPage").on("pageinit", function() {
     $("#connectWifiBtn").attr("data-wifiStatus", WifiStatus.disconnected);
     me.fillVersion();
     setTimeout("me.requestKulianWifi()", 100);
-    setTimeout("me.requestMessage()",    500);
-    setTimeout("me.requestAppList()",    800);
-    setTimeout("me.requestWifiList()",  1000);
+    setTimeout("me.requestWifiList()",   300);
     setTimeout("me.checkNetwork()",     1500);
-
+    setTimeout("me.requestMessage()",   2000);
+    setTimeout("me.requestAppList()",   3000);
     me.initExchangePage();
     if (window.android != undefined) {
         setTimeout("window.android.requestCheckConnection()", 500);
@@ -715,7 +726,7 @@ var me = {
 
             var headerHeight = $("#appListHeader").height();
             var footerHeight = $("#mainFooter").height();
-            console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+$(document).height());
+            // console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+$(document).height());
             $("#tab-1 .wrapper").css('height', ($(document).height()-headerHeight-footerHeight)+'px');// screenHeight - topNavbarHeight-bottomNavbarHeight
         } else if (idx == 2) {// iframe page
             $("#contentIFrame").css('height', $(document).height());
@@ -783,15 +794,13 @@ var me = {
             var url = localServerUrl + "/wifilist?"+callback;
             // console.log("requestWifiList:" + url);
             $.getJSON(url, function(data) {
-                me.parseWifiList(data);
+                wifiListChanged(data);
             });
         } else {
-            var jsonStr = window.android.wifiListJsonString();
-            var obj = eval("(" + jsonStr +")");
-            me.parseWifiList(obj);
+            window.android.requestWifiList();
         }
         if (window.android) {
-            setTimeout("me.requestWifiList()", 15000);
+            setTimeout("me.requestWifiList()", 20000);
         }
     },
 
@@ -831,7 +840,7 @@ var me = {
             return true;
         }
         var ssidMD5 = CryptoJS.MD5(ssid, { asString: true });
-        console.log("my wifi ssid:"+ssid+"  MD5:"+ssidMD5);
+        // console.log("my wifi ssid:"+ssid+"  MD5:"+ssidMD5);
         var isKuLian = false;
         // var passwd = "";
         var arrKuLianWifi = me.kuLianWifi;
@@ -945,7 +954,7 @@ var me = {
         showLoader();
         for (var type = 1; type <= 3; type++) {
             $("#tab-"+type+" .app-list").empty();
-            me.requestAppTypePage(type, 1);
+            setTimeout("me.requestAppTypePage("+type+", 1)" , 1000);
         }
     },
 
@@ -1960,7 +1969,7 @@ var me = {
         me.curAppTabIdx = tabIdx;
         var headerHeight = $("#appListHeader").height();
         var footerHeight = $("#mainFooter").height();
-        console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+$(document).height());
+        // console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+$(document).height());
         $("#tab-"+tabIdx+" .wrapper").css('height', ($(document).height()-headerHeight-footerHeight)+'px');// screenHeight - topNavbarHeight-bottomNavbarHeight
     },
 
