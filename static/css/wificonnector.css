@@ -110,7 +110,7 @@ body{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-khtml-
 .account_item {font-size: 16px; }
 .acount_list img {width: 25px; height: 25px; float: left; }
 #mineView dl {position: relative;overflow: hidden; }
-#mineView dl  i{position: absolute; width: 14px; height: 24px; top:50%; margin-top:-12px; right:0;  background: url(../images/arrow-right.png) no-repeat; background-size: contain;}
+#mineView dl i, .task-list .icon-arrow {position: absolute; width: 14px; height: 24px; top:50%; margin-top:-12px; right:0;  background: url(../images/arrow-right.png) no-repeat; background-size: contain;}
 #mineView dl.account_coin  i{width: 80px; font-size: 16px; background: url(../images/arrow-right.png) 65px no-repeat; background-size: contain;}
 #mineView dt {float: left; /*height: 30px;*/ height: 45px; line-height: 45px; margin-right: 25px; padding-left: 5px;}
 #mineView dd {right: 10px; text-align: right; /*height: 30px; *//*padding-top: 10px;*/ }

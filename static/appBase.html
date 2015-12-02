@@ -146,7 +146,7 @@
                         <li><a href="#tab-1" class="" data-idx='1'>推荐</a></li>
                         <li><a href="#tab-2" class="" data-idx='2'>应用</a></li>
                         <li><a href="#tab-3" class="" data-idx='3'>游戏</a></li>
-                        <li><a href="#tab-4" class="" data-idx='4'>管理</a></li>
+                        <li><a href="#tab-4" class="" data-idx='4'>任务</a></li>
                     </ul>
                 </div>
             </div>
@@ -223,7 +223,7 @@
                         <div style="transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, -1047px) translateZ(0px);" class="scroller">
 
                             <div class="scroller-content">
-                                <div class="app-list">
+<!--                            <div class="app-list">
                                     <div class="section downloading hide">
                                         <h5>下载中</h5>
                                     </div>
@@ -233,6 +233,9 @@
                                     <div class="section hasInstalled hide">
                                         <h5>已安装</h5>
                                     </div>
+                                </div> -->
+
+                                <div class="task-list">
                                 </div>
                             </div>
                         </div>
@@ -318,6 +321,11 @@
     <div role="main" class="ui-content">
         <div class="appDetail"></div>
     </div>
+</div>
+
+<div data-role="page" id="taskWebPage" data-title="任务">
+    <iframe id="taskIFrame" width="100%">
+    </iframe>
 </div>
 
 <div data-role="page" id="ExchangePage" data-title="兑换">
