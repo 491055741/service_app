@@ -32,9 +32,9 @@ def response(file_name):
 def version():
     return response("app/version.json");
 
-@app.route('/applist')
+@app.route('/get_tasklist')
 def applist():
-    return response("app/applist.json")
+    return response("app/tasklist.json")
 
 @app.route('/applist_page')
 def applistpage():

@@ -488,6 +488,10 @@ $(".refresh-app-list").fastClick(function() {
     me.requestAppTypePage(me.curAppTabIdx, 1);
 });
 
+$(".refresh-task-list").fastClick(function() {
+    me.requestTaskList();
+});
+
 var me = {
     countDownSeconds : 0, 
     isChangingPassword : false,
@@ -538,6 +542,7 @@ var me = {
                         if (!me.isLogin) {
                             me.autoLogin();
                         }
+                        setTimeout("me.loadHumorPage()", 1000);
                     },
             error : function() {
                         console.log("checkNetwork fail.");
@@ -705,7 +710,7 @@ var me = {
     },
 
     showTab : function(idx) {
-        var tabs = new Array("connectionView", "choiceView", "contentView", "mineView");
+        var tabs = new Array("connectionView", "choiceView", "humorView", "mineView");
         for (var i = 0; i < tabs.length; i++) {
             if (i == idx) {
                 $("#" + tabs[i]).show();
@@ -729,7 +734,7 @@ var me = {
             // console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+$(document).height());
             $("#tab-1 .wrapper").css('height', ($(document).height()-headerHeight-footerHeight)+'px');// screenHeight - topNavbarHeight-bottomNavbarHeight
         } else if (idx == 2) {// iframe page
-            $("#contentIFrame").css('height', $(document).height());
+            $("#humorIFrame").css('height', $(document).height());
         }
         var titles = new Array("连Wifi", "赚金币", "幽默搞笑", "我的");
         setTitle(titles[idx]);
@@ -950,16 +955,15 @@ var me = {
 
     requestTaskList : function()
     {
-        if (me.isLogin) {
-            var phone_number = $(".acount_list #account").text();
-        } else {
-            var phone_number = getItem('userName');
-        }
+        var phone_number = me.getPhoneNumber();
         var url = appServerUrl+"/get_tasklist?phone_number="+phone_number+"&"+callback;
         console.log("requestTaskList:" + url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
+                $("#tab-4 .refresh-task-list").hide();
+                $("#tab-4 .wrapper").show();
                 me.parseTaskList(data.tasklist);
+                setTimeout(me.initIScroll(4), 2000);
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
@@ -982,13 +986,14 @@ var me = {
 
         $("#tab-4 .task-list").append(html);
         $("#tab-4 .task-list dl").fastClick(function() {
-            me.showBackBtn(true);
-            if ($("#taskIFrame").attr("src") != $(this).data("url")) {
-                $("#taskIFrame").attr("src", $(this).data("url"));
-            }
-            $("#taskIFrame").css('height', 1000);//$(document).height());
-            $("#taskWebPage").attr("data-title", $(this).data("name"));
-            changePage("#taskWebPage");
+            window.location.href = $(this).data("url");
+            // me.showBackBtn(true);
+            // if ($("#taskIFrame").attr("src") != $(this).data("url")) {
+            //     $("#taskIFrame").attr("src", $(this).data("url"));
+            // }
+            // $("#taskIFrame").css('height', 1000);//$(document).height());
+            // $("#taskWebPage").attr("data-title", $(this).data("name"));
+            // changePage("#taskWebPage");
         });
     },
 
@@ -2146,6 +2151,14 @@ var me = {
         }
 
         return arrHtml.join("");
+    },
+
+    loadHumorPage : function()
+    {
+        if ($("#humorIFrame").attr("src") == undefined) {
+            $(".noNetwork").hide();
+            $("#humorIFrame").show().attr("src", "http://xhaz.come11.com");
+        }
     }
 
 }; // end of var me

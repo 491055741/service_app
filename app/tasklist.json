@@ -1,0 +1,23 @@
+{
+   "ret_code" : 0,
+   "ret_msg" : "success",
+   "tasklist" : [
+      {
+         "click_url" : "http://www.mobdsp.com/cb/c?k=138&m1=[M_MAC]&m2=[M_IDFA]&m3=[M_IMEI]&o=http%3A%2F%2Fcs.dspmind.com%2Ftools%2Fsurvey%3F",
+         "coin_num" : 300,
+         "desc" : "填写调查问卷,可获300金币奖励",
+         "logo_url" : "http://www.dspmind.com/upload/images/20151125/wenjuandiaocha.png",
+         "name" : "调查问卷",
+         "task_id" : 138
+      },
+      {
+         "click_url" : "http://www.baidu.com?",
+         "coin_num" : 400,
+         "desc" : "填写调查问卷2,可获400金币奖励",
+         "logo_url" : "http://www.dspmind.com/upload/images/20151125/wenjuandiaocha.png",
+         "name" : "调查问卷2",
+         "task_id" : 139
+      }
+   ],
+   "total_count" : 2
+}
