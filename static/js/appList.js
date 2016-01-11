@@ -737,9 +737,10 @@ var me = {
             var headerHeight = $("#appListHeader").height();
             var footerHeight = $("#mainFooter").height();
             // console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+$(document).height());
-            $("#tab-1 .wrapper").css('height', ($(document).height()-headerHeight-footerHeight)+'px');// screenHeight - topNavbarHeight-bottomNavbarHeight
+            $("#tab-1 .wrapper").css('height', ($(window).height()-headerHeight-footerHeight)+'px');// screenHeight - topNavbarHeight-bottomNavbarHeight
         } else if (idx == 2) {// iframe page
-            $("#humorIFrame").css('height', $(document).height());
+            var footerHeight = $("#mainFooter").height();
+            $("#humorIFrame").css('height', ($(window).height()-footerHeight)+'px');
         }
         var titles = new Array("连Wifi", "赚金币", "幽默搞笑", "我的");
         setTitle(titles[idx]);
@@ -2173,8 +2174,9 @@ var me = {
     loadPopupAdView : function()
     {
         if ($("#popupAdIFrame").attr("src") == undefined) {
+            $("#popupAdView").css('height', $(window).height());
             $("#popupAdView").show();
-            $("#popupAdIFrame").attr("src", "http://go.10086.cn/hao/indexDefault.do?coc=3lCMlmw2");
+            $("#popupAdIFrame").attr("src", "http://go.10086.cn/hao/dwz/0000lk");
         }
     },
 
