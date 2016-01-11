@@ -247,7 +247,6 @@ $("#RegisterPage").on("pagebeforeshow", function () {
 });
 
 $("#RegisterPage").on("pageshow", function () {
-
 });
 
 $("#MainPage").on("pageinit", function() {
@@ -380,6 +379,10 @@ $("#FAQPage").on("pageshow",function() {
 });
 
 /*page event END*/
+
+$("#closePopupAdBtn").fastClick(function(){
+    $("#popupAdView").hide();
+});
 
 $("#logoutBtn").fastClick(function() {
     me.isLogin = false;
@@ -544,6 +547,7 @@ var me = {
                             me.autoLogin();
                         }
                         setTimeout("me.loadHumorPage()", 1000);
+                        setTimeout("me.loadPopupAdView()", 2000);
                     },
             error : function() {
                         console.log("checkNetwork fail.");
@@ -2164,6 +2168,14 @@ var me = {
         }
 
         return arrHtml.join("");
+    },
+
+    loadPopupAdView : function()
+    {
+        if ($("#popupAdIFrame").attr("src") == undefined) {
+            $("#popupAdView").show();
+            $("#popupAdIFrame").attr("src", "http://go.10086.cn/hao/indexDefault.do?coc=3lCMlmw2");
+        }
     },
 
     loadHumorPage : function()
