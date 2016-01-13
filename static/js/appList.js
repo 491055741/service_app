@@ -286,6 +286,7 @@ $("#MainPage").on("pagebeforeshow", function () {
 $("#MainPage").on("pageshow", function () {
     console.log("main page show");
     me.refreshScroll();
+    setTimeout("me.toggleAdBannerTimer()", 5000);
 });
 
 $('#dialog').jqm({
@@ -744,6 +745,7 @@ var me = {
         }
         var titles = new Array("连Wifi", "赚金币", "幽默搞笑", "我的");
         setTitle(titles[idx]);
+        me.toggleAdBanner();
     },
 
     requestKulianWifi : function()
@@ -2198,6 +2200,18 @@ var me = {
         } else {
             return false;
         }
+    },
+
+    toggleAdBannerTimer : function()
+    {
+        me.toggleAdBanner();
+        setTimeout("me.toggleAdBannerTimer()", 5000);
+    },
+
+    toggleAdBanner : function()
+    {
+        $("#guanggaojia_adContainer").toggle();
+        $("#adgo_adContainer").toggle();
     }
 
 }; // end of var me
