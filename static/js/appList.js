@@ -548,7 +548,7 @@ var me = {
                             me.autoLogin();
                         }
                         setTimeout("me.loadHumorPage()", 1000);
-                        setTimeout("me.loadPopupAdView()", 2000);
+                        setTimeout("me.requestAppAd()", 1500);
                     },
             error : function() {
                         console.log("checkNetwork fail.");
@@ -748,6 +748,18 @@ var me = {
         me.toggleAdBanner();
     },
 
+    requestAppAd : function()
+    {
+        var phone_number = me.getPhoneNumber();
+        var url = appServerUrl+"/appad?phone_number="+phone_number+"&"+callback;
+        console.log("requestAppAd:"+url);
+        $.getJSON(url, function(data) {
+            if (data.adlist != undefined && data.adlist.length > 0) {
+                me.loadPopupAdView(data.adlist[0].ad_url);
+            }
+        });        
+    },
+
     requestKulianWifi : function()
     {
         var url = appServerUrl+"/get_ssidlist?"+callback;
@@ -774,11 +786,7 @@ var me = {
 
     requestMessage : function()
     {
-        if (me.isLogin) {
-            var phone_number = $(".acount_list #account").text();
-        } else {
-            var phone_number = getItem('userName');
-        }
+        var phone_number = me.getPhoneNumber();
         var url = appServerUrl+"/app_broadcast?phone_number="+phone_number+"&"+callback;
         console.log("requestAppMessage:"+url);
         $.getJSON(url, function(data) {
@@ -797,7 +805,7 @@ var me = {
                 });
                 me.showMessage();
             }
-        });        
+        });
     },
 
     requestWifiList : function()
@@ -2173,12 +2181,12 @@ var me = {
         return arrHtml.join("");
     },
 
-    loadPopupAdView : function()
+    loadPopupAdView : function(url)
     {
-        if ($("#popupAdIFrame").attr("src") == undefined) {
+        if (url != undefined && $("#popupAdIFrame").attr("src") == undefined) {
             $("#popupAdView").css('height', $(window).height());
             $("#popupAdView").show();
-            $("#popupAdIFrame").attr("src", "http://go.10086.cn/hao/dwz/0000lk");
+            $("#popupAdIFrame").attr("src", url);
         }
     },
 
