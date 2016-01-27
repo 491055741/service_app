@@ -33,8 +33,12 @@ def version():
     return response("app/version.json");
 
 @app.route('/get_tasklist')
-def applist():
+def tasklist():
     return response("app/tasklist.json")
+
+@app.route('/get_gzhtasklist')
+def gzhtasklist():
+    return response("app/gzhtasklist.json")
 
 @app.route('/applist_page')
 def applistpage():
