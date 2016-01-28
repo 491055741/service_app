@@ -293,6 +293,10 @@ $('#dialog').jqm({
     modal: true
 });
 
+$('#gzhdialog').jqm({
+    modal: true
+});
+
 $("#AppDetailPage").on("pagebeforeshow", function () {
     me.showBackBtn(true);
 });
@@ -398,6 +402,10 @@ $("#logoutBtn").fastClick(function() {
 
 $("#registBtn").fastClick(function() {
     me.register();
+});
+
+$("#gzh_close_dialog_btn").click(function() {
+    changePage("#MainPage");
 });
 
 $(".account_coin").fastClick(function() {
