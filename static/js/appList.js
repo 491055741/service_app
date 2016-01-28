@@ -404,10 +404,6 @@ $(".account_coin").fastClick(function() {
     changePage("#ExchangePage");
 });
 
-$("#acceptTaskBtn").fastClick(function() {
-    me.acceptTask($(this).data("taskid"));
-});
-
 $("input").bind("focus", function() {
     if ($(this).attr("value")=='请填写您的手机号' || $(this).attr("value")=='选填') {
         $(this).attr("value","");
@@ -1026,7 +1022,9 @@ var me = {
         console.log("requestTaskList:" + url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                
+                var dialogHtml="<div class='modalViewTitle'>请在4小时内完成任务</div><div class='modalViewText'>超过时间任务将作废</div>";
+                $("#gzh_dialog_message").html(dialogHtml);
+                $("#gzhdialog").jqmShow();
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
@@ -1379,8 +1377,14 @@ var me = {
         arrHtml.push("<dt><div>任务步骤</div></dt><dd><div>1，点击“领取任务”；<br>2，关注公众号；<br>3，向公众号发送“小鸿”；<br>4，点击返回的链接，在打开的页面中输入小鸿账号（手机号）领取金币；</div></dd>");
         arrHtml.push("<dt><div>微信公众号</div></dt><dd><div>"+$(obj).data("wechatid")+"</div></dd>");
         arrHtml.push("<dt><div>公众号二维码</div></dt><dd class='crcode'><img src="+$(obj).data("qrcodeurl")+"></dd></dl>");
+        if ($(obj).data("taskstatus")!='3') {
+            arrHtml.push("<div class='account_exit' style='margin-top:20px; '><center><a href='' id='acceptTaskBtn' data-taskid='"+$(obj).data("taskid")+"' class='ui-btn'>领取任务</a></center></div>");
+        }
         $("#wechatTaskContent").append(arrHtml);
-        $("#acceptTaskBtn").attr("data-taskid",$(obj).data("taskid"));
+        $("#acceptTaskBtn").fastClick(function() {
+            me.acceptGzhTask($(this).data("taskid"));
+        });
+
         changePage('#WechatTaskDetailPage');
     },
 
@@ -1535,7 +1539,7 @@ var me = {
     {
         var arrHtml = new Array();
         arrHtml.push("<li data-taskid='"+task.id+"' data-taskname=\""+task.name+"\" ");
-        arrHtml.push("data-coin='"+task.coin_num+"' data-wechatid='"+task.weixin_id+"' data-qrcodeurl='"+task.qr_code_url+"' class='index-item list-index' >");
+        arrHtml.push("data-coin='"+task.coin_num+"' data-wechatid='"+task.weixin_id+"' data-qrcodeurl='"+task.qr_code_url+"' data-taskstatus='"+task.task_status+"' class='index-item list-index' >");
         arrHtml.push("<div class='index-item-main'>");
         arrHtml.push("<dl class='clearfix'>");
         arrHtml.push("<dt class='item-icon'><span class='app-tags hide'></span>");
