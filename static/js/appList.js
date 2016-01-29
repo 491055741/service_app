@@ -1029,7 +1029,7 @@ var me = {
         console.log("requestTaskList:" + url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                var dialogHtml="<div class='modalViewTitle'>请在4小时内完成任务</div><div class='modalViewText'>超过时间任务将作废</div>";
+                var dialogHtml="<div class='modalViewTitle'>任务已领取</div><div class='modalViewText'>请在4小时内完成任务，超过时间任务将自动作废，无法获得金币奖励</div>";
                 $("#gzh_dialog_message").html(dialogHtml);
                 $("#gzhdialog").jqmShow();
             } else {
