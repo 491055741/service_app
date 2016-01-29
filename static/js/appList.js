@@ -434,7 +434,6 @@ $(".verifyCodeBtn").fastClick(function() {
     me.requestVerifyCode();
 });
 
-/*[2015-11-17] get more coin link*/
 $('#getMoreCoin').fastClick(function(){
     me.showGuide();
 });
@@ -1380,12 +1379,13 @@ var me = {
     {
         $("#wechatTaskContent").empty();
         var arrHtml = new Array();
-        arrHtml.push("<dt><div>任务名称</div></dt><dd><div>"+$(obj).data("taskname")+"</div></dd>");
-        arrHtml.push("<dt><div>可获得金币数</div></dt><dd><div>"+$(obj).data("coin")+"</div></dd>");
-        arrHtml.push("<dt><div>任务步骤</div></dt><dd><div>1，点击“领取任务”；<br>2，关注公众号；<br>3，向公众号发送“小鸿”；<br>4，点击返回的链接，在打开的页面中输入小鸿账号（手机号）领取金币；</div></dd>");
-        arrHtml.push("<dt><div>微信公众号</div></dt><dd><div>"+$(obj).data("wechatid")+"</div></dd>");
-        arrHtml.push("<dt><div>公众号二维码</div></dt><dd class='crcode'><img src="+$(obj).data("qrcodeurl")+"></dd></dl>");
+        arrHtml.push("<div class='row'><dt><div>任务名称</div></dt><dd><div>"+$(obj).data("taskname")+"</div></dd></div>");
+        arrHtml.push("<div class='row'><dt><div>可获金币</div></dt><dd><div>"+$(obj).data("coin")+"枚</div></dd></div>");
+        arrHtml.push("<div class='row'><dt><div>任务步骤</div></dt><dd><div>1，点击“领取任务”；<br>2，关注公众号；<br>3，向公众号发送“小鸿”；<br>4，点击返回的链接，在打开的页面中输入小鸿账号（手机号）领取金币；</div></dd></div>");
+        arrHtml.push("<div class='row'><dt><div>微信公众号</div></dt><dd><div>"+$(obj).data("wechatid")+"</div></dd></div>");
+        arrHtml.push("<div class='row'><dt><div>公众号二维码</div></dt><dd class='crcode'><img src="+$(obj).data("qrcodeurl")+"></dd></div></dl>");
         if ($(obj).data("taskstatus")!='3') {
+            arrHtml.push("<br><center><div>还有"+$(obj).data("remainnum")+"个名额</div></center>");
             arrHtml.push("<div class='account_exit' style='margin-top:20px; '><center><a href='' id='acceptTaskBtn' data-taskid='"+$(obj).data("taskid")+"' class='ui-btn'>领取任务</a></center></div>");
         }
         $("#wechatTaskContent").append(arrHtml);
@@ -1547,7 +1547,7 @@ var me = {
     {
         var arrHtml = new Array();
         arrHtml.push("<li data-taskid='"+task.id+"' data-taskname=\""+task.name+"\" ");
-        arrHtml.push("data-coin='"+task.coin_num+"' data-wechatid='"+task.weixin_id+"' data-qrcodeurl='"+task.qr_code_url+"' data-taskstatus='"+task.task_status+"' class='index-item list-index' >");
+        arrHtml.push("data-coin='"+task.coin_num+"' data-wechatid='"+task.weixin_id+"' data-qrcodeurl='"+task.qr_code_url+"' data-taskstatus='"+task.task_status+"' data-remainnum='"+task.remain_tasknum+"' class='index-item list-index' >");
         arrHtml.push("<div class='index-item-main'>");
         arrHtml.push("<dl class='clearfix'>");
         arrHtml.push("<dt class='item-icon'><span class='app-tags hide'></span>");

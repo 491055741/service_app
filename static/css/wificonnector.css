@@ -243,8 +243,9 @@ li { list-style: none; }
 .content-navdes-wrapper { margin-top: 10px; padding: 0 13px; }
 
 .wechatTaskDetail {padding:15px;}
-.wechatTaskDetail dt {float:left; width:100px;  min-height: 40px; padding-top: 10px;}
-.wechatTaskDetail dd {margin-left: 120px; min-height: 40px; padding-top: 10px;}
+.wechatTaskDetail dt {float:left; width:100px;  min-height: 40px; padding-top: 10px; }
+.wechatTaskDetail dd {margin-left: 120px; min-height: 40px; padding-top: 10px; color:#5d5d5d;}
+.wechatTaskDetail .row {border-bottom: 1px #d4d5d6 solid; }
 .wechatTaskDetail dd img {width:80px; height:80px;}
 
 .transparent_class {  
