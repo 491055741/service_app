@@ -249,7 +249,7 @@ li { list-style: none; }
 .wechatTaskDetail dd img {width:80px; height:80px;}
 #acceptTaskBtn, #gzh_close_dialog_btn {background-color: #FF8800; color: white; text-shadow:0 0 0; border-radius: 6px; }
 #gzh_close_dialog_btn {margin: 40px 10px 10px 10px; }
-
+#copyToClipBdBtn {width:80px; font-size: 10px; float:right; margin-top: 0px; }
 .transparent_class {  
       filter:alpha(opacity=50);  
       -moz-opacity:0.5;  

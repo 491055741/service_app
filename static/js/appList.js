@@ -1029,9 +1029,12 @@ var me = {
         console.log("requestTaskList:" + url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                var dialogHtml="<div class='modalViewTitle'>任务已领取</div><div class='modalViewText'>请在4小时内完成任务，超过时间任务将自动作废，无法获得金币奖励</div>";
+                var dialogHtml="<div class='modalViewTitle'>任务领取成功</div><div class='modalViewText'>请在4小时内完成任务，超过时间任务将自动作废，无法获得金币奖励</div>";
                 $("#gzh_dialog_message").html(dialogHtml);
                 $("#gzhdialog").jqmShow();
+                if (window.android) {
+                    window.android.openWechat();
+                }
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
@@ -1382,7 +1385,7 @@ var me = {
         arrHtml.push("<div class='row'><dt><div>任务名称</div></dt><dd><div>"+$(obj).data("taskname")+"</div></dd></div>");
         arrHtml.push("<div class='row'><dt><div>可获金币</div></dt><dd><div>"+$(obj).data("coin")+"枚</div></dd></div>");
         arrHtml.push("<div class='row'><dt><div>任务步骤</div></dt><dd><div>1，点击“领取任务”；<br>2，关注公众号；<br>3，向公众号发送“小鸿”；<br>4，点击返回的链接，在打开的页面中输入小鸿账号（手机号）领取金币；</div></dd></div>");
-        arrHtml.push("<div class='row'><dt><div>微信公众号</div></dt><dd><div>"+$(obj).data("wechatid")+"</div></dd></div>");
+        arrHtml.push("<div class='row'><dt><div>微信公众号</div></dt><dd><div>"+$(obj).data("wechatid")+"  <a href='' id='copyToClipBdBtn' data-text="+$(obj).data("wechatid")+" class='ui-btn'>复制到剪贴板</a></div></dd></div>");
         arrHtml.push("<div class='row'><dt><div>公众号二维码</div></dt><dd class='crcode'><img src="+$(obj).data("qrcodeurl")+"></dd></div></dl>");
         if ($(obj).data("taskstatus")!='3') {
             arrHtml.push("<br><center><div>还有"+$(obj).data("remainnum")+"个名额</div></center>");
@@ -1392,7 +1395,10 @@ var me = {
         $("#acceptTaskBtn").fastClick(function() {
             me.acceptGzhTask($(this).data("taskid"));
         });
-
+        $("#copyToClipBdBtn").fastClick(function() {
+            console.log("copy "+$(this).data("text")+" to clipboard");
+            me.copyToClipboard($(this).data("text"));
+        });
         changePage('#WechatTaskDetailPage');
     },
 
@@ -1556,7 +1562,7 @@ var me = {
         arrHtml.push("<dd class='item-title item-title--t4'>");
         arrHtml.push("<div class='item-title-sname'>");
         arrHtml.push("<div class='baiying-name'>");
-        arrHtml.push(subString.autoAddEllipsis(task.name, 30, true) + "</div></div></dd>");
+        arrHtml.push(subString.autoAddEllipsis(task.name, 30, true) + "<i class='icon-arrow'></i></div></div></dd>");
         arrHtml.push("</dl></div>");
 
         arrHtml.push("<div class='app_down'>");
@@ -2264,6 +2270,15 @@ var me = {
         if (typeof(preload) != "undefined") {
             preload();
         }
+    },
+
+    copyToClipboard : function(text)
+    {
+        if (window.android) {
+            window.android.copyToClipboard(text);
+        }
+        showLoader("已复制到剪贴板");
+        setTimeout("hideLoader()", 2000);
     }
 
 }; // end of var me
