@@ -405,6 +405,7 @@ $("#registBtn").fastClick(function() {
 });
 
 $("#gzh_close_dialog_btn").click(function() {
+    me.requestTaskList();
     changePage("#MainPage");
 });
 
@@ -981,6 +982,10 @@ var me = {
 
     requestTaskList : function()
     {
+        $("#tab-4 .app-list .section.available").empty();
+        $("#tab-4 .app-list .section.inprogress").empty();
+        $("#tab-4 .app-list .section.finished").empty();
+
         var phone_number = me.getPhoneNumber();
         var url = appServerUrl+"/get_tasklist?phone_number="+phone_number+"&"+callback;
         console.log("requestTaskList:" + url);
@@ -1574,9 +1579,9 @@ var me = {
             arrHtml.push("</div>");
             arrHtml.push("<div class='ui-btn installBtn manageTab'><span>查看</span></div>");
         } else if (task.task_status == 2) {
-            arrHtml.push("<div class='ui-btn installBtn manageTab inactive' ><span>已接任务</span></div>");
+            arrHtml.push("<div class='ui-btn installBtn manageTab inactive' ><span>已接</span></div>");
         } else {
-            arrHtml.push("<div class='ui-btn installBtn manageTab' >啊</div>");
+            arrHtml.push("<div class='ui-btn installBtn manageTab'><span>已完成</span></div>");
         }
 
         arrHtml.push("</div>");
