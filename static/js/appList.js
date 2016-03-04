@@ -209,8 +209,8 @@ var wifiListChanged = function(wifiList) {
     } else {
         console.log("unknown wifilist type:"+wifiList);
     }
-    
 }
+
 /*page event  Start*/
 $("#WelcomPage").on("pageshow", function () {
     console.log("welcome page show");
@@ -234,11 +234,13 @@ $("#RegisterPage").on("pagebeforeshow", function () {
         setTitle("修改密码");
         $("#passwordFields").show();
         $("#inviteCodeFields").hide();
+        $("#genderFields").hide();
     } else {
         me.showBackBtn(false);
         setTitle("验证");
         $("#passwordFields").hide();
         $("#inviteCodeFields").show();
+        $("#genderFields").show();
     }
 
     $("#registPassword").val('');
@@ -1864,6 +1866,13 @@ var me = {
                 return false;
             }
         } else {
+            var gender = $("input:radio[name='gender']:checked").val() ;
+            if (gender == undefined) {
+                showLoader("请选择性别");
+                setTimeout("hideLoader()", 2000);
+                return false;
+            }
+
             if ($("#inviteCode").val().length > 6) {
                 showLoader("邀请码无效");
                 setTimeout("hideLoader()", 2000);
