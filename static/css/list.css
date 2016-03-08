@@ -5,7 +5,7 @@ html,body {
 div#list-more.margin-0 { margin:0;border-top:none;;border-left:1px solid #c6c6c6;border-right:1px solid #c6c6c6; border-bottom:1px solid #c6c6c6;}
 .app-list { border-bottom: 1px solid #D4D5D6; height: 100%; }
 .list-page { padding-top: 0; }
-.app-list .item, .app-list .index-item { height: 80px; border-top: 1px #d4d5d6 solid; background-color: #fafafa; position: relative; }
+.app-list .item, .app-list .index-item, .task-list .index-item { height: 80px; border-top: 1px #d4d5d6 solid; background-color: #fafafa; position: relative; }
 .app-list .index-item .btn { position: absolute; right: 7px; font-style: normal; padding: 0 12px 0 0; background: url(/images/icon27.png) no-repeat right 3px; background-size: auto 12px; color: #666; top: 22px; }
 .app-list .index-item .btn.green { color: Green; }
 .app-list .list_from_box { height: 87px; }

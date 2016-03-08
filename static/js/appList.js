@@ -407,6 +407,9 @@ $("#registBtn").fastClick(function() {
 });
 
 $("#gzh_close_dialog_btn").click(function() {
+    if (window.android) {
+        window.android.openWechat();
+    }
     me.requestTaskList();
     changePage("#MainPage");
 });
@@ -984,17 +987,17 @@ var me = {
 
     requestTaskList : function()
     {
-        $("#tab-4 .app-list .section.available").empty().append("<h5>可接任务</h5>");
-        $("#tab-4 .app-list .section.inprogress").empty().append("<h5>已接任务</h5>");
-        $("#tab-4 .app-list .section.finished").empty().append("<h5>已完成任务</h5>");
-        $("#tab-4 .app-list .section.timedout").empty().append("<h5>已超时任务</h5>");
+        $("#task-list-wrapper .task-list .section.available").empty().append("<h5>可接任务</h5>");
+        $("#task-list-wrapper .task-list .section.inprogress").empty().append("<h5>已接任务</h5>");
+        $("#task-list-wrapper .task-list .section.finished").empty().append("<h5>已完成任务</h5>");
+        $("#task-list-wrapper .task-list .section.timedout").empty().append("<h5>已超时任务</h5>");
         var phone_number = me.getPhoneNumber();
         var url = appServerUrl+"/get_tasklist?phone_number="+phone_number+"&"+callback;
         console.log("requestTaskList:" + url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                $("#tab-4 .refresh-task-list").hide();
-                $("#tab-4 .wrapper").show();
+                $("#task-list-wrapper .refresh-task-list").hide();
+                $("#task-list-wrapper .wrapper").show();
                 me.parseTaskList(data.tasklist);
                 me.requestGzhTaskList();
             } else {
@@ -1011,10 +1014,10 @@ var me = {
         console.log("requestTaskList:" + url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                $("#tab-4 .refresh-task-list").hide();
-                $("#tab-4 .wrapper").show();
+                $("#task-list-wrapper .refresh-task-list").hide();
+                $("#task-list-wrapper .wrapper").show();
                 me.parseGzhTaskList(data.tasklist);
-                $("#tab-4 .app-list li").click(function() {  // don't use fastclick, it will eat 'touchbegin' event
+                $("#task-list-wrapper .task-list li").click(function() {  // don't use fastclick, it will eat 'touchbegin' event
                     if ($(this).data("url") != undefined) {
                         window.location.href = $(this).data("url");
                     } else {
@@ -1036,12 +1039,10 @@ var me = {
         console.log("requestTaskList:" + url);
         $.getJSON(url, function(data) {
             if (data.ret_code == 0) {
-                var dialogHtml="<div class='modalViewTitle'>任务领取成功</div><div class='modalViewText'>请在4小时内完成任务，超过时间任务将自动作废，无法获得金币奖励</div>";
+                var dialogHtml="<div class='modalViewTitle'>任务领取成功</div><div class='modalViewText'>请在4小时内完成任务，超过时间任务将自动作废，无法获得金币奖励<br>公众号id已复制，请直接在微信中粘贴查找</div>";
                 $("#gzh_dialog_message").html(dialogHtml);
                 $("#gzhdialog").jqmShow();
-                if (window.android) {
-                    window.android.openWechat();
-                }
+                $('#copyToClipBdBtn').trigger('click');
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
@@ -1058,29 +1059,27 @@ var me = {
             var url = tasklist[i].click_url+"phone_number="+phone_number;
 
             arrHtml.push("<li class='index-item list-index' data-url='"+url+"'>");
-            arrHtml.push("<div class='index-item-main'>");
 
-            arrHtml.push("<dl data-name='"+tasklist[i].name+"'>");
+            arrHtml.push("<div class='index-item-main'>");
+            arrHtml.push("<dl class='clearfix' data-name='"+tasklist[i].name+"'>");
             arrHtml.push("<dt class='item-icon'><img src="+tasklist[i].logo_url+" /></dt>");
             arrHtml.push("<dd class='item-title item-title--t4'><div class='task_item'><span>"+tasklist[i].desc+"</span>");
             arrHtml.push("<i class='icon-arrow'></i></div></dd>");
+            arrHtml.push("</dl></div>");
 
             arrHtml.push("<div class='app_down'>");
             arrHtml.push("<div class='app_coins'>");
             arrHtml.push("<div class='coin_num'><span>+"+tasklist[i].coin_num+"</span> 金币</div>");
-            arrHtml.push("</div>");
+            arrHtml.push("</div>");// app_coins
             arrHtml.push("<div class='ui-btn installBtn manageTab'><span>查看</span></div>");
-            arrHtml.push("</div>");
+            arrHtml.push("</div>");// app_down
 
-            arrHtml.push("</dl>");
-
-            arrHtml.push("</div>");
             arrHtml.push("</li>");
 
             var html = arrHtml.join("");
         }
 
-        $("#tab-4 .app-list .section.available").show().append(html);
+        $("#task-list-wrapper .task-list .section.available").show().append(html);
     },
 
     parseGzhTaskList : function(tasklist)
@@ -1391,7 +1390,7 @@ var me = {
         var arrHtml = new Array();
         arrHtml.push("<div class='row'><dt><div>任务名称</div></dt><dd><div>"+$(obj).data("taskname")+"</div></dd></div>");
         arrHtml.push("<div class='row'><dt><div>可获金币</div></dt><dd><div>"+$(obj).data("coin")+"枚</div></dd></div>");
-        arrHtml.push("<div class='row'><dt><div>任务步骤</div></dt><dd><div>1，点击“领取任务”；<br>2，关注公众号；<br>3，向公众号发送“小鸿”；<br>4，点击返回的链接，在打开的页面中输入小鸿账号（手机号）领取金币；</div></dd></div>");
+        arrHtml.push("<div class='row'><dt><div>任务步骤</div></dt><dd><div>1，点击“领取任务”；<br>2，关注公众号；<br>3，向公众号发送“小鸿”；<br>4，点击公众号回复的链接，在打开的页面中输入小鸿账号（手机号）领取金币；</div></dd></div>");
         arrHtml.push("<div class='row'><dt><div>微信公众号</div></dt><dd><div>"+$(obj).data("wechatid")+"  <a href='' id='copyToClipBdBtn' data-text="+$(obj).data("wechatid")+" class='ui-btn'>复制到剪贴板</a></div></dd></div>");
         arrHtml.push("<div class='row'><dt><div>公众号二维码</div></dt><dd class='crcode'><img src="+$(obj).data("qrcodeurl")+"></dd></div>");
 
@@ -1550,7 +1549,7 @@ var me = {
             $(".annexWifi").show();
         }
     },
-
+/*
     removeFromAppManageTab : function(installBtn)
     {
         var li = $("#tab-4 .app-list li[data-appid='" + $(installBtn).data('appid')+"']");
@@ -1565,22 +1564,20 @@ var me = {
             $("#tab-4 .app-list .hasInstalled").hide();
         }
     },
-
+*/
     addToTaskListTab : function(task)
     {
         var arrHtml = new Array();
-        arrHtml.push("<li data-taskid='"+task.id+"' data-taskname=\""+task.name+"\" ");
+        arrHtml.push("<li class='index-item list-index' data-taskid='"+task.id+"' data-taskname=\""+task.name+"\" ");
         arrHtml.push("data-coin='"+task.coin_num+"' data-wechatid='"+task.weixin_id+"' data-qrcodeurl='"+task.qr_code_url+"' data-taskstatus='"+task.task_status+"' data-remainnum='"+task.remain_tasknum+"' data-remaintime='"+task.remain_time+"' class='index-item list-index' >");
         arrHtml.push("<div class='index-item-main'>");
         arrHtml.push("<dl class='clearfix'>");
-        arrHtml.push("<dt class='item-icon'><span class='app-tags hide'></span>");
-        arrHtml.push("<img src='images/wechat.png' />");
-        arrHtml.push("</dt>");
+        arrHtml.push("<dt class='item-icon'><img src='images/wechat.png' /></dt>");
         arrHtml.push("<dd class='item-title item-title--t4'>");
-        arrHtml.push("<div class='item-title-sname'>");
-        arrHtml.push("<div class='baiying-name'>");
-        arrHtml.push(subString.autoAddEllipsis(task.name, 30, true) + "<i class='icon-arrow'></i></div></div></dd>");
-        arrHtml.push("</dl></div>");
+        arrHtml.push("<div class='task_item'>");
+        arrHtml.push("<span>"+subString.autoAddEllipsis(task.name, 30, true) + "</span>");
+        arrHtml.push("<i class='icon-arrow'></i>");
+        arrHtml.push("</div></dd></dl></div>");
 
         arrHtml.push("<div class='app_down'>");
         // console.log($(installBtn).data());
@@ -1597,20 +1594,18 @@ var me = {
         } else {
             arrHtml.push("<div class='ui-btn installBtn manageTab'><span>已超时</span></div>");
         }
+        arrHtml.push("</div></li>");// app_down
 
-        arrHtml.push("</div>");
-        arrHtml.push("</div>");
-        arrHtml.push("</li>");
         var html = arrHtml.join("");
 
         if (task.task_status == 1) {
-            $("#tab-4 .app-list .section.available").show().append(html);
+            $("#task-list-wrapper .task-list .section.available").show().append(html);
         } else if (task.task_status == 2) {
-            $("#tab-4 .app-list .section.inprogress").show().append(html);
+            $("#task-list-wrapper .task-list .section.inprogress").show().append(html);
         } else if (task.task_status == 3) {
-            $("#tab-4 .app-list .section.finished").show().append(html);
+            $("#task-list-wrapper .task-list .section.finished").show().append(html);
         } else {
-            $("#tab-4 .app-list .section.timedout").show().append(html);
+            $("#task-list-wrapper .task-list .section.timedout").show().append(html);
         }
     },
 
@@ -2147,15 +2142,23 @@ var me = {
             me.myScroll = new Array(5);
         }
 
-        var upIcon = $("#tab-"+idx+" .up-icon");
-            // var downIcon = $("#tab-"+me.curAppTabIdx+" .down-icon");
-
         if (me.myScroll[idx] != null) {
             me.myScroll[idx].destroy();
         }
-        me.myScroll[idx] = new IScroll("#tab-"+idx+" .wrapper", 
+
+        var upIcon = null;
+        if (idx != 4) {
+            upIcon = $("#tab-"+idx+" .up-icon");
+            me.myScroll[idx] = new IScroll("#tab-"+idx+" .wrapper", 
                                 {click:true, probeType: 3, mouseWheel: true, fadeScrollbars: true }
                                 );
+        } else {
+            upIcon = $("#task-list-wrapper .up-icon");
+            me.myScroll[idx] = new IScroll("#task-list-wrapper .wrapper", 
+                                {click:true, probeType: 3, mouseWheel: true, fadeScrollbars: true }
+                                );
+        }
+            // var downIcon = $("#tab-"+me.curAppTabIdx+" .down-icon");
 
         me.myScroll[idx].on("scroll",function() {
             var y = this.y,
