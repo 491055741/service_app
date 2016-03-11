@@ -749,14 +749,18 @@ var me = {
         } else {
             slide.hide();
         }
-        if (idx == 1) { // choice page
+        if (idx == 0) {
+            me.refreshScroll(4);
+            var footerHeight = $("#mainFooter").height();
+           $("#task-list-wrapper .wrapper").css('height', ($(window).height()-footerHeight)+'px');
+       } else if (idx == 1) { // choice page
             me.refreshScroll();
 
             var headerHeight = $("#appListHeader").height();
             var footerHeight = $("#mainFooter").height();
             // console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+$(document).height());
             $("#tab-1 .wrapper").css('height', ($(window).height()-headerHeight-footerHeight)+'px');// screenHeight - topNavbarHeight-bottomNavbarHeight
-        } else if (idx == 2) {// iframe page
+        } else if (idx == 2) {// iframe page （humor page）
             var footerHeight = $("#mainFooter").height();
             $("#humorIFrame").css('height', ($(window).height()-footerHeight)+'px');
         }
@@ -987,10 +991,10 @@ var me = {
 
     requestTaskList : function()
     {
-        $("#task-list-wrapper .task-list .section.available").empty().append("<h5>可接任务</h5>");
+        $("#task-list-wrapper .task-list .section.available").empty().append("<h5>做任务赚金币</h5>");
         $("#task-list-wrapper .task-list .section.inprogress").empty().append("<h5>已接任务</h5>");
         $("#task-list-wrapper .task-list .section.finished").empty().append("<h5>已完成任务</h5>");
-        $("#task-list-wrapper .task-list .section.timedout").empty().append("<h5>已超时任务</h5>");
+        $("#task-list-wrapper .task-list .section.timedout").empty().append("<h5>超时任务</h5>");
         var phone_number = me.getPhoneNumber();
         var url = appServerUrl+"/get_tasklist?phone_number="+phone_number+"&"+callback;
         console.log("requestTaskList:" + url);
@@ -1089,6 +1093,9 @@ var me = {
         for (var i = 0; i < tasklist.length; i++) {
             me.addToTaskListTab(tasklist[i]);
         }
+        me.refreshScroll(4);
+        var footerHeight = $("#mainFooter").height();
+        $("#task-list-wrapper .wrapper").css('height', ($(window).height()-footerHeight)+'px');
     },
 
     requestAppList : function()
@@ -1906,7 +1913,7 @@ var me = {
                 var passwdMD5 = CryptoJS.MD5(passwd, { asString: true });
                 var gender = $("input:radio[name='gender']:checked").val() ;
                 var url = appServerUrl+"/appregister?"+callback+"&phone_number="+phone_number+"&passwd="+passwdMD5+"&verify_code="+verify_code+"&gender="+gender;
-                if (inviteCode && inviteCode.length > 0 && inviteCode != "选填") {
+                if (inviteCode && inviteCode.length > 0 && inviteCode != "可不填") {
                     url += "&invite_code=" + inviteCode;
                 }
                 if (me.isLeShiPhone()) {

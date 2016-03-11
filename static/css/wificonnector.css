@@ -81,7 +81,7 @@ body{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-khtml-
 #task-list-wrapper .task-list .section h5 {padding-left: 8px; }
 #task-list-wrapper .wrapper {
     position: absolute;
-    top: 240px;
+    top: 0px;
 }
 .exchange_list .coin_icon {position: absolute; width: 20px; top:30px; right: 75px;}
 .exchange_list .coin_num { position: absolute; width: 55px; bottom: 10px; right: 10px; padding-left: 16px; color: #4d4d4d; font-size: 12px; background: url("../images/coins.png") no-repeat left center; background-size: 14px; }
