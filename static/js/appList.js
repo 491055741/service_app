@@ -287,8 +287,13 @@ $("#MainPage").on("pagebeforeshow", function () {
 
 $("#MainPage").on("pageshow", function () {
     console.log("main page show");
-    me.refreshScroll();
-    // setTimeout("me.toggleAdBannerTimer()", 5000);
+    if (me.currentTabIdx == 0 && me.isGotTaskList) {
+        var footerHeight = $("#mainFooter").height();
+        $("#task-list-wrapper .wrapper").css('height', ($(window).height()-footerHeight)+'px');
+        me.refreshScroll(4);
+    } else {
+        me.refreshScroll();
+    }
 });
 
 $('#dialog').jqm({
@@ -524,6 +529,7 @@ var me = {
     kuLianWifi : null,
     appList : null,
     isLogin : false,
+    isGotTaskList : false,
     autoLoginRetryCount : 0,
     showBackBtn : function (isShowBackBtn) {
         console.log("showBackBtn:"+isShowBackBtn);
@@ -750,16 +756,15 @@ var me = {
             slide.hide();
         }
         if (idx == 0) {
-            me.refreshScroll(4);
             var footerHeight = $("#mainFooter").height();
-           $("#task-list-wrapper .wrapper").css('height', ($(window).height()-footerHeight)+'px');
+            $("#task-list-wrapper .wrapper").css('height', ($(window).height()-footerHeight)+'px');
+            me.refreshScroll(4);
        } else if (idx == 1) { // choice page
-            me.refreshScroll();
-
             var headerHeight = $("#appListHeader").height();
             var footerHeight = $("#mainFooter").height();
             // console.log("header:"+headerHeight+" footerHeight:"+footerHeight+" screenHeight:"+$(document).height());
             $("#tab-1 .wrapper").css('height', ($(window).height()-headerHeight-footerHeight)+'px');// screenHeight - topNavbarHeight-bottomNavbarHeight
+            me.refreshScroll();
         } else if (idx == 2) {// iframe page （humor page）
             var footerHeight = $("#mainFooter").height();
             $("#humorIFrame").css('height', ($(window).height()-footerHeight)+'px');
@@ -1005,6 +1010,7 @@ var me = {
                 $("#task-list-wrapper .wrapper").show();
                 me.parseTaskList(data.tasklist);
                 me.requestGzhTaskList();
+                me.isGotTaskList = true;
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
@@ -1029,7 +1035,7 @@ var me = {
                         me.clickOnGzhTask(this);
                     }
                 });
-                setTimeout(me.initIScroll(4), 2000);
+                setTimeout(me.initIScroll(4), 500);
             } else {
                 showLoader(data.ret_msg);
                 setTimeout("hideLoader()", 3000);
@@ -1094,9 +1100,9 @@ var me = {
         for (var i = 0; i < tasklist.length; i++) {
             me.addToTaskListTab(tasklist[i]);
         }
-        me.refreshScroll(4);
         var footerHeight = $("#mainFooter").height();
         $("#task-list-wrapper .wrapper").css('height', ($(window).height()-footerHeight)+'px');
+        me.refreshScroll(4);
     },
 
     requestAppList : function()
@@ -1195,9 +1201,6 @@ var me = {
                             me.showDownloadProgress(this);
                         });
                         setTimeout(me.initIScroll(type), 2000);
-                        if (me.myScroll[4] == null) {
-                            me.initIScroll(4);
-                        }
                     },
             error : function() {
                         $("#tab-"+type+" .refresh-app-list").show();
