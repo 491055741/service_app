@@ -4,5 +4,6 @@
     "versionCode" : 1,
     "name": "WifiConnector.apk",
     "url": "http://app.milkpapa.com:8080/static/WifiConnector.apk",
-    "force": "NO"
+    "force": "NO",
+    "desc": ""
 }
