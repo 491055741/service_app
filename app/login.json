@@ -1,5 +1,6 @@
 {
     "coin_num": 6,
     "ret_code": 0,
+    "is_sign": "true",
     "ret_msg": "success"
 }
