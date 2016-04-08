@@ -135,7 +135,7 @@ var appLanched = function (pkgName) {
     } else {
         var imei = 'none';
     }
-    var url = appServerUrl+"/applaunch_report?"+callback+"&phone_number="+phone_number+"&imei="+imei;
+    var url = appServerUrl+"/applanch_report?"+callback+"&phone_number="+phone_number+"&imei="+imei;
     if (appId == undefined) {
         url = url+"&pkgname="+pkgName;
     } else {
